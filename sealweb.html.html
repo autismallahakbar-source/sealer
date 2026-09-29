@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SealScripts</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+.page{display:none;min-height:100vh;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:2rem;animation:fadeIn .8s ease forwards;perspective:1200px}
+.page.active{display:flex}
+.page-content{max-width:800px;width:100%;transition:transform .25s cubic-bezier(.22,1,.36,1);transform-style:preserve-3d;will-change:transform}
+h1{font-size:4rem;font-weight:300;letter-spacing:-.02em;margin-bottom:.5rem;color:#fff}
+h2{font-size:1.5rem;font-weight:300;letter-spacing:.1em;margin-bottom:3rem;color:#888;text-transform:lowercase}
+.divider{width:60px;height:2px;background:#333;border-radius:999px;margin:2rem auto}
+.home-buttons{display:flex;flex-direction:column;align-items:center;gap:1rem}
+.btn{display:inline-block;padding:.8rem 2rem;border:1px solid #333;border-radius:999px;color:#e0e0e0;text-decoration:none;font-size:1rem;letter-spacing:.05em;transition:all .3s ease;background:transparent;cursor:pointer;font-family:inherit;min-width:200px}
+.btn:hover{background:#1a1a1a;border-color:#555;color:#fff;transform:scale(1.03)}
+footer{margin-top:4rem;font-size:.8rem;color:#444;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto}
+footer .copyright{display:block;margin-bottom:.5rem}
+footer .disclaimer{font-size:.7rem;color:#3a3a3a}
+.scripts-title{font-size:2rem;font-weight:300;color:#fff;margin-bottom:3rem}
+.script-block{margin-bottom:8rem}
+.script-block:last-of-type{margin-bottom:3rem}
+.copy-row{display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem}
+.copy-text{font-size:1rem;color:#ccc;padding:.9rem 1.4rem;border:1px solid #333;border-radius:999px;background:#111;user-select:all;word-break:break-all;font-family:'Courier New',monospace;max-width:90%;text-align:left}
+.copy-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #333;border-radius:50%;background:transparent;color:#e0e0e0;font-size:1.1rem;cursor:pointer;transition:all .3s ease;flex-shrink:0}
+.copy-btn:hover{background:#1a1a1a;border-color:#555;color:#fff;transform:scale(1.05)}
+.copy-btn:active{transform:scale(.95)}
+.script-label{font-size:1.4rem;font-weight:300;color:#fff;letter-spacing:.05em}
+.back-link{display:inline-block;margin-top:1rem;font-size:.9rem;color:#666;text-decoration:none;transition:color .3s ease;cursor:pointer;background:none;border:none;font-family:inherit}
+.back-link:hover{color:#fff}
+.reviews-title{font-size:2rem;font-weight:300;color:#fff;margin-bottom:.5rem}
+.reviews-subtitle{font-size:.95rem;color:#777;margin-bottom:3rem}
+.review-form{background:#0f0f0f;border:1px solid #222;border-radius:24px;padding:2.5rem 2rem;max-width:600px;width:100%;margin:0 auto 3rem;text-align:left}
+.form-label{display:block;font-size:.9rem;color:#888;margin-bottom:.75rem;letter-spacing:.03em}
+.stars-input{display:flex;gap:.4rem;justify-content:center;margin-bottom:2rem;flex-direction:row-reverse}
+.stars-input input{display:none}
+.stars-input label{font-size:2.5rem;color:#333;cursor:pointer;transition:color .2s ease,transform .2s ease;line-height:1;user-select:none}
+.stars-input label:hover,.stars-input label:hover~label,.stars-input input:checked~label{color:#ffc107}
+.stars-input label:hover{transform:scale(1.15)}
+.stars-input.error label{color:#5a1a1a;animation:shake .3s ease}
+.stars-input.error label:hover,.stars-input.error label:hover~label{color:#ffc107}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.review-textarea{width:100%;min-height:140px;padding:1rem 1.2rem;background:#111;border:1px solid #333;border-radius:16px;color:#e0e0e0;font-family:inherit;font-size:.95rem;line-height:1.6;resize:vertical;transition:border-color .3s ease;margin-bottom:1.5rem}
+.review-textarea:focus{outline:none;border-color:#555}
+.review-textarea::placeholder{color:#4a4a4a}
+.submit-btn{display:block;width:100%;padding:.9rem 2rem;border:1px solid #ffc107;border-radius:999px;background:transparent;color:#ffc107;font-size:.95rem;letter-spacing:.05em;cursor:pointer;transition:all .3s ease;font-family:inherit}
+.submit-btn:hover{background:#ffc107;color:#0a0a0a;transform:scale(1.02)}
+.submit-btn:active{transform:scale(.98)}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;border:1px solid #333;color:#fff;padding:.7rem 1.5rem;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:all .35s ease;z-index:300;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:#2e7d32;color:#81c784}
+.toast.error{border-color:#c62828;color:#ef9a9a}
+.warning-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .35s ease;z-index:200}
+.warning-overlay.show{opacity:1;pointer-events:auto}
+.warning-box{background:#0f0f0f;border:1px solid #3a1a1a;border-radius:24px;max-width:560px;width:100%;padding:2.5rem 2rem;text-align:center;box-shadow:0 0 60px rgba(255,60,60,.15);transform:translateY(15px) scale(.97);transition:transform .35s ease}
+.warning-overlay.show .warning-box{transform:translateY(0) scale(1)}
+.warning-icon{font-size:5.5rem;line-height:1;color:#ff3b3b;margin-bottom:1rem;display:inline-block;animation:pulse 1.6s ease-in-out infinite;text-shadow:0 0 30px rgba(255,59,59,.5)}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:.85}}
+.warning-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:1.2rem;letter-spacing:.03em}
+.warning-text{font-size:.95rem;color:#b0b0b0;line-height:1.7;margin-bottom:2rem}
+.warning-text strong{color:#ff6b6b;font-weight:500}
+.warning-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer;transition:all .3s ease;font-family:inherit;background:#1a1a1a;border:1px solid #ff3b3b;color:#fff}
+.warning-btn:hover{background:#ff3b3b;color:#0a0a0a;transform:scale(1.03)}
+.warning-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.warning-btn:disabled:hover{background:#1a1a1a;color:#fff;transform:none}
+.thanks-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .35s ease;z-index:250}
+.thanks-overlay.show{opacity:1;pointer-events:auto}
+.thanks-box{background:#0f0f0f;border:1px solid #2e7d32;border-radius:24px;max-width:480px;width:100%;padding:2.5rem 2rem;text-align:center;box-shadow:0 0 60px rgba(46,125,50,.2);transform:translateY(15px) scale(.97);transition:transform .35s ease}
+.thanks-overlay.show .thanks-box{transform:translateY(0) scale(1)}
+.thanks-icon{font-size:4.5rem;line-height:1;color:#4caf50;margin-bottom:1rem;display:inline-block;animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+.thanks-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:.8rem;letter-spacing:.03em}
+.thanks-text{font-size:.95rem;color:#b0b0b0;line-height:1.7;margin-bottom:2rem}
+.thanks-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer;transition:all .3s ease;font-family:inherit;background:#1a1a1a;border:1px solid #4caf50;color:#fff}
+.thanks-btn:hover{background:#4caf50;color:#0a0a0a;transform:scale(1.03)}
+.mad-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .35s ease;z-index:260}
+.mad-overlay.show{opacity:1;pointer-events:auto}
+.mad-box{background:#0f0f0f;border:1px solid #c62828;border-radius:24px;max-width:480px;width:100%;padding:2.5rem 2rem;text-align:center;box-shadow:0 0 60px rgba(198,40,40,.25);transform:translateY(15px) scale(.97);transition:transform .35s ease}
+.mad-overlay.show .mad-box{transform:translateY(0) scale(1)}
+.mad-icon{font-size:4.5rem;line-height:1;color:#ff3b3b;margin-bottom:1rem;display:inline-block;animation:pop .5s ease;font-weight:300}
+.mad-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:.8rem;letter-spacing:.03em}
+.mad-text{font-size:.95rem;color:#b0b0b0;line-height:1.7;margin-bottom:2rem}
+.mad-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer;transition:all .3s ease;font-family:inherit;background:#1a1a1a;border:1px solid #ff3b3b;color:#fff}
+.mad-btn:hover{background:#ff3b3b;color:#0a0a0a;transform:scale(1.03)}
+.lang-switcher{display:none;position:fixed;top:1.25rem;right:1.25rem;z-index:150}
+.lang-switcher.visible{display:block}
+.lang-switcher select{background:#111;color:#e0e0e0;border:1px solid #333;border-radius:999px;padding:.5rem 1.1rem;font-size:.85rem;font-family:inherit;cursor:pointer;transition:all .3s ease;appearance:none;-webkit-appearance:none;padding-right:1.9rem;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right .7rem center;background-size:14px}
+.lang-switcher select:hover{background-color:#1a1a1a;border-color:#555;color:#fff}
+.lang-switcher select:focus{outline:none;border-color:#555}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media (max-width:600px){
+.lang-switcher{top:.75rem;right:.75rem}
+.lang-switcher select{padding:.4rem .9rem;font-size:.75rem;padding-right:1.7rem;background-size:12px}
+h1{font-size:2.5rem}
+h2{font-size:1rem}
+.scripts-title{font-size:1.5rem}
+.copy-text{font-size:.75rem;padding:.7rem 1rem}
+.script-label{font-size:1.1rem}
+.script-block{margin-bottom:5rem}
+footer{font-size:.7rem}
+footer .disclaimer{font-size:.65rem}
+.warning-icon{font-size:4rem}
+.warning-title{font-size:1.2rem}
+.warning-text{font-size:.85rem}
+.warning-box{padding:2rem 1.5rem}
+.warning-btn{font-size:.85rem;padding:.75rem 1.5rem}
+.review-form{padding:1.8rem 1.2rem}
+.stars-input label{font-size:2rem}
+.reviews-title{font-size:1.5rem}
+.thanks-icon,.mad-icon{font-size:3.5rem}
+.thanks-title,.mad-title{font-size:1.2rem}
+.thanks-text,.mad-text{font-size:.85rem}
+.thanks-box,.mad-box{padding:2rem 1.5rem}
+}
+@media (prefers-reduced-motion:reduce){.page-content{transition:none}}
+</style>
+</head>
+<body>
+<div class="lang-switcher" id="langSwitcher">
+<select id="langSelect">
+<option value="en">English</option>
+<option value="es">Español</option>
+<option value="ja">日本語</option>
+<option value="ru">Русский</option>
+<option value="pt">Português (BR)</option>
+<option value="zh">中文</option>
+<option value="ko">한국어</option>
+<option value="hi">हिन्दी</option>
+<option value="de">Deutsch</option>
+</select>
+</div>
+<section class="page active" id="page-home">
+<div class="page-content" data-tilt>
+<h1 data-i18n="welcome">Welcome</h1>
+<h2 data-i18n="presents">seal scripts presents</h2>
+<div class="divider"></div>
+<div class="home-buttons">
+<button class="btn" id="goToScripts" data-i18n="viewScripts">View scripts</button>
+<button class="btn" id="goToReviews" data-i18n="reviews">Reviews</button>
+</div>
+<footer>
+<span class="copyright">© 2026 SealScripts</span>
+<span class="disclaimer" data-i18n="disclaimer">This website is not affiliated with, endorsed by, or connected to Roblox Corporation, the game Roblox, or any in-game projects. All coincidences are purely accidental.</span>
+</footer>
+</div>
+</section>
+<section class="page" id="page-scripts">
+<div class="page-content" data-tilt>
+<h3 class="scripts-title">seal's scripts</h3>
+<div class="script-block">
+<div class="copy-row">
+<span class="copy-text" id="contactText1">loadstring(game:HttpGet("https://raw.githubusercontent.com/autismallahakbar-source/seal-seal/main/tralala.lua"))()</span>
+<button class="copy-btn" data-target="contactText1" data-i18n-title="copy" title="Copy" aria-label="Copy text">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<p class="script-label">One Tap Script</p>
+</div>
+<div class="script-block">
+<div class="copy-row">
+<span class="copy-text" id="contactText2">loadstring(game:HttpGet("https://raw.githubusercontent.com/autismallahakbar-source/seal-aimbot/main/seal.lua"))()</span>
+<button class="copy-btn" data-target="contactText2" data-warn="true" data-i18n-title="copy" title="Copy" aria-label="Copy text">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<p class="script-label">Knife Duels</p>
+</div>
+<div class="script-block">
+<div class="copy-row">
+<span class="copy-text" id="contactText3">loadstring(game:HttpGet("https://raw.githubusercontent.com/autismallahakbar-source/seal-tralala/main/seal.lua"))()</span>
+<button class="copy-btn" data-target="contactText3" data-warn="true" data-i18n-title="copy" title="Copy" aria-label="Copy text">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<p class="script-label">AimBot For Rivals</p>
+</div>
+<button class="back-link" id="goToHomeFromScripts" data-i18n="goBack">Go Back</button>
+</div>
+</section>
+<section class="page" id="page-reviews">
+<div class="page-content" data-tilt>
+<h3 class="reviews-title" data-i18n="leaveReview">Leave a review</h3>
+<p class="reviews-subtitle" data-i18n="reviewSubtitle">Rate the scripts from 1 to 5 stars. Anonymous reviews.</p>
+<div class="review-form" id="reviewForm">
+<label class="form-label" data-i18n="yourRating">Your rating</label>
+<div class="stars-input" id="starsInput">
+<input type="radio" name="rating" id="star5" value="5">
+<label for="star5">★</label>
+<input type="radio" name="rating" id="star4" value="4">
+<label for="star4">★</label>
+<input type="radio" name="rating" id="star3" value="3">
+<label for="star3">★</label>
+<input type="radio" name="rating" id="star2" value="2">
+<label for="star2">★</label>
+<input type="radio" name="rating" id="star1" value="1">
+<label for="star1">★</label>
+</div>
+<label class="form-label" for="reviewText" data-i18n="yourReview">Your review</label>
+<textarea class="review-textarea" id="reviewText" data-i18n-placeholder="reviewPlaceholder" placeholder="Write your honest review here... (optional)" maxlength="500"></textarea>
+<button type="button" class="submit-btn" id="submitBtn" data-i18n="sendToSeal">Send To Seal</button>
+</div>
+<button class="back-link" id="goToHomeFromReviews" data-i18n="goBack">Go Back</button>
+</div>
+</section>
+<div class="warning-overlay" id="warningOverlay">
+<div class="warning-box">
+<div class="warning-icon">⚠</div>
+<h4 class="warning-title" data-i18n="warningTitle">Warning</h4>
+<p class="warning-text" id="warningTextEl" data-i18n-html="warningText">By using these scripts, you take <strong>full responsibility</strong> for your account. If you get banned by moderators or admins — <strong>Seal is not involved</strong> in any way.<br><br>Play carefully and at your own risk.</p>
+<button class="warning-btn" id="warningConfirm" data-i18n="warningBtn">I take responsibility, copy</button>
+</div>
+</div>
+<div class="thanks-overlay" id="thanksOverlay">
+<div class="thanks-box">
+<div class="thanks-icon">✓</div>
+<h4 class="thanks-title" data-i18n="thanksTitle">Thanks For Review!</h4>
+<p class="thanks-text" data-i18n-html="thanksText">Your feedback means a lot to Seal.<br>It will be reviewed soon.</p>
+<button class="thanks-btn" id="thanksClose" data-i18n="close">Close</button>
+</div>
+</div>
+<div class="mad-overlay" id="madOverlay">
+<div class="mad-box">
+<div class="mad-icon">✗</div>
+<h4 class="mad-title" data-i18n="madTitle">Seal is mad</h4>
+<p class="mad-text" data-i18n-html="madText">You already left a review.<br>Each user can only submit one review.</p>
+<button class="mad-btn" id="madClose" data-i18n="close">Close</button>
+</div>
+</div>
+<div class="toast" id="toast">Copied ✓</div>
+<script>
+const translations={
+en:{welcome:"Welcome",presents:"seal scripts presents",viewScripts:"View scripts",reviews:"Reviews",disclaimer:"This website is not affiliated with, endorsed by, or connected to Roblox Corporation, the game Roblox, or any in-game projects. All coincidences are purely accidental.",copy:"Copy",leaveReview:"Leave a review",reviewSubtitle:"Rate the scripts from 1 to 5 stars. Anonymous reviews.",yourRating:"Your rating",yourReview:"Your review",reviewPlaceholder:"Write your honest review here... (optional)",sendToSeal:"Send To Seal",goBack:"Go Back",warningTitle:"Warning",warningText:"By using these scripts, you take <strong>full responsibility</strong> for your account. If you get banned by moderators or admins — <strong>Seal is not involved</strong> in any way.<br><br>Play carefully and at your own risk.",warningBtn:"I take responsibility, copy",pleaseRead:"Please read...",thanksTitle:"Thanks For Review!",thanksText:"Your feedback means a lot to Seal.<br>It will be reviewed soon.",close:"Close",madTitle:"Seal is mad",madText:"You already left a review.<br>Each user can only submit one review.",pickRating:"Please pick a rating first",copied:"Copied ✓",couldNotCopy:"Could not copy"},
+es:{welcome:"Bienvenido",presents:"seal scripts presenta",viewScripts:"Ver scripts",reviews:"Reseñas",disclaimer:"Este sitio web no está afiliado, respaldado ni conectado con Roblox Corporation, el juego Roblox ni ningún proyecto dentro del juego. Todas las coincidencias son puramente accidentales.",copy:"Copiar",leaveReview:"Deja una reseña",reviewSubtitle:"Valora los scripts de 1 a 5 estrellas. Reseñas anónimas.",yourRating:"Tu valoración",yourReview:"Tu reseña",reviewPlaceholder:"Escribe tu reseña honesta aquí... (opcional)",sendToSeal:"Enviar a Seal",goBack:"Volver",warningTitle:"Advertencia",warningText:"Al usar estos scripts, asumes <strong>toda la responsabilidad</strong> de tu cuenta. Si los moderadores o administradores te banean — <strong>Seal no tiene nada que ver</strong>.<br><br>Juega con cuidado y bajo tu propio riesgo.",warningBtn:"Asumo la responsabilidad, copiar",pleaseRead:"Por favor lee...",thanksTitle:"¡Gracias por tu reseña!",thanksText:"Tu opinión significa mucho para Seal.<br>Será revisada pronto.",close:"Cerrar",madTitle:"Seal está enojado",madText:"Ya dejaste una reseña.<br>Cada usuario puede enviar solo una reseña.",pickRating:"Primero elige una valoración",copied:"Copiado ✓",couldNotCopy:"No se pudo copiar"},
+ja:{welcome:"ようこそ",presents:"seal scripts プレゼンツ",viewScripts:"スクリプトを見る",reviews:"レビュー",disclaimer:"このウェブサイトは Roblox Corporation、Roblox ゲーム、またはゲーム内プロジェクトとは一切関係ありません。すべての一致は偶然です。",copy:"コピー",leaveReview:"レビューを書く",reviewSubtitle:"スクリプトを 1〜5 つ星で評価してください。匿名レビュー。",yourRating:"あなたの評価",yourReview:"あなたのレビュー",reviewPlaceholder:"ここに正直なレビューを書いてください...（任意）",sendToSeal:"Seal に送信",goBack:"戻る",warningTitle:"警告",warningText:"これらのスクリプトを使用すると、アカウントの<strong>全責任</strong>を負います。モデレーターや管理者に BAN された場合、<strong>Seal は一切関与していません</strong>。<br><br>自己責任で慎重にプレイしてください。",warningBtn:"責任を負います、コピー",pleaseRead:"お読みください...",thanksTitle:"レビューありがとうございます！",thanksText:"あなたのフィードバックは Seal にとって大きな意味があります。<br>すぐに確認されます。",close:"閉じる",madTitle:"Seal は怒っています",madText:"すでにレビューを残しています。<br>各ユーザーは 1 回のみレビューを送信できます。",pickRating:"まず評価を選択してください",copied:"コピーしました ✓",couldNotCopy:"コピーできませんでした"},
+ru:{welcome:"Добро пожаловать",presents:"seal scripts представляет",viewScripts:"Посмотреть скрипты",reviews:"Отзывы",disclaimer:"Этот сайт никак не связан с Roblox Corporation, игрой Roblox или какими-либо внутриигровыми проектами. Все совпадения случайны.",copy:"Копировать",leaveReview:"Оставить отзыв",reviewSubtitle:"Оцените скрипты от 1 до 5 звёзд. Анонимные отзывы.",yourRating:"Ваша оценка",yourReview:"Ваш отзыв",reviewPlaceholder:"Напишите честный отзыв здесь... (необязательно)",sendToSeal:"Отправить Seal",goBack:"Назад",warningTitle:"Предупреждение",warningText:"Используя эти скрипты, вы берёте <strong>полную ответственность</strong> за свой аккаунт. Если вас забанят модераторы или админы — <strong>Seal к этому не причастен</strong>.<br><br>Играйте осторожно и на свой страх и риск.",warningBtn:"Я беру ответственность, копировать",pleaseRead:"Пожалуйста, прочитайте...",thanksTitle:"Спасибо за отзыв!",thanksText:"Ваш отзыв много значит для Seal.<br>Он будет скоро рассмотрен.",close:"Закрыть",madTitle:"Seal злится",madText:"Вы уже оставили отзыв.<br>Каждый пользователь может оставить только один отзыв.",pickRating:"Сначала выберите оценку",copied:"Скопировано ✓",couldNotCopy:"Не удалось скопировать"},
+pt:{welcome:"Bem-vindo",presents:"seal scripts apresenta",viewScripts:"Ver scripts",reviews:"Avaliações",disclaimer:"Este site não é afiliado, endossado ou conectado à Roblox Corporation, ao jogo Roblox ou a qualquer projeto dentro do jogo. Todas as coincidências são puramente acidentais.",copy:"Copiar",leaveReview:"Deixe uma avaliação",reviewSubtitle:"Avalie os scripts de 1 a 5 estrelas. Avaliações anônimas.",yourRating:"Sua avaliação",yourReview:"Sua avaliação",reviewPlaceholder:"Escreva sua avaliação honesta aqui... (opcional)",sendToSeal:"Enviar para Seal",goBack:"Voltar",warningTitle:"Aviso",warningText:"Ao usar esses scripts, você assume <strong>total responsabilidade</strong> pela sua conta. Se você for banido por moderadores ou admins — <strong>Seal não tem nada a ver com isso</strong>.<br><br>Jogue com cuidado e por sua conta e risco.",warningBtn:"Eu assumo a responsabilidade, copiar",pleaseRead:"Por favor leia...",thanksTitle:"Obrigado pela avaliação!",thanksText:"Seu feedback significa muito para Seal.<br>Será revisado em breve.",close:"Fechar",madTitle:"Seal está irritado",madText:"Você já deixou uma avaliação.<br>Cada usuário pode enviar apenas uma avaliação.",pickRating:"Por favor escolha uma avaliação primeiro",copied:"Copiado ✓",couldNotCopy:"Não foi possível copiar"},
+zh:{welcome:"欢迎",presents:"seal scripts 出品",viewScripts:"查看脚本",reviews:"评价",disclaimer:"本网站与 Roblox Corporation、Roblox 游戏或任何游戏内项目没有任何关联。所有巧合纯属偶然。",copy:"复制",leaveReview:"留下评价",reviewSubtitle:"为脚本评分 1 到 5 星。匿名评价。",yourRating:"你的评分",yourReview:"你的评价",reviewPlaceholder:"在这里写下你的真实评价...（可选）",sendToSeal:"发送给 Seal",goBack:"返回",warningTitle:"警告",warningText:"使用这些脚本，您将对您的账户承担<strong>全部责任</strong>。如果被管理员封禁——<strong>Seal 与此无关</strong>。<br><br>请谨慎游戏，风险自负。",warningBtn:"我承担责任，复制",pleaseRead:"请阅读...",thanksTitle:"感谢评价！",thanksText:"你的反馈对 Seal 很重要。<br>很快就会审核。",close:"关闭",madTitle:"Seal 生气了",madText:"你已经留下评价了。<br>每个用户只能提交一次评价。",pickRating:"请先选择评分",copied:"已复制 ✓",couldNotCopy:"无法复制"},
+ko:{welcome:"환영합니다",presents:"seal scripts 제공",viewScripts:"스크립트 보기",reviews:"리뷰",disclaimer:"이 웹사이트는 Roblox Corporation, Roblox 게임 또는 게임 내 프로젝트와 관련이 없습니다. 모든 일치는 우연입니다.",copy:"복사",leaveReview:"리뷰 남기기",reviewSubtitle:"스크립트를 1~5점으로 평가해주세요. 익명 리뷰.",yourRating:"당신의 평가",yourReview:"당신의 리뷰",reviewPlaceholder:"여기에 솔직한 리뷰를 작성하세요... (선택 사항)",sendToSeal:"Seal에게 보내기",goBack:"돌아가기",warningTitle:"경고",warningText:"이 스크립트를 사용하면 계정에 대한 <strong>모든 책임</strong>은 본인에게 있습니다. 관리자나 모더레이터에 의해 차단되더라도 <strong>Seal은 관련이 없습니다</strong>.<br><br>신중하게 본인 책임 하에 플레이하세요.",warningBtn:"책임을 지겠습니다, 복사",pleaseRead:"읽어주세요...",thanksTitle:"리뷰 감사합니다!",thanksText:"당신의 피드백은 Seal에게 큰 의미가 있습니다.<br>곧 검토될 것입니다.",close:"닫기",madTitle:"Seal이 화났어요",madText:"이미 리뷰를 남겼습니다.<br>각 사용자는 한 번만 리뷰를 제출할 수 있습니다.",pickRating:"먼저 평가를 선택하세요",copied:"복사됨 ✓",couldNotCopy:"복사할 수 없습니다"},
+hi:{welcome:"स्वागत है",presents:"seal scripts प्रस्तुत करता है",viewScripts:"स्क्रिप्ट देखें",reviews:"समीक्षाएँ",disclaimer:"यह वेबसाइट Roblox Corporation, Roblox गेम या किसी भी इन-गेम प्रोजेक्ट से संबद्ध नहीं है। सभी संयोग पूरी तरह से संयोगवश हैं।",copy:"कॉपी करें",leaveReview:"समीक्षा छोड़ें",reviewSubtitle:"स्क्रिप्ट को 1 से 5 सितारों में रेट करें। अनाम समीक्षाएँ।",yourRating:"आपकी रेटिंग",yourReview:"आपकी समीक्षा",reviewPlaceholder:"यहाँ अपनी ईमानदार समीक्षा लिखें... (वैकल्पिक)",sendToSeal:"Seal को भेजें",goBack:"वापस जाएँ",warningTitle:"चेतावनी",warningText:"इन स्क्रिप्ट्स का उपयोग करके, आप अपने अकाउंट की <strong>पूरी जिम्मेदारी</strong> लेते हैं। अगर मॉडरेटर या एडमिन आपको बैन करते हैं — <strong>Seal इससे जुड़ा नहीं है</strong>।<br><br>सावधानी से खेलें और अपने जोखिम पर।",warningBtn:"मैं जिम्मेदारी लेता हूँ, कॉपी करें",pleaseRead:"कृपया पढ़ें...",thanksTitle:"समीक्षा के लिए धन्यवाद!",thanksText:"आपकी प्रतिक्रिया Seal के लिए बहुत मायने रखती है।<br>इसे जल्द ही समीक्षा किया जाएगा।",close:"बंद करें",madTitle:"Seal नाराज़ है",madText:"आपने पहले ही एक समीक्षा छोड़ दी है।<br>प्रत्येक उपयोगकर्ता केवल एक समीक्षा सबमिट कर सकता है।",pickRating:"कृपया पहले एक रेटिंग चुनें",copied:"कॉपी किया गया ✓",couldNotCopy:"कॉपी नहीं कर सका"},
+de:{welcome:"Willkommen",presents:"seal scripts präsentiert",viewScripts:"Skripte ansehen",reviews:"Bewertungen",disclaimer:"Diese Website ist nicht mit der Roblox Corporation, dem Spiel Roblox oder irgendwelchen In-Game-Projekten verbunden. Alle Übereinstimmungen sind rein zufällig.",copy:"Kopieren",leaveReview:"Bewertung abgeben",reviewSubtitle:"Bewerte die Skripte von 1 bis 5 Sternen. Anonyme Bewertungen.",yourRating:"Deine Bewertung",yourReview:"Deine Rezension",reviewPlaceholder:"Schreibe hier deine ehrliche Bewertung... (optional)",sendToSeal:"An Seal senden",goBack:"Zurück",warningTitle:"Warnung",warningText:"Durch die Nutzung dieser Skripte übernimmst du die <strong>volle Verantwortung</strong> für dein Konto. Wenn du von Moderatoren oder Admins gebannt wirst — <strong>Seal ist nicht beteiligt</strong>.<br><br>Spiele vorsichtig und auf eigenes Risiko.",warningBtn:"Ich übernehme die Verantwortung, kopieren",pleaseRead:"Bitte lesen...",thanksTitle:"Danke für die Bewertung!",thanksText:"Dein Feedback bedeutet Seal viel.<br>Es wird bald überprüft.",close:"Schließen",madTitle:"Seal ist wütend",madText:"Du hast bereits eine Bewertung abgegeben.<br>Jeder Nutzer kann nur eine Bewertung einreichen.",pickRating:"Bitte wähle zuerst eine Bewertung",copied:"Kopiert ✓",couldNotCopy:"Kopieren fehlgeschlagen"}
+};
+let currentLang='en';
+function applyLang(lang){
+    if(!translations[lang])lang='en';
+    currentLang=lang;
+    const t=translations[lang];
+    document.documentElement.lang=lang;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(t[k]!==undefined)el.textContent=t[k]});
+    document.querySelectorAll('[data-i18n-html]').forEach(el=>{const k=el.getAttribute('data-i18n-html');if(t[k]!==undefined)el.innerHTML=t[k]});
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.getAttribute('data-i18n-placeholder');if(t[k]!==undefined)el.placeholder=t[k]});
+    document.querySelectorAll('[data-i18n-title]').forEach(el=>{const k=el.getAttribute('data-i18n-title');if(t[k]!==undefined){el.title=t[k];el.setAttribute('aria-label',t[k])}});
+    if(warningCounting&&warningConfirm.disabled){warningConfirm.textContent=t.pleaseRead+' '+warningSecondsLeft}
+    document.getElementById('langSelect').value=lang;
+    try{localStorage.setItem('seal_lang',lang)}catch(e){}
+}
+const langSwitcher=document.getElementById('langSwitcher');
+const pageHome=document.getElementById('page-home');
+const pageScripts=document.getElementById('page-scripts');
+const pageReviews=document.getElementById('page-reviews');
+function showPage(page,hash){
+    [pageHome,pageScripts,pageReviews].forEach(p=>p.classList.remove('active'));
+    page.classList.add('active');
+    if(page===pageHome)langSwitcher.classList.add('visible');
+    else langSwitcher.classList.remove('visible');
+    window.scrollTo(0,0);
+    if(hash)history.pushState({},'',hash);
+}
+document.getElementById('goToScripts').addEventListener('click',()=>showPage(pageScripts,'#scripts'));
+document.getElementById('goToReviews').addEventListener('click',()=>showPage(pageReviews,'#reviews'));
+document.getElementById('goToHomeFromScripts').addEventListener('click',()=>showPage(pageHome,'#home'));
+document.getElementById('goToHomeFromReviews').addEventListener('click',()=>showPage(pageHome,'#home'));
+function restorePage(){if(location.hash==='#scripts')showPage(pageScripts);else if(location.hash==='#reviews')showPage(pageReviews);else showPage(pageHome)}
+restorePage();
+window.addEventListener('popstate',restorePage);
+const tiltElements=document.querySelectorAll('[data-tilt]');
+tiltElements.forEach(el=>{let rafId=null,targetX=0,targetY=0,currentX=0,currentY=0;const MAX_SHIFT=.4;document.addEventListener('mousemove',e=>{const activePage=el.closest('.page');if(!activePage||!activePage.classList.contains('active'))return;const px=(e.clientX/window.innerWidth)-.5;const py=(e.clientY/window.innerHeight)-.5;targetX=px*MAX_SHIFT*2;targetY=py*MAX_SHIFT*2;if(!rafId)rafId=requestAnimationFrame(animate)});function animate(){currentX+=(targetX-currentX)*.12;currentY+=(targetY-currentY)*.12;el.style.transform=`translate3d(${currentX}px, ${currentY}px, 0) rotateX(${-currentY*.15}deg) rotateY(${currentX*.15}deg)`;if(Math.abs(targetX-currentX)>.05||Math.abs(targetY-currentY)>.05){rafId=requestAnimationFrame(animate)}else rafId=null}});
+const toast=document.getElementById('toast');
+function showToast(msg,type){toast.textContent=msg;toast.className='toast show'+(type?' '+type:'');clearTimeout(showToast._t);showToast._t=setTimeout(()=>{toast.classList.remove('show')},2200)}
+const warningOverlay=document.getElementById('warningOverlay');
+const warningConfirm=document.getElementById('warningConfirm');
+const copyButtons=document.querySelectorAll('.copy-btn');
+let pendingText=null;
+let warningTimer=null;
+let warningCounting=false;
+let warningSecondsLeft=4;
+copyButtons.forEach(btn=>{btn.addEventListener('click',()=>{const targetId=btn.getAttribute('data-target');const targetEl=document.getElementById(targetId);const text=targetEl.textContent;const shouldWarn=btn.getAttribute('data-warn')==='true';if(shouldWarn){pendingText=text;openWarning()}else copyToClipboard(text)})});
+function openWarning(){
+    warningOverlay.classList.add('show');
+    warningConfirm.disabled=true;
+    warningCounting=true;
+    warningSecondsLeft=4;
+    warningConfirm.textContent=translations[currentLang].pleaseRead+' '+warningSecondsLeft;
+    clearInterval(warningTimer);
+    warningTimer=setInterval(()=>{
+        warningSecondsLeft--;
+        if(warningSecondsLeft<=0){
+            clearInterval(warningTimer);
+            warningCounting=false;
+            warningConfirm.disabled=false;
+            warningConfirm.textContent=translations[currentLang].warningBtn;
+        }else{
+            warningConfirm.textContent=translations[currentLang].pleaseRead+' '+warningSecondsLeft;
+        }
+    },1000);
+}
+warningConfirm.addEventListener('click',()=>{
+    if(warningConfirm.disabled)return;
+    if(pendingText!==null){copyToClipboard(pendingText);pendingText=null}
+    warningOverlay.classList.remove('show');
+    clearInterval(warningTimer);
+    warningCounting=false;
+    warningConfirm.disabled=true;
+    warningConfirm.textContent=translations[currentLang].warningBtn;
+});
+async function copyToClipboard(text){try{await navigator.clipboard.writeText(text);showToast(translations[currentLang].copied,'success')}catch(err){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showToast(translations[currentLang].copied,'success')}catch(e){alert(translations[currentLang].couldNotCopy)}document.body.removeChild(ta)}}
+const REVIEWED_KEY='seal_scripts_reviewed';
+const submitBtn=document.getElementById('submitBtn');
+const starsInput=document.getElementById('starsInput');
+const thanksOverlay=document.getElementById('thanksOverlay');
+const thanksClose=document.getElementById('thanksClose');
+const madOverlay=document.getElementById('madOverlay');
+const madClose=document.getElementById('madClose');
+const reviewText=document.getElementById('reviewText');
+let reviewSubmitting=false;
+function hasReviewed(){if(reviewSubmitting)return true;try{return localStorage.getItem(REVIEWED_KEY)==='1'}catch(e){return false}}
+function markReviewed(){reviewSubmitting=true;try{localStorage.setItem(REVIEWED_KEY,'1')}catch(e){}}
+submitBtn.addEventListener('click',()=>{if(reviewSubmitting||hasReviewed()){madOverlay.classList.add('show');return}const ratingInput=document.querySelector('input[name="rating"]:checked');if(!ratingInput){starsInput.classList.add('error');showToast(translations[currentLang].pickRating,'error');setTimeout(()=>starsInput.classList.remove('error'),1000);return}starsInput.classList.remove('error');markReviewed();document.querySelectorAll('input[name="rating"]').forEach(r=>r.checked=false);reviewText.value='';thanksOverlay.classList.add('show')});
+thanksClose.addEventListener('click',()=>thanksOverlay.classList.remove('show'));
+thanksOverlay.addEventListener('click',e=>{if(e.target===thanksOverlay)thanksOverlay.classList.remove('show')});
+madClose.addEventListener('click',()=>madOverlay.classList.remove('show'));
+madOverlay.addEventListener('click',e=>{if(e.target===madOverlay)madOverlay.classList.remove('show')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){thanksOverlay.classList.remove('show');madOverlay.classList.remove('show')}});
+const langSelect=document.getElementById('langSelect');
+langSelect.addEventListener('change',()=>applyLang(langSelect.value));
+let savedLang='en';
+try{savedLang=localStorage.getItem('seal_lang')||(navigator.language||'en').slice(0,2)}catch(e){}
+if(savedLang==='pt-BR'||savedLang==='pt-br')savedLang='pt';
+if(!translations[savedLang])savedLang='en';
+applyLang(savedLang);
+if(pageHome.classList.contains('active'))langSwitcher.classList.add('visible');
+</script>
+</body>
+</html>
